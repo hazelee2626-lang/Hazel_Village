@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍃 하젤마을</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--wood:#5a3218;--gold:#d4a860;--leaf:#4daa3c;--sky:#5aaee0;--cream:#fef6e4;--parch:#fdf0d0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:#1e3a10;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+.wrap{position:relative;width:min(99vw,940px);height:min(97vh,580px);border-radius:20px;overflow:hidden;
+box-shadow:0 0 0 4px var(–gold),0 0 0 9px var(–wood),0 0 0 13px #a07840,0 0 60px rgba(0,0,0,.65)}
+
+.hud{position:absolute;top:0;left:0;right:0;height:42px;
+background:linear-gradient(180deg,rgba(10,28,4,.88)0%,transparent);
+display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:50;pointer-events:none}
+.hud-title{font-family:‘Baloo 2’,sans-serif;font-size:20px;font-weight:800;color:#fef4b0;
+text-shadow:0 2px 12px rgba(0,0,0,.5),0 0 28px rgba(255,220,80,.22)}
+.hud-r{font-size:11px;color:rgba(255,245,180,.72);font-weight:700}
+
+.screen{position:absolute;inset:0;transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1)}
+.screen.gone{opacity:0;transform:scale(.94);pointer-events:none}
+svg.map{width:100%;height:100%}
+
+/* POI hover */
+.poi{cursor:pointer}
+.poi .hitbox{fill:transparent}
+.poi:hover .bldg{filter:brightness(1.08) drop-shadow(0 8px 22px rgba(0,0,0,.32)) drop-shadow(0 0 16px rgba(240,200,60,.52))}
+.poi .lbl-badge{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.poi:hover .lbl-badge{transform:translateY(-5px)}
+
+.rz{cursor:pointer;transition:filter .2s}
+.rz:hover{filter:brightness(1.08) drop-shadow(0 0 14px rgba(180,150,255,.55))}
+
+/* Animations */
+.ca{animation:ca 22s ease-in-out infinite}
+.cb{animation:cb 30s ease-in-out infinite 3s}
+.cc{animation:cc 18s ease-in-out infinite 8s}
+@keyframes ca{0%,100%{transform:translate(0,0)}40%{transform:translate(10px,-5px)}70%{transform:translate(-6px,4px)}}
+@keyframes cb{0%,100%{transform:translateX(0)}50%{transform:translateX(-14px)}}
+@keyframes cc{0%,100%{transform:translate(0,0)}50%{transform:translate(8px,-6px)}}
+
+.lanA{animation:ls 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+.lanB{animation:ls 4.1s ease-in-out infinite .5s;transform-box:fill-box;transform-origin:50% 0}
+.lanC{animation:ls 2.9s ease-in-out infinite .9s;transform-box:fill-box;transform-origin:50% 0}
+@keyframes ls{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+
+.sm1{animation:sm 3.4s ease-out infinite}
+.sm2{animation:sm 3.4s ease-out infinite 1.1s}
+.sm3{animation:sm 3.4s ease-out infinite 2.2s}
+@keyframes sm{0%{opacity:.55;transform:translate(0,0) scale(.65)}100%{opacity:0;transform:translate(-4px,-34px) scale(1.5)}}
+
+.ws1{animation:ws 2.9s ease-in-out infinite}
+.ws2{animation:ws 2.9s ease-in-out infinite .9s}
+.ws3{animation:ws 2.9s ease-in-out infinite 1.8s}
+@keyframes ws{0%,100%{opacity:.12}50%{opacity:.46}}
+
+.fb{animation:fb 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.fb2{animation:fb 3s ease-in-out infinite .7s;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes fb{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+
+.bf{animation:bf 5.5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.bf2{animation:bf 7.5s ease-in-out infinite 1.8s;transform-box:fill-box;transform-origin:center}
+@keyframes bf{0%{transform:translate(0,0)}25%{transform:translate(8px,-8px)}75%{transform:translate(-6px,-11px)}100%{transform:translate(0,0)}}
+
+.sunR{animation:sunR 5s ease-in-out infinite}
+@keyframes sunR{0%,100%{opacity:.3}50%{opacity:.55}}
+
+.duck{animation:duck 4s ease-in-out infinite}
+@keyframes duck{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,-2px)}}
+
+/* Overlay */
+.ov{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+background:rgba(6,18,2,.58);backdrop-filter:blur(8px);
+opacity:0;pointer-events:none;transition:opacity .3s}
+.ov.show{opacity:1;pointer-events:all}
+.dlg{background:var(–parch);border-radius:24px;max-width:400px;width:93%;overflow:hidden;max-height:88vh;overflow-y:auto;
+box-shadow:0 0 0 3px var(–gold),0 0 0 7px var(–wood),0 0 55px rgba(0,0,0,.48);
+transform:scale(.84) translateY(24px);transition:transform .38s cubic-bezier(.34,1.56,.64,1)}
+.ov.show .dlg{transform:scale(1) translateY(0)}
+.dlg-hdr{padding:20px 22px 15px;display:flex;align-items:flex-start;gap:14px;
+border-bottom:2px dashed #e0c880;background:linear-gradient(135deg,var(–parch),#f4e8c0)}
+.dlg-ico{font-size:40px;flex-shrink:0;line-height:1}
+.dlg-ttl{font-family:‘Baloo 2’,sans-serif;font-size:18px;font-weight:800;color:#3a2808;margin-bottom:3px}
+.dlg-sub{font-size:10.5px;color:#9a7040;font-weight:700;line-height:1.5}
+.dlg-body{padding:15px 20px}
+.npage{background:white;border-radius:13px;border:2px solid #ede0c4;overflow:hidden}
+.nphdr{background:linear-gradient(135deg,#f8f2e4,#eee2c8);padding:10px 15px;border-bottom:1.5px solid #e4d4a8}
+.nphdr-t{font-family:‘Baloo 2’,sans-serif;font-size:12.5px;font-weight:700;color:#3a2808}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 15px;border-bottom:1px solid #f2e8d6;
+transition:background .15s;font-size:12px;font-weight:700;color:#444}
+.ni:last-child{border-bottom:none}
+.ni:hover{background:#fef8ee;cursor:default}
+.nd{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dlg-ft{padding:12px 20px 18px;display:flex;justify-content:center;border-top:2px dashed #e0c880}
+.close-btn{background:linear-gradient(135deg,#68c040,#4a9c28);border:none;border-radius:50px;
+padding:9px 34px;font-family:‘Baloo 2’,sans-serif;font-weight:800;font-size:13px;color:white;cursor:pointer;
+box-shadow:0 4px 14px rgba(70,160,30,.38);transition:all .2s}
+.close-btn:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(70,160,30,.44)}
+
+/* House screen */
+.hs-hdr{position:absolute;top:0;left:0;right:0;height:48px;
+background:linear-gradient(135deg,#2e5a1e,#1c3e10);display:flex;align-items:center;gap:12px;
+padding:0 18px;z-index:10;border-bottom:2px solid rgba(255,255,255,.1)}
+.back{background:rgba(255,255,255,.13);border:1.5px solid rgba(255,255,255,.26);border-radius:50px;
+padding:5px 16px;font-family:‘Baloo 2’,sans-serif;font-weight:700;font-size:12px;color:white;cursor:pointer;transition:all .2s}
+.back:hover{background:rgba(255,255,255,.24);transform:translateX(-2px)}
+.hs-title{font-family:‘Baloo 2’,sans-serif;font-size:15px;font-weight:700;color:#fef6d0}
+.hs-hint{margin-left:auto;font-size:10px;color:rgba(255,255,255,.48);font-weight:700}
+
+.legend{position:absolute;bottom:14px;right:14px;background:rgba(10,28,4,.75);
+border:1.5px solid rgba(200,175,90,.35);border-radius:14px;padding:10px 15px;
+color:rgba(255,244,185,.8);font-size:10px;font-weight:700;line-height:2;
+z-index:20;pointer-events:none;backdrop-filter:blur(5px)}
+.legend strong{display:block;margin-bottom:3px;color:#f0c840;font-size:11px;font-family:‘Baloo 2’,sans-serif}
+
+.time-badge{position:absolute;bottom:14px;left:14px;background:rgba(10,28,4,.75);
+border:1.5px solid rgba(200,175,90,.35);border-radius:50px;padding:7px 18px;
+font-size:11px;font-weight:800;color:#fef4b0;font-family:‘Baloo 2’,sans-serif;
+z-index:20;pointer-events:none;backdrop-filter:blur(5px)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<div class="hud">
+  <span class="hud-title">🍃 하젤마을</span>
+  <span class="hud-r">⭐ Lv.7 하젤 GM · Handam BBQ</span>
+</div>
+
+<!-- ═══════════════════════════════ VILLAGE SCREEN ═══════════════════════════════ -->
+
+<div id="sv" class="screen">
+<svg class="map" viewBox="0 0 940 580" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#3a8ccc"/><stop offset="60%" stop-color="#7abce0"/><stop offset="100%" stop-color="#b8daf4"/>
+  </linearGradient>
+  <linearGradient id="gTop" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#84cc60"/><stop offset="100%" stop-color="#5aaa38"/>
+  </linearGradient>
+  <linearGradient id="gBot" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#5aaa38"/><stop offset="100%" stop-color="#428824"/>
+  </linearGradient>
+  <radialGradient id="pondG" cx="38%" cy="30%">
+    <stop offset="0%" stop-color="#a0daf0"/><stop offset="55%" stop-color="#50aad0"/><stop offset="100%" stop-color="#3090b8"/>
+  </radialGradient>
+  <radialGradient id="sunG" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#fff8a0"/><stop offset="45%" stop-color="#ffd840"/><stop offset="100%" stop-color="#ffa820" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="wallG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#fef8ec"/><stop offset="100%" stop-color="#efe4cc"/>
+  </radialGradient>
+  <filter id="sh"><feDropShadow dx="2" dy="6" stdDeviation="5" flood-color="#122008" flood-opacity=".3"/></filter>
+  <filter id="bsh"><feDropShadow dx="3" dy="10" stdDeviation="8" flood-color="#122008" flood-opacity=".42"/></filter>
+  <filter id="glw"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <pattern id="gp" x="0" y="0" width="22" height="16" patternUnits="userSpaceOnUse">
+    <ellipse cx="5" cy="13" rx="2.5" ry="4.5" fill="#72c450" opacity=".14"/>
+    <ellipse cx="16" cy="11" rx="2" ry="4" fill="#64bc40" opacity=".11"/>
+  </pattern>
+</defs>
+
+<!-- ── SKY ── -->
+
+<rect width="940" height="205" fill="url(#skyG)"/>
+<rect y="188" width="940" height="28" fill="#a0d880" opacity=".3"/>
+
+<!-- Sun glow + body -->
+
+<circle cx="858" cy="62" r="68" fill="url(#sunG)" class="sunR"/>
+<circle cx="858" cy="62" r="30" fill="#fff7a8"/>
+<circle cx="858" cy="62" r="21" fill="#ffd840"/>
+<g stroke="#ffd040" stroke-width="2.5" stroke-linecap="round" opacity=".32">
+  <line x1="858" y1="18" x2="858" y2="5"/><line x1="858" y1="105" x2="858" y2="118"/>
+  <line x1="814" y1="62" x2="801" y2="62"/><line x1="902" y1="62" x2="915" y2="62"/>
+  <line x1="827" y1="31" x2="818" y2="22"/><line x1="889" y1="31" x2="898" y2="22"/>
+  <line x1="827" y1="93" x2="818" y2="102"/><line x1="889" y1="93" x2="898" y2="102"/>
+</g>
+
+<!-- Clouds -->
+
+<g class="ca">
+  <ellipse cx="108" cy="80" rx="64" ry="31" fill="white" opacity=".96"/>
+  <ellipse cx="142" cy="62" rx="52" ry="29" fill="white" opacity=".96"/>
+  <ellipse cx="78"  cy="76" rx="44" ry="24" fill="white" opacity=".96"/>
+  <ellipse cx="172" cy="74" rx="40" ry="22" fill="white" opacity=".96"/>
+  <ellipse cx="108" cy="100" rx="58" ry="11" fill="#b0c8e0" opacity=".18"/>
+</g>
+<g class="cb">
+  <ellipse cx="440" cy="56" rx="54" ry="26" fill="white" opacity=".88"/>
+  <ellipse cx="470" cy="40" rx="42" ry="24" fill="white" opacity=".88"/>
+  <ellipse cx="412" cy="52" rx="36" ry="20" fill="white" opacity=".88"/>
+</g>
+<g class="cc">
+  <ellipse cx="640" cy="90" rx="46" ry="21" fill="white" opacity=".82"/>
+  <ellipse cx="666" cy="76" rx="34" ry="19" fill="white" opacity=".82"/>
+  <ellipse cx="616" cy="86" rx="30" ry="17" fill="white" opacity=".82"/>
+</g>
+
+<!-- Birds -->
+
+<g fill="none" stroke="#6090b8" stroke-width="1.8" stroke-linecap="round">
+  <path d="M302,70 Q309,63 316,70"/><path d="M323,61 Q330,54 337,61"/>
+  <path d="M524,104 Q530,97 536,104"/><path d="M543,95 Q549,88 555,95"/>
+</g>
+
+<!-- ── GRASS ── -->
+
+<rect y="196" width="940" height="384" fill="url(#gTop)"/>
+<rect y="196" width="940" height="384" fill="url(#gp)"/>
+<rect y="400" width="940" height="180" fill="url(#gBot)" opacity=".55"/>
+<!-- Terrain shading patches -->
+<ellipse cx="172" cy="278" rx="120" ry="44" fill="#78c054" opacity=".26"/>
+<ellipse cx="515" cy="468" rx="170" ry="54" fill="#72bc4e" opacity=".22"/>
+<ellipse cx="800" cy="318" rx="100" ry="40" fill="#62b040" opacity=".26"/>
+<ellipse cx="386" cy="508" rx="128" ry="34" fill="#72bc4e" opacity=".2"/>
+<ellipse cx="710" cy="500" rx="108" ry="32" fill="#62b040" opacity=".2"/>
+
+<!-- ══ POND ══ -->
+
+<ellipse cx="406" cy="380" rx="98" ry="57" fill="#1e7898" opacity=".35"/>
+<ellipse cx="404" cy="374" rx="95" ry="54" fill="url(#pondG)"/>
+<ellipse cx="404" cy="374" rx="95" ry="54" fill="none" stroke="#80c8e8" stroke-width="2.2" opacity=".4"/>
+<!-- Shimmer -->
+<ellipse cx="378" cy="357" rx="28" ry="12" fill="white" opacity=".18" class="ws1"/>
+<ellipse cx="424" cy="368" rx="20" ry="8.5" fill="white" opacity=".15" class="ws2"/>
+<ellipse cx="392" cy="383" rx="14" ry="5.5" fill="white" opacity=".13" class="ws3"/>
+<!-- Lily pads -->
+<ellipse cx="448" cy="386" rx="16" ry="9" fill="#4a9828"/><ellipse cx="448" cy="386" rx="16" ry="9" fill="none" stroke="#387018" stroke-width="1"/>
+<circle cx="448" cy="383" r="6" fill="#ff6082" opacity=".9"/>
+<path d="M448,386 L448,377" stroke="#387018" stroke-width="1.2" opacity=".45"/>
+<ellipse cx="370" cy="394" rx="13" ry="7" fill="#4a9828" opacity=".85"/>
+<path d="M370,394 L370,387" stroke="#387018" stroke-width="1" opacity=".4"/>
+<ellipse cx="420" cy="356" rx="11" ry="6.5" fill="#4a9828" opacity=".8"/>
+<!-- Duck -->
+<g class="duck">
+  <circle cx="362" cy="366" r="11" fill="#f8d860"/>
+  <ellipse cx="370" cy="363" rx="8" ry="5.5" fill="#f8e89a"/>
+  <ellipse cx="375" cy="362" rx="5" ry="3.2" fill="#f0a820"/>
+  <circle cx="377" cy="361" r="2.5" fill="#d88000"/>
+  <circle cx="362" cy="360" r="3" fill="#2a1808"/><circle cx="363" cy="359" r="1.1" fill="white" opacity=".55"/>
+  <path d="M369,368 Q382,371 395,368" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"/>
+</g>
+<text x="404" y="434" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="11" fill="#1e6888" font-weight="700" opacity=".85">연못 🦆</text>
+
+<!-- ══ ROAD ══ -->
+
+<path d="M225,490 C312,470 402,435 498,408 C568,388 638,374 708,368" fill="none" stroke="#201404" stroke-width="58" stroke-linecap="round" opacity=".22"/>
+<path d="M225,486 C312,466 402,431 498,404 C568,384 638,370 708,364" fill="none" stroke="#c4a458" stroke-width="50" stroke-linecap="round"/>
+<path d="M225,486 C312,466 402,431 498,404 C568,384 638,370 708,364" fill="none" stroke="#dcc070" stroke-width="42" stroke-linecap="round"/>
+<path d="M225,486 C312,466 402,431 498,404 C568,384 638,370 708,364" fill="none" stroke="#ecd880" stroke-width="24" stroke-linecap="round" opacity=".3"/>
+<!-- Road edge stones -->
+<path d="M225,486 C312,466 402,431 498,404 C568,384 638,370 708,364" fill="none" stroke="#b89848" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="14 10" opacity=".28"/>
+<path d="M225,486 C312,466 402,431 498,404 C568,384 638,370 708,364" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-dasharray="10 18" opacity=".16"/>
+<!-- Road flowers -->
+<g class="fb"><circle cx="258" cy="468" r="7" fill="#ff70a0"/><circle cx="258" cy="470" r="3.2" fill="#ffd820"/></g>
+<g class="fb2"><circle cx="294" cy="454" r="6" fill="#fff060"/><circle cx="294" cy="456" r="2.8" fill="#ff8800"/></g>
+<circle cx="336" cy="442" r="5.5" fill="#88d060"/>
+<g class="fb"><circle cx="378" cy="430" r="7" fill="#ff9dc8"/><circle cx="378" cy="432" r="3" fill="#ffd820"/></g>
+<g class="fb2"><circle cx="432" cy="414" r="6" fill="#a8e8ff"/><circle cx="432" cy="416" r="2.8" fill="#4488cc"/></g>
+<g class="fb"><circle cx="480" cy="400" r="6" fill="#ff7098"/><circle cx="480" cy="402" r="2.8" fill="#ffd820"/></g>
+<g class="fb2"><circle cx="530" cy="388" r="6" fill="#fff060"/><circle cx="530" cy="390" r="2.8" fill="#ff8800"/></g>
+<circle cx="578" cy="376" r="5" fill="#ff9dc8"/>
+<g class="fb"><circle cx="630" cy="367" r="6.5" fill="#b0ffa0"/><circle cx="630" cy="369" r="3" fill="#40a820"/></g>
+
+<!-- Signpost -->
+
+<g transform="translate(464,388)">
+  <rect x="-7" y="-4" width="14" height="60" rx="4" fill="#7a4e28"/>
+  <rect x="-7" y="-4" width="14" height="10" rx="3" fill="#9a6838" opacity=".5"/>
+  <!-- Left board shadow -->
+  <rect x="-76" y="-26" width="72" height="28" rx="7" fill="#201404" opacity=".16" transform="translate(3,5)"/>
+  <rect x="4"   y="-26" width="72" height="28" rx="7" fill="#201404" opacity=".16" transform="translate(3,5)"/>
+  <!-- Left board -->
+  <rect x="-76" y="-26" width="72" height="28" rx="7" fill="#fef4cc"/>
+  <rect x="-76" y="-26" width="72" height="28" rx="7" fill="none" stroke="#d4b040" stroke-width="2"/>
+  <polygon points="-76,-13 -86,-1 -76,11" fill="#fef4cc" stroke="#d4b040" stroke-width="2"/>
+  <text x="-40" y="-5" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#6a3a08" font-weight="800">← 집 🏠</text>
+  <!-- Right board -->
+  <rect x="4"   y="-26" width="72" height="28" rx="7" fill="#fef4cc"/>
+  <rect x="4"   y="-26" width="72" height="28" rx="7" fill="none" stroke="#d4b040" stroke-width="2"/>
+  <polygon points="76,-13 86,-1 76,11" fill="#fef4cc" stroke="#d4b040" stroke-width="2"/>
+  <text x="40" y="-5" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#6a3a08" font-weight="800">직장 🍖 →</text>
+</g>
+
+<!-- ══ TREES ══ -->
+
+<!-- Deep left cluster -->
+
+<g filter="url(#sh)">
+  <rect x="76" y="340" width="14" height="30" rx="4" fill="#6b4226"/>
+  <circle cx="83" cy="321" r="30" fill="#357820"/><circle cx="72" cy="313" r="22" fill="#459a30"/>
+  <circle cx="94" cy="311" r="20" fill="#3a8c28"/><circle cx="83" cy="305" r="18" fill="#58b040"/>
+  <circle cx="71" cy="309" r="5.5" fill="#ff5838" opacity=".65"/><circle cx="86" cy="315" r="4.5" fill="#ff5838" opacity=".6"/>
+</g>
+<g filter="url(#sh)">
+  <rect x="104" y="294" width="12" height="25" rx="3" fill="#7a5230"/>
+  <circle cx="110" cy="278" r="26" fill="#3d8828"/><circle cx="100" cy="271" r="19" fill="#4daa3c"/>
+  <circle cx="120" cy="269" r="17" fill="#3d8828"/><circle cx="110" cy="264" r="16" fill="#5abc48"/>
+</g>
+<!-- Left upper -->
+<g filter="url(#sh)">
+  <rect x="282" y="308" width="14" height="32" rx="4" fill="#6b4226"/>
+  <circle cx="289" cy="288" r="32" fill="#3d8828"/><circle cx="277" cy="280" r="24" fill="#4daa3c"/>
+  <circle cx="301" cy="278" r="22" fill="#3a8828"/><circle cx="289" cy="271" r="20" fill="#5abc48"/>
+  <circle cx="275" cy="278" r="5.5" fill="#ff5838" opacity=".65"/><circle cx="292" cy="284" r="4.5" fill="#ff5838" opacity=".6"/>
+</g>
+<!-- Upper center -->
+<g filter="url(#sh)">
+  <rect x="342" y="258" width="13" height="27" rx="4" fill="#7a5230"/>
+  <circle cx="348" cy="240" r="29" fill="#4daa3c"/><circle cx="337" cy="233" r="22" fill="#5abc48"/>
+  <circle cx="360" cy="230" r="20" fill="#4daa3c"/><circle cx="348" cy="224" r="19" fill="#68cc58"/>
+</g>
+<!-- Pine trees (right center) -->
+<g filter="url(#sh)">
+  <rect x="562" y="268" width="13" height="26" rx="3" fill="#6b4226"/>
+  <polygon points="568,242 552,272 584,272" fill="#2a6a1c"/>
+  <polygon points="568,226 550,259 586,259" fill="#347828"/>
+  <polygon points="568,210 549,247 587,247" fill="#449038"/>
+  <polygon points="568,195 550,232 586,232" fill="#549848"/>
+  <circle cx="568" cy="193" r="6.5" fill="#64a858"/>
+</g>
+<g filter="url(#sh)">
+  <rect x="600" y="296" width="11" height="22" rx="3" fill="#6b4226"/>
+  <polygon points="605,274 593,299 617,299" fill="#2a6a1c"/>
+  <polygon points="605,261 591,288 619,288" fill="#347828"/>
+  <polygon points="605,249 591,278 619,278" fill="#449038"/>
+</g>
+<!-- Far right -->
+<g filter="url(#sh)">
+  <rect x="880" y="338" width="12" height="26" rx="4" fill="#7a5230"/>
+  <circle cx="886" cy="320" r="26" fill="#3d8828"/><circle cx="875" cy="313" r="19" fill="#4daa3c"/>
+  <circle cx="897" cy="311" r="18" fill="#5abc48"/>
+</g>
+<!-- Near pond left -->
+<g filter="url(#sh)">
+  <rect x="312" y="380" width="11" height="23" rx="3" fill="#6b4226"/>
+  <circle cx="317" cy="365" r="24" fill="#4daa3c"/><circle cx="307" cy="358" r="17" fill="#5abc48"/>
+  <circle cx="327" cy="356" r="16" fill="#42a038"/>
+</g>
+<!-- Far left isolated -->
+<g filter="url(#sh)">
+  <rect x="30" y="246" width="11" height="24" rx="3" fill="#7a5230"/>
+  <circle cx="36" cy="230" r="25" fill="#3d8828"/><circle cx="26" cy="223" r="18" fill="#4daa3c"/>
+  <circle cx="46" cy="221" r="17" fill="#5abc48"/>
+</g>
+<!-- Right upper grove -->
+<g filter="url(#sh)">
+  <rect x="790" y="214" width="12" height="24" rx="3" fill="#7a5230"/>
+  <circle cx="796" cy="199" r="26" fill="#4daa3c"/><circle cx="785" cy="192" r="19" fill="#5abc48"/>
+  <circle cx="807" cy="190" r="17" fill="#42a038"/>
+</g>
+<g filter="url(#sh)">
+  <rect x="755" y="398" width="11" height="20" rx="3" fill="#7a5230"/>
+  <circle cx="760" cy="385" r="23" fill="#4daa3c"/><circle cx="750" cy="379" r="16" fill="#5abc48"/>
+  <circle cx="770" cy="377" r="15" fill="#42a038"/>
+</g>
+
+<!-- Mushrooms -->
+
+<g>
+  <ellipse cx="502" cy="440" rx="8" ry="4" fill="#e02820"/><ellipse cx="502" cy="437" rx="8" ry="4.8" fill="#f03828"/>
+  <circle cx="499" cy="435" r="1.8" fill="white" opacity=".65"/><circle cx="504" cy="434" r="1.4" fill="white" opacity=".58"/>
+  <rect x="500" y="441" width="4" height="9" rx="2" fill="#f2e6cc"/>
+  <ellipse cx="646" cy="442" rx="6.5" ry="3.2" fill="#f03828"/><ellipse cx="646" cy="439" rx="6.5" ry="3.6" fill="#ff4838"/>
+  <rect x="644" y="442" width="4" height="7" rx="1.5" fill="#f2e6cc"/>
+</g>
+<!-- Rocks -->
+<ellipse cx="350" cy="452" rx="12" ry="7" fill="#aaa090" opacity=".52"/><ellipse cx="348" cy="450" rx="10" ry="5.5" fill="#c2baa8" opacity=".42"/>
+<ellipse cx="604" cy="424" rx="10" ry="6" fill="#aaa090" opacity=".48"/><ellipse cx="602" cy="422" rx="8" ry="4.5" fill="#c2baa8" opacity=".38"/>
+
+<!-- Scattered flowers -->
+
+<g>
+  <circle cx="474" cy="352" r="6" fill="#ff70a0" opacity=".88"/><circle cx="474" cy="352" r="2.8" fill="#ffd820"/>
+  <circle cx="488" cy="363" r="5" fill="#ff9dc8" opacity=".82"/><circle cx="488" cy="363" r="2.2" fill="#ffd820"/>
+  <circle cx="463" cy="365" r="4.5" fill="#fff060" opacity=".8"/><circle cx="463" cy="365" r="2" fill="#ff8800"/>
+  <circle cx="154" cy="310" r="5.5" fill="#ff9dc8" opacity=".8"/><circle cx="154" cy="310" r="2.5" fill="#ffd820"/>
+  <circle cx="168" cy="322" r="4.5" fill="#fff060" opacity=".75"/><circle cx="168" cy="322" r="2" fill="#ff8800"/>
+  <circle cx="522" cy="256" r="5" fill="#ff70a0" opacity=".7"/><circle cx="522" cy="256" r="2.2" fill="#ffd820"/>
+  <circle cx="538" cy="263" r="4.5" fill="#b0ffa0" opacity=".7"/><circle cx="538" cy="263" r="2" fill="#40a820"/>
+  <circle cx="780" cy="370" r="5.5" fill="#fff060" opacity=".8"/><circle cx="780" cy="370" r="2.5" fill="#ff8800"/>
+  <circle cx="793" cy="382" r="4.5" fill="#ff9dc8" opacity=".75"/><circle cx="793" cy="382" r="2" fill="#ffd820"/>
+  <circle cx="208" cy="514" r="5.5" fill="#a8e8ff" opacity=".75"/><circle cx="208" cy="514" r="2.5" fill="#4488cc"/>
+  <circle cx="644" cy="502" r="6" fill="#ff70a0" opacity=".8"/><circle cx="644" cy="502" r="2.8" fill="#ffd820"/>
+</g>
+
+<!-- Butterflies -->
+
+<g class="bf" transform="translate(506,296)">
+  <ellipse cx="-7" cy="-5" rx="9" ry="5.5" fill="#ff9dc8" opacity=".82" transform="rotate(-22,-7,-5)"/>
+  <ellipse cx="7" cy="-5" rx="9" ry="5.5" fill="#ff9dc8" opacity=".82" transform="rotate(22,7,-5)"/>
+  <ellipse cx="-6" cy="3" rx="5.5" ry="3.5" fill="#ffb8d8" opacity=".6" transform="rotate(16,-6,3)"/>
+  <ellipse cx="6" cy="3" rx="5.5" ry="3.5" fill="#ffb8d8" opacity=".6" transform="rotate(-16,6,3)"/>
+  <line x1="0" y1="-9" x2="0" y2="5" stroke="#5a3818" stroke-width="1.3"/>
+  <circle cx="0" cy="-10" r="2.2" fill="#5a3818"/>
+</g>
+<g class="bf2" transform="translate(314,318)">
+  <ellipse cx="-6" cy="-4" rx="8" ry="5" fill="#c8f0a0" opacity=".84" transform="rotate(-20,-6,-4)"/>
+  <ellipse cx="6" cy="-4" rx="8" ry="5" fill="#c8f0a0" opacity=".84" transform="rotate(20,6,-4)"/>
+  <ellipse cx="-5" cy="2" rx="4.5" ry="3" fill="#d8f8b0" opacity=".6" transform="rotate(14,-5,2)"/>
+  <ellipse cx="5" cy="2" rx="4.5" ry="3" fill="#d8f8b0" opacity=".6" transform="rotate(-14,5,2)"/>
+  <line x1="0" y1="-8" x2="0" y2="4" stroke="#5a3818" stroke-width="1.3"/>
+  <circle cx="0" cy="-9" r="2" fill="#5a3818"/>
+</g>
+
+<!-- ══════════════════════ HOUSE POI ══════════════════════ -->
+
+<g class="poi" onclick="enterHouse()">
+  <!-- Ground shadow -->
+  <ellipse cx="200" cy="498" rx="110" ry="18" fill="#1a3a08" opacity=".3"/>
+  <!-- Lawn -->
+  <ellipse cx="200" cy="482" rx="108" ry="28" fill="#68be48" opacity=".44"/>
+
+  <!-- Garden beds -->
+
+  <rect x="106" y="447" width="40" height="32" rx="10" fill="#78c854" opacity=".62"/>
+  <g class="fb"><circle cx="117" cy="454" r="7" fill="#ff6890"/><circle cx="117" cy="454" r="3.2" fill="#ffd820"/></g>
+  <g class="fb2"><circle cx="130" cy="460" r="6" fill="#fff060"/><circle cx="130" cy="460" r="2.8" fill="#ff8800"/></g>
+  <circle cx="140" cy="454" r="5.5" fill="#ff9dc8"/><circle cx="140" cy="454" r="2.5" fill="#ffd820"/>
+  <rect x="256" y="447" width="40" height="32" rx="10" fill="#78c854" opacity=".62"/>
+  <g class="fb"><circle cx="266" cy="454" r="6" fill="#a8e8ff"/><circle cx="266" cy="454" r="2.8" fill="#4488cc"/></g>
+  <g class="fb2"><circle cx="278" cy="460" r="7" fill="#ff6890"/><circle cx="278" cy="460" r="3.2" fill="#ffd820"/></g>
+  <circle cx="290" cy="454" r="5.5" fill="#b0ffa0"/><circle cx="290" cy="454" r="2.5" fill="#40a820"/>
+
+  <!-- Picket fence -->
+
+  <rect x="108" y="418" width="186" height="7.5" rx="3.5" fill="#c8a050"/>
+  <rect x="108" y="431" width="186" height="7.5" rx="3.5" fill="#c8a050"/>
+  <g fill="#d4ae60">
+    <rect x="108" y="408" width="7.5" height="34" rx="3.5"/><rect x="126" y="408" width="7.5" height="34" rx="3.5"/>
+    <rect x="144" y="408" width="7.5" height="34" rx="3.5"/><rect x="162" y="408" width="7.5" height="34" rx="3.5"/>
+    <!-- Gate gap 178-212 -->
+    <rect x="214" y="408" width="7.5" height="34" rx="3.5"/><rect x="232" y="408" width="7.5" height="34" rx="3.5"/>
+    <rect x="250" y="408" width="7.5" height="34" rx="3.5"/><rect x="268" y="408" width="7.5" height="34" rx="3.5"/>
+    <rect x="286" y="408" width="7.5" height="34" rx="3.5"/>
+  </g>
+  <!-- Gate -->
+  <rect x="178" y="409" width="30" height="30" rx="5" fill="#d8b872" opacity=".95"/>
+  <rect x="178" y="409" width="30" height="30" rx="5" fill="none" stroke="#b8982"/>
+  <line x1="178" y1="424" x2="208" y2="424" stroke="#b89040" stroke-width="1.2"/>
+  <circle cx="204" cy="424" r="3.2" fill="#f0c040"/>
+
+  <!-- Stone foundation -->
+
+  <g class="bldg">
+    <rect x="118" y="382" width="166" height="60" rx="8" fill="#cec6ae" filter="url(#sh)"/>
+    <g stroke="#b0a890" stroke-width="1" opacity=".6" fill="none">
+      <line x1="118" y1="400" x2="284" y2="400"/><line x1="118" y1="418" x2="284" y2="418"/>
+      <line x1="148" y1="382" x2="148" y2="400"/><line x1="198" y1="382" x2="198" y2="400"/><line x1="248" y1="382" x2="248" y2="400"/>
+      <line x1="134" y1="400" x2="134" y2="418"/><line x1="184" y1="400" x2="184" y2="418"/><line x1="234" y1="400" x2="234" y2="418"/>
+    </g>
+
+```
+<!-- Main wall -->
+<rect x="118" y="312" width="166" height="82" rx="8" fill="#fdf6ea" filter="url(#bsh)"/>
+<rect x="118" y="312" width="8" height="82" rx="2" fill="#e8d8b4" opacity=".5"/>
+<rect x="276" y="312" width="8" height="82" rx="2" fill="#d8c8a0" opacity=".4"/>
+<g stroke="#e0ceaa" stroke-width="1" opacity=".4">
+  <line x1="118" y1="328" x2="284" y2="328"/><line x1="118" y1="344" x2="284" y2="344"/>
+  <line x1="118" y1="360" x2="284" y2="360"/><line x1="118" y1="376" x2="284" y2="376"/>
+</g>
+
+<!-- ROOF -->
+<polygon points="100,324 200,262 300,324" fill="#3a0c04" opacity=".2" filter="url(#sh)"/>
+<!-- Left slope -->
+<polygon points="102,324 200,265 200,324" fill="#c02818"/>
+<!-- Right slope -->
+<polygon points="200,265 298,324 200,324" fill="#d83028"/>
+<!-- Tile lines left slope -->
+<g stroke="#901808" stroke-width="1.3" opacity=".28">
+  <line x1="148" y1="288" x2="103" y2="323"/><line x1="166" y1="278" x2="121" y2="323"/>
+  <line x1="184" y1="269" x2="139" y2="323"/>
+</g>
+<!-- Tile lines right slope -->
+<g stroke="#901808" stroke-width="1.3" opacity=".25">
+  <line x1="252" y1="288" x2="297" y2="323"/><line x1="234" y1="278" x2="279" y2="323"/>
+  <line x1="216" y1="269" x2="261" y2="323"/>
+</g>
+<!-- Horizontal tile courses -->
+<g stroke="#901808" stroke-width="1.8" opacity=".2">
+  <line x1="110" y1="310" x2="290" y2="310"/>
+  <line x1="122" y1="296" x2="278" y2="296"/>
+  <line x1="136" y1="282" x2="264" y2="282"/>
+</g>
+<!-- Eave -->
+<rect x="100" y="320" width="200" height="10" rx="5" fill="#8a1808"/>
+<rect x="100" y="320" width="200" height="5" rx="3" fill="#d83028" opacity=".36"/>
+<!-- Ridge cap -->
+<rect x="184" y="261" width="32" height="9" rx="4.5" fill="#6a1408"/>
+<circle cx="200" cy="261" r="6" fill="#8a1c10"/>
+<circle cx="184" cy="265" r="3.8" fill="#6a1408"/><circle cx="216" cy="265" r="3.8" fill="#6a1408"/>
+
+<!-- Chimney -->
+<rect x="236" y="262" width="24" height="47" rx="4.5" fill="#b88870" filter="url(#sh)"/>
+<g stroke="#988060" stroke-width="1" opacity=".55">
+  <line x1="236" y1="276" x2="260" y2="276"/><line x1="236" y1="291" x2="260" y2="291"/>
+  <line x1="248" y1="262" x2="248" y2="276"/><line x1="242" y1="276" x2="242" y2="291"/>
+</g>
+<rect x="233" y="259" width="30" height="8" rx="4" fill="#a87860"/>
+<!-- Smoke -->
+<circle cx="244" cy="250" r="10" fill="#d4d4d4" class="sm1"/>
+<circle cx="249" cy="237" r="8"  fill="#c8c8c8" class="sm2"/>
+<circle cx="246" cy="225" r="7"  fill="#c0c0c0" class="sm3"/>
+
+<!-- Window left (with flower box) -->
+<rect x="126" y="324" width="42" height="35" rx="5.5" fill="#bce0f6" filter="url(#sh)"/>
+<rect x="126" y="324" width="42" height="35" rx="5.5" fill="none" stroke="#7ab0cc" stroke-width="2"/>
+<line x1="147" y1="324" x2="147" y2="359" stroke="#7ab0cc" stroke-width="1.6"/>
+<line x1="126" y1="340" x2="168" y2="340" stroke="#7ab0cc" stroke-width="1.6"/>
+<rect x="129" y="327" width="11" height="11" rx="2" fill="white" opacity=".3"/>
+<rect x="124" y="357" width="46" height="6" rx="3" fill="#c4a860"/>
+<rect x="124" y="361" width="46" height="12" rx="4" fill="#72c050"/>
+<g><circle cx="133" cy="364" r="5" fill="#ff6890"/><circle cx="133" cy="364" r="2.2" fill="#ffd820"/></g>
+<g><circle cx="147" cy="364" r="5" fill="#fff060"/><circle cx="147" cy="364" r="2.2" fill="#ff8800"/></g>
+<g><circle cx="161" cy="364" r="5" fill="#ff9dc8"/><circle cx="161" cy="364" r="2.2" fill="#ffd820"/></g>
+
+<!-- Window right (with flower box) -->
+<rect x="234" y="324" width="42" height="35" rx="5.5" fill="#bce0f6" filter="url(#sh)"/>
+<rect x="234" y="324" width="42" height="35" rx="5.5" fill="none" stroke="#7ab0cc" stroke-width="2"/>
+<line x1="255" y1="324" x2="255" y2="359" stroke="#7ab0cc" stroke-width="1.6"/>
+<line x1="234" y1="340" x2="276" y2="340" stroke="#7ab0cc" stroke-width="1.6"/>
+<rect x="237" y="327" width="11" height="11" rx="2" fill="white" opacity=".3"/>
+<rect x="232" y="357" width="46" height="6" rx="3" fill="#c4a860"/>
+<rect x="232" y="361" width="46" height="12" rx="4" fill="#72c050"/>
+<g><circle cx="241" cy="364" r="5" fill="#fff060"/><circle cx="241" cy="364" r="2.2" fill="#ff8800"/></g>
+<g><circle cx="255" cy="364" r="5" fill="#ff9dc8"/><circle cx="255" cy="364" r="2.2" fill="#ffd820"/></g>
+<g><circle cx="269" cy="364" r="5" fill="#a8e8ff"/><circle cx="269" cy="364" r="2.2" fill="#4488cc"/></g>
+
+<!-- Arched door -->
+<rect x="182" y="352" width="38" height="44" rx="20" fill="#8a5830" filter="url(#sh)"/>
+<rect x="184" y="354" width="34" height="42" rx="18" fill="#7a4a26"/>
+<ellipse cx="201" cy="354" rx="15" ry="9" fill="#c8e4f6" opacity=".52"/>
+<rect x="186" y="362" width="12" height="22" rx="3" fill="#6a3c1e" opacity=".42"/>
+<rect x="202" y="362" width="12" height="22" rx="3" fill="#6a3c1e" opacity=".42"/>
+<circle cx="210" cy="374" r="3.2" fill="#f0c040"/>
+<rect x="182" y="392" width="38" height="7" rx="3" fill="#b8a878"/>
+<rect x="178" y="397" width="46" height="8" rx="3" fill="#caba90"/>
+
+<!-- Mailbox -->
+<rect x="98" y="402" width="8" height="22" rx="4" fill="#8a5830"/>
+<rect x="90" y="386" width="22" height="18" rx="5" fill="#5ab848" filter="url(#sh)"/>
+<rect x="89" y="383" width="24" height="8" rx="4" fill="#48a038"/>
+<rect x="98" y="389" width="2" height="6" fill="#387028"/>
+```
+
+</g><!-- /bldg -->
+
+  <!-- Label -->
+
+  <rect x="148" y="236" width="106" height="32" rx="16" fill="white" opacity=".95" filter="url(#sh)" class="lbl-badge"/>
+  <rect x="148" y="236" width="106" height="32" rx="16" fill="none" stroke="#c89060" stroke-width="2.2" class="lbl-badge"/>
+  <text x="201" y="257" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="14.5" fill="#5a3218" font-weight="800" class="lbl-badge">🏠 하젤네 집</text>
+  <text x="201" y="222" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10" fill="rgba(200,148,60,.88)" font-weight="800" class="fb">탭해서 입장 ↓</text>
+</g><!-- /house poi -->
+
+<!-- ══════════════════════ RESTAURANT POI ══════════════════════ -->
+
+<g class="poi" onclick="showWork()">
+  <!-- Ground shadow -->
+  <ellipse cx="720" cy="394" rx="120" ry="18" fill="#1a3a08" opacity=".28"/>
+  <!-- Courtyard paving -->
+  <rect x="618" y="366" width="206" height="32" rx="7" fill="#c4b468" opacity=".55"/>
+  <g stroke="#b4a458" stroke-width="1.2" opacity=".4">
+    <line x1="638" y1="366" x2="638" y2="398"/><line x1="668" y1="366" x2="668" y2="398"/>
+    <line x1="698" y1="366" x2="698" y2="398"/><line x1="728" y1="366" x2="728" y2="398"/>
+    <line x1="758" y1="366" x2="758" y2="398"/><line x1="788" y1="366" x2="788" y2="398"/>
+  </g>
+  <!-- Steps -->
+  <rect x="688" y="358" width="66" height="10" rx="3.5" fill="#b8b298"/>
+  <rect x="684" y="366" width="74" height="8" rx="3" fill="#cac8ae"/>
+
+  <g class="bldg">
+  <!-- Building body -->
+  <rect x="616" y="272" width="210" height="100" rx="9" fill="#fdf4e0" filter="url(#bsh)"/>
+  <rect x="616" y="272" width="10" height="100" rx="3" fill="#e0cc98" opacity=".45"/>
+  <rect x="816" y="272" width="10" height="100" rx="3" fill="#c8b880" opacity=".35"/>
+  <g stroke="#d4bc88" stroke-width="1" opacity=".36">
+    <line x1="616" y1="290" x2="826" y2="290"/><line x1="616" y1="308" x2="826" y2="308"/>
+    <line x1="616" y1="326" x2="826" y2="326"/><line x1="616" y1="344" x2="826" y2="344"/>
+    <line x1="616" y1="362" x2="826" y2="362"/>
+  </g>
+
+  <!-- ── KOREAN ROOF (기와지붕) ── -->
+
+  <!-- Outer shadow cast -->
+
+  <path d="M586,284 Q721,226 856,284" fill="none" stroke="#280408" stroke-width="68" stroke-linecap="butt" opacity=".22"/>
+  <!-- Main roof body -->
+  <path d="M586,284 Q721,228 856,284" fill="none" stroke="#8a1010" stroke-width="58" stroke-linecap="butt"/>
+  <path d="M586,284 Q721,228 856,284" fill="none" stroke="#c02828" stroke-width="44" stroke-linecap="butt"/>
+  <!-- Highlight streak near ridge -->
+  <path d="M622,274 Q721,234 820,274" fill="none" stroke="#e83838" stroke-width="16" stroke-linecap="round" opacity=".42"/>
+  <!-- Eave underside -->
+  <path d="M586,284 Q721,288 856,284" fill="none" stroke="#6a0c0c" stroke-width="12" stroke-linecap="round"/>
+  <path d="M588,286 Q721,290 854,286" fill="none" stroke="#200404" stroke-width="5" stroke-linecap="round" opacity=".28"/>
+  <!-- Tile courses -->
+  <g opacity=".22">
+    <path d="M608,268 Q721,246 834,268" fill="none" stroke="#781010" stroke-width="2"/>
+    <path d="M596,276 Q721,256 846,276" fill="none" stroke="#781010" stroke-width="2"/>
+  </g>
+  <!-- Tile ribs radiating left -->
+  <g stroke="#701010" stroke-width="1.4" opacity=".26">
+    <path d="M590,282 Q650,262 714,234" fill="none"/>
+    <path d="M590,282 Q636,266 684,252" fill="none"/>
+    <path d="M590,282 Q618,272 650,265" fill="none"/>
+  </g>
+  <!-- Tile ribs right -->
+  <g stroke="#701010" stroke-width="1.4" opacity=".22">
+    <path d="M852,282 Q792,262 728,234" fill="none"/>
+    <path d="M852,282 Q806,266 758,252" fill="none"/>
+    <path d="M852,282 Q824,272 792,265" fill="none"/>
+  </g>
+  <!-- Upswept corners -->
+  <path d="M586,284 Q570,269 560,252" fill="none" stroke="#8a1010" stroke-width="13" stroke-linecap="round"/>
+  <path d="M587,284 Q572,271 564,256" fill="none" stroke="#c02828" stroke-width="8" stroke-linecap="round"/>
+  <path d="M856,284 Q872,269 882,252" fill="none" stroke="#8a1010" stroke-width="13" stroke-linecap="round"/>
+  <path d="M855,284 Q870,271 878,256" fill="none" stroke="#c02828" stroke-width="8" stroke-linecap="round"/>
+  <!-- Ridge beam -->
+  <path d="M636,248 Q721,234 806,248" fill="none" stroke="#580c0c" stroke-width="10" stroke-linecap="round"/>
+  <path d="M636,248 Q721,236 806,248" fill="none" stroke="#8a1818" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <!-- Ridge ornaments -->
+  <circle cx="721" cy="231" r="10" fill="#500808"/><circle cx="721" cy="231" r="7" fill="#f0c040"/><circle cx="721" cy="231" r="4" fill="#800c10"/>
+  <circle cx="636" cy="247" r="6" fill="#580c0c"/><circle cx="806" cy="247" r="6" fill="#580c0c"/>
+  <circle cx="560" cy="252" r="8.5" fill="#700c0c"/><circle cx="882" cy="252" r="8.5" fill="#700c0c"/>
+  <!-- Corner birds (owl-like ornaments) -->
+  <ellipse cx="560" cy="244" rx="6" ry="7" fill="#580c0c"/>
+  <ellipse cx="882" cy="244" rx="6" ry="7" fill="#580c0c"/>
+
+  <!-- Second tier roof -->
+
+  <path d="M636,274 Q721,250 806,274" fill="none" stroke="#700c0c" stroke-width="28" stroke-linecap="butt"/>
+  <path d="M636,274 Q721,250 806,274" fill="none" stroke="#b01818" stroke-width="20" stroke-linecap="butt"/>
+  <path d="M638,274 Q721,252 804,274" fill="none" stroke="#680c0c" stroke-width="7" stroke-linecap="round"/>
+  <path d="M636,274 Q721,274 806,274" fill="none" stroke="#580c0c" stroke-width="5.5" stroke-linecap="round" opacity=".45"/>
+  <path d="M636,274 Q622,265 616,253" fill="none" stroke="#700c0c" stroke-width="9" stroke-linecap="round"/>
+  <path d="M806,274 Q820,265 826,253" fill="none" stroke="#700c0c" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="616" cy="252" r="5.5" fill="#700c0c"/><circle cx="826" cy="252" r="5.5" fill="#700c0c"/>
+
+  <!-- Sign board -->
+
+  <rect x="648" y="286" width="146" height="44" rx="7" fill="#400808"/>
+  <rect x="649" y="287" width="144" height="42" rx="6" fill="#600c0c"/>
+  <rect x="651" y="289" width="140" height="38" rx="5" fill="none" stroke="#b07818" stroke-width="2"/>
+  <rect x="654" y="292" width="134" height="32" rx="4" fill="none" stroke="#f0b020" stroke-width=".9" opacity=".42"/>
+  <text x="721" y="305" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="14" fill="#f0c840" font-weight="800" letter-spacing="1.5">한담 BBQ</text>
+  <text x="721" y="320" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10" fill="#ffb060" font-weight="700">🍖 Korean BBQ · 정통 한국식</text>
+
+  <!-- OPEN badge -->
+
+  <rect x="690" y="278" width="44" height="16" rx="6" fill="#22b050"/>
+  <rect x="690" y="278" width="44" height="16" rx="6" fill="none" stroke="#169038" stroke-width="1"/>
+  <text x="712" y="289.5" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="8.5" fill="white" font-weight="800">OPEN</text>
+
+  <!-- Pillars -->
+
+  <rect x="622" y="272" width="20" height="100" rx="4.5" fill="#d8c498"/>
+  <rect x="623" y="272" width="18" height="100" rx="3.5" fill="#ecdcb0"/>
+  <rect x="618" y="366" width="28" height="10" rx="4" fill="#b8a878"/>
+  <rect x="618" y="270" width="28" height="7" rx="3.5" fill="#b8a878"/>
+  <rect x="800" y="272" width="20" height="100" rx="4.5" fill="#d8c498"/>
+  <rect x="801" y="272" width="18" height="100" rx="3.5" fill="#ecdcb0"/>
+  <rect x="796" y="366" width="28" height="10" rx="4" fill="#b8a878"/>
+  <rect x="796" y="270" width="28" height="7" rx="3.5" fill="#b8a878"/>
+
+  <!-- Lantern wire -->
+
+  <path d="M622,267 Q721,260 820,267" fill="none" stroke="#583020" stroke-width="1.8"/>
+  <!-- Lanterns -->
+  <g class="lanA">
+    <rect x="647" y="252" width="9" height="6" rx="2" fill="#580c0c"/>
+    <ellipse cx="651" cy="267" rx="13" ry="18" fill="#d81818"/>
+    <ellipse cx="651" cy="260" rx="9" ry="7.5" fill="#f03030" opacity=".45"/>
+    <ellipse cx="651" cy="279" rx="5" ry="3.5" fill="#a01010" opacity=".55"/>
+    <line x1="651" y1="285" x2="651" y2="293" stroke="#580c0c" stroke-width="1.8"/>
+    <g stroke="white" stroke-width=".7" opacity=".18">
+      <line x1="641" y1="261" x2="641" y2="274"/><line x1="648" y1="258" x2="648" y2="276"/>
+    </g>
+  </g>
+  <g class="lanB">
+    <rect x="685" y="250" width="9" height="6" rx="2" fill="#580c0c"/>
+    <ellipse cx="689" cy="265" rx="13" ry="18" fill="#d81818"/>
+    <ellipse cx="689" cy="258" rx="9" ry="7.5" fill="#f03030" opacity=".45"/>
+    <ellipse cx="689" cy="277" rx="5" ry="3.5" fill="#a01010" opacity=".55"/>
+    <line x1="689" y1="283" x2="689" y2="291" stroke="#580c0c" stroke-width="1.8"/>
+  </g>
+  <g class="lanA">
+    <rect x="747" y="250" width="9" height="6" rx="2" fill="#580c0c"/>
+    <ellipse cx="751" cy="265" rx="13" ry="18" fill="#d81818"/>
+    <ellipse cx="751" cy="258" rx="9" ry="7.5" fill="#f03030" opacity=".45"/>
+    <ellipse cx="751" cy="277" rx="5" ry="3.5" fill="#a01010" opacity=".55"/>
+    <line x1="751" y1="283" x2="751" y2="291" stroke="#580c0c" stroke-width="1.8"/>
+  </g>
+  <g class="lanC">
+    <rect x="784" y="252" width="9" height="6" rx="2" fill="#580c0c"/>
+    <ellipse cx="788" cy="267" rx="13" ry="18" fill="#d81818"/>
+    <ellipse cx="788" cy="260" rx="9" ry="7.5" fill="#f03030" opacity=".45"/>
+    <ellipse cx="788" cy="279" rx="5" ry="3.5" fill="#a01010" opacity=".55"/>
+    <line x1="788" y1="285" x2="788" y2="293" stroke="#580c0c" stroke-width="1.8"/>
+  </g>
+  <!-- Kitchen smoke -->
+  <circle cx="732" cy="259" r="12" fill="#d0d0d0" class="sm1"/>
+  <circle cx="737" cy="244" r="9.5" fill="#c4c4c4" class="sm2"/>
+  <circle cx="733" cy="231" r="8" fill="#bbb" class="sm3"/>
+
+  <!-- Windows -->
+
+  <rect x="634" y="300" width="48" height="36" rx="6" fill="#bce0f6" filter="url(#sh)"/>
+  <rect x="634" y="300" width="48" height="36" rx="6" fill="none" stroke="#7ab0cc" stroke-width="1.8"/>
+  <line x1="658" y1="300" x2="658" y2="336" stroke="#7ab0cc" stroke-width="1.5"/>
+  <line x1="634" y1="317" x2="682" y2="317" stroke="#7ab0cc" stroke-width="1.5"/>
+  <rect x="637" y="303" width="13" height="13" rx="2" fill="white" opacity=".28"/>
+  <rect x="760" y="300" width="48" height="36" rx="6" fill="#bce0f6" filter="url(#sh)"/>
+  <rect x="760" y="300" width="48" height="36" rx="6" fill="none" stroke="#7ab0cc" stroke-width="1.8"/>
+  <line x1="784" y1="300" x2="784" y2="336" stroke="#7ab0cc" stroke-width="1.5"/>
+  <line x1="760" y1="317" x2="808" y2="317" stroke="#7ab0cc" stroke-width="1.5"/>
+  <rect x="763" y="303" width="13" height="13" rx="2" fill="white" opacity=".28"/>
+
+  <!-- Double doors -->
+
+  <rect x="684" y="326" width="76" height="50" rx="5.5" fill="#5a2e10"/>
+  <rect x="686" y="328" width="36" height="46" rx="4" fill="#6e3c1e"/>
+  <rect x="724" y="328" width="36" height="46" rx="4" fill="#6e3c1e"/>
+  <g stroke="#4a2010" stroke-width="1" opacity=".45">
+    <rect x="689" y="332" width="10" height="16" rx="2" fill="none"/>
+    <rect x="689" y="352" width="10" height="16" rx="2" fill="none"/>
+    <rect x="727" y="332" width="10" height="16" rx="2" fill="none"/>
+    <rect x="727" y="352" width="10" height="16" rx="2" fill="none"/>
+  </g>
+  <circle cx="722" cy="353" r="3.5" fill="#f0c040"/>
+  <circle cx="726" cy="353" r="3.5" fill="#f0c040"/>
+  <!-- Door mat -->
+  <rect x="692" y="372" width="60" height="7" rx="3" fill="#8a6030" opacity=".8"/>
+  </g><!-- /bldg -->
+
+  <!-- Label -->
+
+  <rect x="649" y="200" width="146" height="32" rx="16" fill="white" opacity=".95" filter="url(#sh)" class="lbl-badge"/>
+  <rect x="649" y="200" width="146" height="32" rx="16" fill="none" stroke="#c89060" stroke-width="2.2" class="lbl-badge"/>
+  <text x="722" y="221" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="14.5" fill="#5a1808" font-weight="800" class="lbl-badge">🍖 한담 BBQ</text>
+  <text x="722" y="186" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10" fill="rgba(200,100,40,.88)" font-weight="800" class="fb">탭해서 입장 ↓</text>
+</g><!-- /restaurant poi -->
+
+<!-- Village nameplate sign -->
+
+<g transform="translate(468,172)">
+  <rect x="-8" y="-4" width="16" height="58" rx="5" fill="#7a4e28"/>
+  <rect x="-8" y="-4" width="16" height="12" rx="4" fill="#9a6838" opacity=".45"/>
+  <rect x="-72" y="-28" width="144" height="38" rx="11" fill="#fef8d0" filter="url(#sh)"/>
+  <rect x="-72" y="-28" width="144" height="38" rx="11" fill="none" stroke="#d4b040" stroke-width="2.5"/>
+  <rect x="-68" y="-24" width="136" height="30" rx="9" fill="none" stroke="#f0c040" stroke-width=".9" opacity=".4"/>
+  <text x="0" y="-5" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="14" fill="#6a3a08" font-weight="800">🍃 하젤마을</text>
+</g>
+
+</svg>
+
+<div class="legend">
+  <strong>🗺️ 마을 안내판</strong>
+  🏠 집 탭 → 집 도면 → 방별 대시보드<br>
+  🍖 직장 탭 → 업무 대시보드 오픈
+</div>
+<div class="time-badge">🌤️ 맑음 · 봄</div>
+</div><!-- /village screen -->
+
+<!-- ═══════════════════════════════ HOUSE SCREEN ═══════════════════════════════ -->
+
+<div id="sh" class="screen gone">
+<div class="hs-hdr">
+  <button class="back" onclick="goVillage()">← 마을로</button>
+  <span class="hs-title">🏠 하젤네 집 — 인터랙티브 도면</span>
+  <span class="hs-hint">방마다 탭해보세요!</span>
+</div>
+
+<svg class="map" viewBox="0 0 940 535" preserveAspectRatio="xMidYMid meet" style="margin-top:48px;height:calc(100% - 48px)">
+<defs>
+  <filter id="rsh"><feDropShadow dx="1" dy="3" stdDeviation="3" flood-color="#281408" flood-opacity=".18"/></filter>
+  <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f5ede0"/><stop offset="100%" stop-color="#ede0cc"/>
+  </linearGradient>
+</defs>
+
+<!-- Outer shell with wood grain border -->
+
+<rect x="44" y="18" width="852" height="492" rx="16" fill="#d4c8b0" filter="url(#rsh)"/>
+<rect x="48" y="22" width="844" height="484" rx="14" fill="#c8bca4"/>
+<rect x="50" y="24" width="840" height="480" rx="12" fill="url(#floorG)"/>
+<!-- Corner pillars -->
+<rect x="50" y="24" width="20" height="480" rx="6" fill="#c8b898"/>
+<rect x="870" y="24" width="20" height="480" rx="6" fill="#b8a888"/>
+<rect x="50" y="24" width="840" height="20" rx="6" fill="#d4c8b0"/>
+<rect x="50" y="484" width="840" height="20" rx="6" fill="#c0b498"/>
+<!-- Roof ornament strip -->
+<rect x="48" y="22" width="844" height="28" rx="12" fill="#c4441c" opacity=".72"/>
+<text x="470" y="42" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="12" fill="#fef4d0" font-weight="800" opacity=".9">🏠 하젤네 집 · 클릭 가능한 인터랙티브 도면</text>
+
+<!-- Floor base -->
+
+<rect x="68" y="58" width="804" height="438" rx="8" fill="#faf5ea"/>
+<!-- Floor wood planks subtle -->
+<g stroke="#e8d8c0" stroke-width="1" opacity=".35">
+  <line x1="68" y1="108" x2="872" y2="108"/><line x1="68" y1="158" x2="872" y2="158"/>
+  <line x1="68" y1="208" x2="872" y2="208"/><line x1="68" y1="258" x2="872" y2="258"/>
+  <line x1="68" y1="308" x2="872" y2="308"/><line x1="68" y1="358" x2="872" y2="358"/>
+  <line x1="68" y1="408" x2="872" y2="408"/><line x1="68" y1="458" x2="872" y2="458"/>
+</g>
+
+<!-- ── WALLS ── -->
+
+<!-- Vertical center wall (between left 2 rooms and right 3) -->
+
+<rect x="330" y="58" width="11" height="438" fill="#c4b09a"/>
+<rect x="332" y="58" width="7" height="438" fill="#d8c4aa"/>
+<!-- Horizontal wall (between top and bottom zones) -->
+<rect x="68" y="270" width="804" height="10" fill="#c4b09a"/>
+<rect x="68" y="273" width="804" height="4" fill="#d8c4aa"/>
+<!-- Right zone vertical wall (bath / laundry) -->
+<rect x="614" y="280" width="10" height="216" fill="#c4b09a"/>
+<rect x="616" y="280" width="6" height="216" fill="#d8c4aa"/>
+<!-- Top right zone wall -->
+<rect x="614" y="58" width="10" height="212" fill="#c4b09a"/>
+<rect x="616" y="58" width="6" height="212" fill="#d8c4aa"/>
+
+<!-- ── DOORS ── -->
+
+<!-- Room ↔ Living: horizontal wall gap -->
+
+<rect x="174" y="268" width="62" height="12" rx="3" fill="#c4a868"/>
+<text x="205" y="278" text-anchor="middle" font-size="8" fill="white" font-family="'Baloo 2',sans-serif" font-weight="800">문</text>
+<!-- Room ↔ Study: vertical wall gap (top) -->
+<rect x="328" y="88" width="13" height="54" rx="3" fill="#c4a868"/>
+<text x="334" y="117" text-anchor="middle" font-size="8" fill="white" font-family="'Baloo 2',sans-serif" font-weight="800" writing-mode="tb">문</text>
+<!-- Living ↔ Kitchen: vertical wall gap (bottom) -->
+<rect x="328" y="330" width="13" height="54" rx="3" fill="#c4a868"/>
+<text x="334" y="360" text-anchor="middle" font-size="8" fill="white" font-family="'Baloo 2',sans-serif" font-weight="800" writing-mode="tb">문</text>
+<!-- Kitchen ↔ Bath: vertical wall gap -->
+<rect x="612" y="332" width="13" height="50" rx="3" fill="#c4a868"/>
+<text x="618" y="360" text-anchor="middle" font-size="8" fill="white" font-family="'Baloo 2',sans-serif" font-weight="800" writing-mode="tb">문</text>
+<!-- Study ↔ Livingroom top right: vertical wall gap -->
+<rect x="612" y="108" width="13" height="50" rx="3" fill="#c4a868"/>
+<text x="618" y="136" text-anchor="middle" font-size="8" fill="white" font-family="'Baloo 2',sans-serif" font-weight="800" writing-mode="tb">문</text>
+<!-- Front door (bottom) -->
+<rect x="240" y="492" width="68" height="10" rx="3" fill="#b05820"/>
+<text x="274" y="504" text-anchor="middle" font-size="11" fill="#7a3810" font-family="'Baloo 2',sans-serif" font-weight="800">🚪 현관</text>
+
+<!-- ══════════════ ROOM ZONES ══════════════ -->
+
+<!-- 방 (Bedroom) — top left -->
+
+<g class="rz" onclick="showRoom('방','🛏️','개인 대시보드','#8860cc',['🌙 수면 기록 & 기상 루틴','📔 감정 일기 & 하루 회고','✅ 습관 트래커','📚 독서 노트 & 위시리스트','🌸 월간 회고 & 초집중 챌린지'])">
+  <rect x="68" y="58" width="262" height="212" fill="#f0e8ff" opacity=".95"/>
+  <!-- Furniture hints: bed -->
+  <rect x="80" y="68" width="95" height="62" rx="7" fill="#d4c0f0" opacity=".62"/>
+  <rect x="80" y="68" width="95" height="18" rx="7" fill="#c0a8e8" opacity=".72"/>
+  <rect x="80" y="68" width="18" height="62" rx="5" fill="#c0a8e8" opacity=".65"/>
+  <rect x="157" y="68" width="18" height="62" rx="5" fill="#c0a8e8" opacity=".65"/>
+  <!-- Nightstand -->
+  <rect x="182" y="78" width="26" height="32" rx="4" fill="#d0b8f0" opacity=".52"/>
+  <circle cx="195" cy="90" r="5" fill="#f8f860" opacity=".8"/><!-- lamp -->
+  <!-- Wardrobe -->
+  <rect x="275" y="68" width="42" height="98" rx="5" fill="#c8b4e8" opacity=".58"/>
+  <line x1="296" y1="68" x2="296" y2="166" stroke="#b0a0d0" stroke-width="1.2" opacity=".6"/>
+  <circle cx="282" cy="120" r="3" fill="#e0c870" opacity=".8"/>
+  <circle cx="310" cy="120" r="3" fill="#e0c870" opacity=".8"/>
+  <!-- Plant -->
+  <circle cx="290" cy="192" r="16" fill="#72b850" opacity=".7"/>
+  <circle cx="285" cy="198" r="10" fill="#5aa438" opacity=".7"/>
+  <rect x="285" y="205" width="10" height="14" rx="3" fill="#a06840" opacity=".65"/>
+  <!-- Rug -->
+  <ellipse cx="152" cy="186" rx="60" ry="36" fill="#b898e8" opacity=".28"/>
+  <ellipse cx="152" cy="186" rx="60" ry="36" fill="none" stroke="#9880c8" stroke-width="1.5" opacity=".3"/>
+  <!-- Labels -->
+  <text x="182" y="225" text-anchor="middle" font-size="36">🛏️</text>
+  <text x="182" y="252" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="16" fill="#5030a0" font-weight="800">방</text>
+  <text x="182" y="268" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#7050b8" font-weight="700">개인 · 습관 · 일기</text>
+  <text x="182" y="282" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="9" fill="#b0a0cc" font-weight="700">클릭!</text>
+</g>
+
+<!-- 서재/책상 (Study) — top right (between vertical walls) -->
+
+<g class="rz" onclick="showRoom('서재 / 책상','💻','공부 & 집중 대시보드','#2878c8',['🔥 초집중 챌린지 트래커','📖 학습 노트 & 링크 보관','🧠 Hazel Check 프로젝트','💡 아이디어 뱅크','📅 주간 플래너 & 목표'])">
+  <rect x="341" y="58" width="273" height="212" fill="#e8f4ff" opacity=".95"/>
+  <!-- Desk -->
+  <rect x="355" y="68" width="238" height="56" rx="5" fill="#c4d8f0" opacity=".6"/>
+  <!-- Monitor -->
+  <rect x="440" y="72" width="88" height="48" rx="5" fill="#90b8e0" opacity=".65"/>
+  <rect x="444" y="76" width="80" height="40" rx="3" fill="#78a8d0" opacity=".7"/>
+  <rect x="458" y="76" width="52" height="28" rx="2" fill="#9fcfe8" opacity=".5"/><!-- screen glow -->
+  <rect x="479" y="120" width="12" height="8" rx="2" fill="#90b8e0" opacity=".6"/>
+  <!-- Keyboard / mouse -->
+  <rect x="440" y="126" width="60" height="12" rx="3" fill="#b0c8e0" opacity=".55"/>
+  <circle cx="524" cy="131" r="8" fill="#b0c8e0" opacity=".55"/>
+  <!-- Books -->
+  <rect x="356" y="72" width="78" height="84" rx="4" fill="#b8d0ec" opacity=".52"/>
+  <g opacity=".65">
+    <rect x="362" y="78" width="11" height="72" rx="2" fill="#e07858"/>
+    <rect x="375" y="78" width="13" height="72" rx="2" fill="#58a058"/>
+    <rect x="390" y="78" width="11" height="72" rx="2" fill="#8858c0"/>
+    <rect x="403" y="78" width="14" height="72" rx="2" fill="#4878c0"/>
+    <rect x="419" y="78" width="11" height="72" rx="2" fill="#c08040"/>
+  </g>
+  <!-- Desk lamp -->
+  <rect x="538" y="108" width="8" height="28" rx="4" fill="#c0c8d8" opacity=".65"/>
+  <ellipse cx="542" cy="100" rx="22" ry="10" fill="#f0e870" opacity=".65"/>
+  <!-- Chair (back) -->
+  <rect x="454" y="128" width="60" height="8" rx="4" fill="#c0d0e8" opacity=".55"/>
+  <!-- Labels -->
+  <text x="477" y="216" text-anchor="middle" font-size="32">💻</text>
+  <text x="477" y="244" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="15" fill="#1050a0" font-weight="800">서재 / 책상</text>
+  <text x="477" y="260" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#3068b8" font-weight="700">초집중 챌린지 · 학습</text>
+  <text x="477" y="274" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="9" fill="#90b0cc" font-weight="700">클릭!</text>
+</g>
+
+<!-- 드레스룸 / 공부방 — top far right -->
+
+<g class="rz" onclick="showRoom('드레스룸','👗','스타일 & 쇼핑 대시보드','#d05090',['👗 옷 인벤토리','🛍️ 쇼핑 위시리스트','💄 뷰티 & 스킨케어 루틴','📸 OOTD 기록','✨ 셀프케어 체크리스트'])">
+  <rect x="624" y="58" width="248" height="212" fill="#fff0f6" opacity=".95"/>
+  <!-- Closet rods -->
+  <rect x="636" y="70" width="224" height="100" rx="5" fill="#f0d8ec" opacity=".55"/>
+  <line x1="636" y1="80" x2="860" y2="80" stroke="#c8a0c0" stroke-width="2" opacity=".55"/>
+  <!-- Hangers (simplified) -->
+  <g stroke="#c090b8" stroke-width="1.2" opacity=".7">
+    <line x1="648" y1="80" x2="648" y2="155"/><line x1="668" y1="80" x2="668" y2="155"/>
+    <line x1="688" y1="80" x2="688" y2="155"/><line x1="708" y1="80" x2="708" y2="155"/>
+    <line x1="728" y1="80" x2="728" y2="155"/><line x1="748" y1="80" x2="748" y2="155"/>
+    <line x1="768" y1="80" x2="768" y2="155"/><line x1="788" y1="80" x2="788" y2="155"/>
+    <line x1="808" y1="80" x2="808" y2="155"/><line x1="828" y1="80" x2="828" y2="155"/>
+    <line x1="848" y1="80" x2="848" y2="155"/>
+  </g>
+  <!-- Clothes colors -->
+  <rect x="638" y="82" width="28" height="72" rx="5" fill="#f07898" opacity=".7"/>
+  <rect x="669" y="82" width="28" height="72" rx="5" fill="#78b8f8" opacity=".7"/>
+  <rect x="700" y="82" width="28" height="72" rx="5" fill="#f8e870" opacity=".7"/>
+  <rect x="731" y="82" width="28" height="72" rx="5" fill="#b870e8" opacity=".7"/>
+  <rect x="762" y="82" width="28" height="72" rx="5" fill="#70e890" opacity=".7"/>
+  <rect x="793" y="82" width="28" height="72" rx="5" fill="#f89858" opacity=".7"/>
+  <rect x="824" y="82" width="28" height="72" rx="5" fill="#c0c0f8" opacity=".7"/>
+  <!-- Mirror -->
+  <rect x="744" y="162" width="52" height="82" rx="8" fill="#d0ecf8" opacity=".72"/>
+  <rect x="744" y="162" width="52" height="82" rx="8" fill="none" stroke="#a0c0d8" stroke-width="1.5"/>
+  <ellipse cx="762" cy="178" rx="12" ry="18" fill="white" opacity=".18"/>
+  <!-- Vanity table -->
+  <rect x="636" y="170" width="100" height="58" rx="5" fill="#f0d8ec" opacity=".58"/>
+  <ellipse cx="686" cy="172" rx="30" ry="14" fill="#d8f0f8" opacity=".6"/><!-- mirror top -->
+  <!-- Labels -->
+  <text x="748" y="248" text-anchor="middle" font-size="30">👗</text>
+  <text x="748" y="274" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="15" fill="#902860" font-weight="800">드레스룸</text>
+  <text x="748" y="290" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#b84878" font-weight="700">스타일 · 쇼핑</text>
+  <text x="748" y="304" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="9" fill="#cca0b4" font-weight="700">클릭!</text>
+</g>
+
+<!-- 거실 (Living Room) — bottom left -->
+
+<g class="rz" onclick="showRoom('거실','🛋️','일상 & 삶 대시보드','#d08820',['🌈 버킷리스트 & 위시리스트','🎬 보고싶은 영화 & 드라마','✈️ 여행 계획 & 기록','💌 소중한 관계 노트','🎨 취미 & 즐길거리'])">
+  <rect x="68" y="280" width="262" height="216" fill="#fffaee" opacity=".95"/>
+  <!-- Sofa -->
+  <rect x="82" y="292" width="128" height="66" rx="8" fill="#f2d890" opacity=".7"/>
+  <rect x="82" y="292" width="128" height="20" rx="7" fill="#e8c870" opacity=".75"/>
+  <rect x="82" y="292" width="20" height="66" rx="6" fill="#e8c870" opacity=".72"/>
+  <rect x="190" y="292" width="20" height="66" rx="6" fill="#e8c870" opacity=".72"/>
+  <!-- Cushions -->
+  <rect x="106" y="298" width="30" height="24" rx="5" fill="#f87098" opacity=".65"/>
+  <rect x="144" y="298" width="30" height="24" rx="5" fill="#98d870" opacity=".65"/>
+  <rect x="168" y="300" width="24" height="20" rx="4" fill="#78b8f8" opacity=".6"/>
+  <!-- Coffee table -->
+  <rect x="96" y="364" width="88" height="50" rx="7" fill="#d8b860" opacity=".55"/>
+  <ellipse cx="102" cy="374" rx="6" ry="6" fill="#c0a030" opacity=".45"/>
+  <rect x="108" y="376" width="66" height="8" rx="3" fill="#c8a840" opacity=".45"/>
+  <!-- TV -->
+  <rect x="225" y="295" width="80" height="52" rx="5" fill="#3a3a3a" opacity=".72"/>
+  <rect x="228" y="298" width="74" height="46" rx="4" fill="#1a2a38" opacity=".8"/>
+  <rect x="240" y="308" width="50" height="30" rx="2" fill="#2a4a60" opacity=".65"/>
+  <rect x="252" y="344" width="14" height="6" rx="2" fill="#3a3a3a" opacity=".6"/>
+  <!-- Plant corner -->
+  <circle cx="294" cy="456" r="20" fill="#68b040" opacity=".72"/>
+  <circle cx="288" cy="462" r="13" fill="#529030" opacity=".72"/>
+  <rect x="284" y="470" width="12" height="18" rx="4" fill="#8a6040" opacity=".7"/>
+  <!-- Rug -->
+  <ellipse cx="168" cy="420" rx="78" ry="52" fill="#e8c840" opacity=".22"/>
+  <ellipse cx="168" cy="420" rx="78" ry="52" fill="none" stroke="#d0b030" stroke-width="2" opacity=".28"/>
+  <ellipse cx="168" cy="420" rx="58" ry="36" fill="none" stroke="#d0b030" stroke-width="1" opacity=".2"/>
+  <!-- Labels -->
+  <text x="190" y="430" text-anchor="middle" font-size="34">🛋️</text>
+  <text x="190" y="458" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="16" fill="#8a5808" font-weight="800">거실</text>
+  <text x="190" y="474" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#b07818" font-weight="700">일상 · 취미 · 관계</text>
+  <text x="190" y="488" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="9" fill="#c8aa68" font-weight="700">클릭!</text>
+</g>
+
+<!-- 주방 / 키친 (Kitchen) — bottom center -->
+
+<g class="rz" onclick="showRoom('키친','🍳','건강 & 루틴 대시보드','#289858',['🥗 식단 & 영양 기록','💪 운동 목표 & 기록','☀️ 아침 루틴 체크리스트','🌙 저녁 루틴 체크리스트','💊 영양제 & 건강 관리'])">
+  <rect x="341" y="280" width="273" height="216" fill="#f0fff6" opacity=".95"/>
+  <!-- Counter top L -->
+  <rect x="353" y="292" width="90" height="52" rx="6" fill="#b8e8c0" opacity=".65"/>
+  <!-- Sink -->
+  <rect x="360" y="298" width="50" height="34" rx="5" fill="#88c8d8" opacity=".75"/>
+  <circle cx="385" cy="315" r="8" fill="#68a8c0" opacity=".8"/>
+  <ellipse cx="385" cy="315" rx="5" ry="5" fill="#50a0b8" opacity=".6"/>
+  <rect x="383" y="296" width="4" height="7" rx="2" fill="#70a8c0" opacity=".7"/>
+  <!-- Stove / range right counter -->
+  <rect x="455" y="292" width="144" height="52" rx="6" fill="#c8d8c0" opacity=".62"/>
+  <rect x="462" y="298" width="60" height="40" rx="4" fill="#b8c8b0" opacity=".7"/>
+  <g>
+    <circle cx="476" cy="308" r="7.5" fill="#9ab0a0" opacity=".8"/><circle cx="476" cy="308" r="4.5" fill="#e85020" opacity=".65"/>
+    <circle cx="498" cy="308" r="7.5" fill="#9ab0a0" opacity=".8"/><circle cx="498" cy="308" r="4.5" fill="#e85020" opacity=".6"/>
+    <circle cx="476" cy="328" r="7.5" fill="#9ab0a0" opacity=".8"/><circle cx="476" cy="328" r="4.5" fill="#e85020" opacity=".55"/>
+    <circle cx="498" cy="328" r="7.5" fill="#9ab0a0" opacity=".8"/>
+  </g>
+  <!-- Oven -->
+  <rect x="530" y="298" width="62" height="40" rx="4" fill="#a8b8a0" opacity=".7"/>
+  <rect x="534" y="302" width="54" height="32" rx="3" fill="#8aa090" opacity=".6"/>
+  <rect x="540" y="308" width="42" height="20" rx="2" fill="#c8d8c0" opacity=".5"/><!-- oven window -->
+  <!-- Fridge -->
+  <rect x="337" y="280" width="5" height="216" fill="#c4b09a"/> <!-- This is the wall separator, not fridge, remove -->
+  <rect x="530" y="350" width="72" height="144" rx="6" fill="#d8e4d8" opacity=".72"/>
+  <rect x="534" y="354" width="64" height="66" rx="4" fill="#c8d8c8" opacity=".7"/>
+  <rect x="534" y="424" width="64" height="64" rx="4" fill="#c8d8c8" opacity=".65"/>
+  <line x1="566" y1="350" x2="566" y2="494" stroke="#b8c8b8" stroke-width="1.2" opacity=".55"/>
+  <circle cx="556" cy="390" r="3" fill="#c0d0c0" opacity=".7"/>
+  <circle cx="556" cy="455" r="3" fill="#c0d0c0" opacity=".7"/>
+  <!-- Island / kitchen table -->
+  <rect x="358" y="366" width="155" height="80" rx="7" fill="#d8f0d4" opacity=".68"/>
+  <!-- Bowls / food items on island -->
+  <ellipse cx="390" cy="398" rx="20" ry="12" fill="#f0e860" opacity=".7"/>
+  <ellipse cx="390" cy="395" rx="18" ry="10" fill="#f8f070" opacity=".65"/>
+  <ellipse cx="438" cy="404" rx="16" ry="9" fill="#f09860" opacity=".65"/>
+  <ellipse cx="478" cy="398" rx="12" ry="8" fill="#98d878" opacity=".65"/>
+  <!-- Labels -->
+  <text x="448" y="448" text-anchor="middle" font-size="32">🍳</text>
+  <text x="448" y="474" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="16" fill="#186838" font-weight="800">키친</text>
+  <text x="448" y="490" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#289858" font-weight="700">건강 · 식단 · 루틴</text>
+  <text x="448" y="504" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="9" fill="#88c8a0" font-weight="700">클릭!</text>
+</g>
+
+<!-- 화장실 (Bathroom) — bottom right -->
+
+<g class="rz" onclick="showRoom('화장실 & 욕실','🪴','셀프케어 & 웰니스 대시보드','#c04888',['💆 스킨케어 & 뷰티 루틴','🧘 명상 & 마인드풀니스','🌺 웰니스 체크인','🏃 운동 기록','✨ 나를 위한 메모'])">
+  <rect x="624" y="280" width="248" height="216" fill="#fff4f8" opacity=".95"/>
+  <!-- Bathtub -->
+  <rect x="636" y="298" width="108" height="56" rx="12" fill="#f0d8e8" opacity=".78"/>
+  <rect x="640" y="302" width="100" height="48" rx="10" fill="#e8c8dc" opacity=".72"/>
+  <ellipse cx="690" cy="312" rx="34" ry="14" fill="white" opacity=".22"/>
+  <!-- Faucet -->
+  <rect x="682" y="298" width="16" height="6" rx="3" fill="#c0b8d0" opacity=".75"/>
+  <rect x="688" y="295" width="4" height="8" rx="2" fill="#b0a8c0" opacity=".8"/>
+  <!-- Shower area -->
+  <rect x="752" y="292" width="108" height="100" rx="8" fill="#d8e8f0" opacity=".65"/>
+  <rect x="756" y="296" width="100" height="92" rx="6" fill="#c8dcea" opacity=".58"/>
+  <!-- Shower head -->
+  <circle cx="838" cy="304" r="10" fill="#b0c8e0" opacity=".7"/>
+  <circle cx="838" cy="304" r="7" fill="#a0b8d0" opacity=".72"/>
+  <g stroke="#90a8c0" stroke-width="1" opacity=".6">
+    <line x1="830" y1="314" x2="828" y2="322"/><line x1="834" y1="315" x2="833" y2="324"/>
+    <line x1="838" y1="315" x2="838" y2="324"/><line x1="842" y1="315" x2="843" y2="324"/>
+    <line x1="846" y1="314" x2="848" y2="322"/>
+  </g>
+  <!-- Sink small -->
+  <ellipse cx="690" cy="388" rx="28" ry="16" fill="#d8eef8" opacity=".75"/>
+  <ellipse cx="690" cy="386" rx="24" ry="13" fill="#c8e4f0" opacity=".7"/>
+  <circle cx="690" cy="384" r="6" fill="#88c0d8" opacity=".7"/>
+  <!-- Mirror above sink -->
+  <rect x="660" y="410" width="62" height="48" rx="6" fill="#d4ecf8" opacity=".78"/>
+  <rect x="660" y="410" width="62" height="48" rx="6" fill="none" stroke="#a0c0d8" stroke-width="1.5"/>
+  <ellipse cx="682" cy="424" rx="16" ry="22" fill="white" opacity=".16"/>
+  <!-- Toilet -->
+  <ellipse cx="810" cy="430" rx="28" ry="36" fill="#f0e8f0" opacity=".78"/>
+  <ellipse cx="810" cy="425" rx="24" ry="18" fill="#e8dce8" opacity=".72"/>
+  <rect x="786" y="390" width="48" height="20" rx="8" fill="#e4dce4" opacity=".75"/>
+  <!-- Plants -->
+  <circle cx="640" cy="460" r="18" fill="#72b050" opacity=".75"/>
+  <circle cx="635" cy="466" r="12" fill="#5a9838" opacity=".72"/>
+  <rect x="633" y="474" width="10" height="14" rx="4" fill="#8a5830" opacity=".7"/>
+  <!-- Labels -->
+  <text x="748" y="446" text-anchor="middle" font-size="30">🪴</text>
+  <text x="748" y="472" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="14" fill="#882040" font-weight="800">화장실 & 욕실</text>
+  <text x="748" y="488" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="10.5" fill="#c04878" font-weight="700">셀프케어 · 웰니스</text>
+  <text x="748" y="502" text-anchor="middle" font-family="'Baloo 2',sans-serif" font-size="9" fill="#d890b0" font-weight="700">클릭!</text>
+</g>
+
+<!-- Compass -->
+
+<g transform="translate(880,480)">
+  <circle r="22" fill="rgba(20,48,8,.75)" stroke="rgba(200,168,80,.35)" stroke-width="1.5"/>
+  <text y="-8" text-anchor="middle" font-size="9.5" fill="#e03030" font-family="'Baloo 2',sans-serif" font-weight="800">N</text>
+  <text y="12" text-anchor="middle" font-size="8.5" fill="rgba(255,245,180,.65)" font-family="'Baloo 2',sans-serif" font-weight="800">S</text>
+  <text x="-12" y="4.5" text-anchor="middle" font-size="8.5" fill="rgba(255,245,180,.65)" font-family="'Baloo 2',sans-serif" font-weight="800">W</text>
+  <text x="12" y="4.5" text-anchor="middle" font-size="8.5" fill="rgba(255,245,180,.65)" font-family="'Baloo 2',sans-serif" font-weight="800">E</text>
+  <polygon points="0,-14 3.5,0 0,5 -3.5,0" fill="#e03030"/>
+  <polygon points="0,14 3.5,0 0,5 -3.5,0" fill="rgba(255,245,180,.5)"/>
+</g>
+
+</svg>
+</div><!-- /house screen -->
+
+<!-- ═════════════════ OVERLAYS ═════════════════ -->
+
+<!-- Work overlay -->
+
+<div class="ov" id="wov" onclick="closeOv('wov')">
+  <div class="dlg" onclick="event.stopPropagation()">
+    <div class="dlg-hdr">
+      <span class="dlg-ico">🍖</span>
+      <div>
+        <div class="dlg-ttl">업무 대시보드</div>
+        <div class="dlg-sub">한담 BBQ 직장 클릭 → Notion 업무 허브로 이동<br>하젤 GM의 모든 업무가 여기서 관리됩니다</div>
+      </div>
+    </div>
+    <div class="dlg-body">
+      <div class="npage">
+        <div class="nphdr"><span class="nphdr-t">📌 한담 BBQ — 업무 홈</span></div>
+        <div class="ni"><span class="nd" style="background:#e04848"></span>📊 P&L 손익 관리 & 월간 분석</div>
+        <div class="ni"><span class="nd" style="background:#4888e0"></span>👥 직원 관리 · 스케줄 · 급여</div>
+        <div class="ni"><span class="nd" style="background:#48c068"></span>🛒 식재료 & 벤더 관계 관리</div>
+        <div class="ni"><span class="nd" style="background:#e0a028"></span>📋 업무 할 일 & 프로젝트 트래킹</div>
+        <div class="ni"><span class="nd" style="background:#c048c0"></span>📱 SNS & 콘텐츠 관리 (@dots__hazel)</div>
+        <div class="ni"><span class="nd" style="background:#e06828"></span>🤝 외부 파트너십 & 이벤트</div>
+        <div class="ni"><span class="nd" style="background:#2888c8"></span>📈 매장 KPI & 주간 리뷰</div>
+      </div>
+    </div>
+    <div class="dlg-ft"><button class="close-btn" onclick="closeOv('wov')">닫기 ✕</button></div>
+  </div>
+</div>
+
+<!-- Room overlay -->
+
+<div class="ov" id="rov" onclick="closeOv('rov')">
+  <div class="dlg" onclick="event.stopPropagation()">
+    <div class="dlg-hdr">
+      <span class="dlg-ico" id="rico">🛏️</span>
+      <div>
+        <div class="dlg-ttl" id="rttl">방</div>
+        <div class="dlg-sub" id="rsub">서브</div>
+      </div>
+    </div>
+    <div class="dlg-body">
+      <div class="npage">
+        <div class="nphdr"><span class="nphdr-t" id="rpttl">페이지</span></div>
+        <div id="ritems"></div>
+      </div>
+    </div>
+    <div class="dlg-ft"><button class="close-btn" onclick="closeOv('rov')">닫기 ✕</button></div>
+  </div>
+</div>
+
+<script>
+function enterHouse(){
+  document.getElementById('sv').classList.add('gone');
+  document.getElementById('sh').classList.remove('gone');
+}
+function goVillage(){
+  document.getElementById('sh').classList.add('gone');
+  document.getElementById('sv').classList.remove('gone');
+}
+function showWork(){
+  document.getElementById('wov').classList.add('show');
+}
+function showRoom(name,ico,dash,color,items){
+  document.getElementById('rico').textContent=ico;
+  document.getElementById('rttl').textContent=name+' → '+dash;
+  document.getElementById('rsub').textContent=name+' 탭 시 이 Notion 대시보드로 이동합니다';
+  document.getElementById('rpttl').textContent=ico+' '+dash;
+  const c=document.getElementById('ritems');
+  c.innerHTML='';
+  items.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='ni';
+    d.innerHTML=`<span class="nd" style="background:${color}"></span>${t}`;
+    c.appendChild(d);
+  });
+  document.getElementById('rov').classList.add('show');
+}
+function closeOv(id){document.getElementById(id).classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.ov').forEach(o=>o.classList.remove('show'))});
+</script>
+
+</div><!-- /wrap -->
+</body>
+</html>
