@@ -4,1280 +4,1131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌙 하젤마을</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<title>🗺️ 하젤마을 지도</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#080f28; --navy:#0d1a3e; --gold:#f0bc48; --gold2:#d9a030;
-  --red:#d93228; --lantern:#ff6830; --moon:#fef5cc; --teal:#52cfc0;
-  --cream:#fdf2dc; --mist:rgba(160,190,255,0.07);
+  --parch:#f4ead0; --parch2:#ede0bb; --parch3:#e5d4a4;
+  --ink:#3a2a10; --ink2:#5a3e1a; --ink3:#7a5828;
+  --red:#c2382a; --blue:#3a6090; --sage:#5a7a4a;
+  --rose:#c27858; --gold:#c89828;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#020810}
+html,body{width:100%;height:100%;overflow:hidden;background:#2a1e0a}
 body{font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center}
 
-/* ── FRAME ── */
+/* ── OUTER FRAME ── */
 .frame{
 position:relative;
 width:min(99vw,960px);height:min(97vh,590px);
-border-radius:22px;overflow:hidden;
+border-radius:6px;overflow:hidden;
 box-shadow:
-0 0 0 1px rgba(240,188,72,.28),
-0 0 0 5px rgba(8,15,40,.95),
-0 0 0 7px rgba(240,188,72,.2),
-0 0 0 10px rgba(8,15,40,.85),
-0 0 90px rgba(240,188,72,.1),
-0 50px 120px rgba(0,0,0,.85)
+0 0 0 3px #8a6020,
+0 0 0 8px #2a1e0a,
+0 0 0 12px #6a4810,
+0 0 0 18px #1a1006,
+0 40px 120px rgba(0,0,0,.8)
 }
 
-/* ── SCREENS ── */
-.screen{position:absolute;inset:0;transition:opacity .6s cubic-bezier(.4,0,.2,1),transform .6s cubic-bezier(.4,0,.2,1)}
-.screen.gone{opacity:0;transform:scale(.96) translateY(10px);pointer-events:none}
+.screen{position:absolute;inset:0;transition:opacity .55s ease,transform .55s ease}
+.screen.gone{opacity:0;transform:scale(.97);pointer-events:none}
 svg.sc{width:100%;height:100%;display:block}
 
-/* ── TITLE SCREEN ── */
-#s0{
-background:radial-gradient(ellipse 90% 80% at 50% 35%, #18296a 0%, #0d1a3e 45%, #060f22 100%);
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
-.t-moon{
-width:96px;height:96px;border-radius:50%;
-background:radial-gradient(circle at 33% 33%, #fffae0, #f5d558 55%, #c99818);
-box-shadow:0 0 0 2px rgba(240,188,72,.25),0 0 44px rgba(240,188,72,.52),0 0 100px rgba(240,188,72,.22);
-margin-bottom:30px;position:relative;
-animation:moonP 4.5s ease-in-out infinite
-}
-.t-moon::after{
-content:’’;position:absolute;top:13%;left:18%;
-width:30%;height:24%;border-radius:50%;
-background:rgba(255,255,255,.2);transform:rotate(-18deg)
-}
-@keyframes moonP{
-0%,100%{box-shadow:0 0 0 2px rgba(240,188,72,.25),0 0 44px rgba(240,188,72,.52),0 0 100px rgba(240,188,72,.2)}
-50%{box-shadow:0 0 0 3px rgba(240,188,72,.35),0 0 62px rgba(240,188,72,.68),0 0 130px rgba(240,188,72,.28)}
-}
-.t-kr{
-font-family:‘Cormorant Garamond’,serif;font-size:clamp(34px,5.8vw,56px);font-weight:700;
-color:var(–moon);letter-spacing:8px;
-text-shadow:0 0 50px rgba(240,188,72,.45),0 2px 4px rgba(0,0,0,.5);
-margin-bottom:9px;animation:fadeUp .9s cubic-bezier(.4,0,.2,1) both
-}
-.t-en{
-font-family:‘Cormorant Garamond’,serif;font-size:clamp(12px,1.8vw,16px);font-style:italic;
-color:rgba(240,215,130,.5);letter-spacing:9px;
-margin-bottom:48px;animation:fadeUp .9s .15s cubic-bezier(.4,0,.2,1) both
-}
-.t-btn{
-background:transparent;border:1px solid rgba(240,188,72,.45);border-radius:50px;
-padding:14px 46px;font-family:‘Cormorant Garamond’,serif;font-size:17px;font-weight:600;
-color:var(–gold);cursor:pointer;letter-spacing:2.5px;position:relative;overflow:hidden;
-transition:all .35s cubic-bezier(.34,1.56,.64,1);
-animation:fadeUp .9s .3s cubic-bezier(.4,0,.2,1) both
-}
-.t-btn::before{
-content:’’;position:absolute;inset:0;
-background:linear-gradient(135deg,rgba(240,188,72,.1),transparent);
-opacity:0;transition:opacity .3s
-}
-.t-btn:hover{border-color:rgba(240,188,72,.85);color:var(–moon);
-transform:scale(1.06);box-shadow:0 0 32px rgba(240,188,72,.28)}
-.t-btn:hover::before{opacity:1}
-.t-hint{font-size:11px;color:rgba(200,175,110,.35);margin-top:24px;letter-spacing:3px;
-animation:fadeUp .9s .45s cubic-bezier(.4,0,.2,1) both}
+/* ── SHARED: DECORATIVE BORDER WITHIN SVG ── */
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── NAVBARS ── */
-.vnav,.hnav{
-position:absolute;top:0;left:0;right:0;height:46px;z-index:50;
-display:flex;align-items:center;justify-content:space-between;padding:0 20px;
-}
-.vnav{background:linear-gradient(180deg,rgba(4,10,24,.88) 0%,transparent 100%);pointer-events:none}
-.hnav{
-background:linear-gradient(135deg,rgba(6,12,28,.96),rgba(8,16,36,.96));
-border-bottom:1px solid rgba(240,188,72,.14);pointer-events:auto
+/* ── NAV ── */
+.mapnav{
+position:absolute;top:10px;left:10px;right:10px;
+display:flex;align-items:center;justify-content:space-between;
+z-index:50;pointer-events:none
 }
 .nav-back{
 pointer-events:all;
-background:rgba(240,188,72,.09);border:1px solid rgba(240,188,72,.25);
-border-radius:50px;padding:5px 18px;cursor:pointer;
-font-family:‘Cormorant Garamond’,serif;font-size:13px;font-weight:600;
-color:rgba(240,212,130,.78);letter-spacing:1px;
-transition:all .25s;display:flex;align-items:center;gap:5px
+background:rgba(244,234,208,.88);border:1.5px solid #8a6020;
+border-radius:3px;padding:5px 16px;cursor:pointer;
+font-family:‘IM Fell English’,serif;font-size:13px;
+color:#3a2a10;letter-spacing:.5px;
+transition:all .2s;box-shadow:1px 2px 6px rgba(0,0,0,.25)
 }
-.nav-back:hover{background:rgba(240,188,72,.18);border-color:rgba(240,188,72,.55);color:var(–moon)}
-.nav-title{font-family:‘Cormorant Garamond’,serif;font-size:17px;font-weight:700;
-color:rgba(240,215,130,.88);letter-spacing:3px;
-text-shadow:0 0 24px rgba(240,188,72,.3);pointer-events:none}
-.nav-r{font-size:10px;color:rgba(200,175,110,.48);letter-spacing:1px;pointer-events:none}
+.nav-back:hover{background:var(–parch3);transform:translateY(-1px);box-shadow:2px 4px 10px rgba(0,0,0,.3)}
+.nav-title{
+font-family:‘Playfair Display’,serif;font-size:16px;font-weight:700;
+color:#3a2a10;letter-spacing:1px;pointer-events:none;
+text-shadow:1px 1px 0 rgba(244,234,208,.8)
+}
+
+/* ── POI hover ── */
+.poi{cursor:pointer}
+.poi .bld{transition:filter .25s}
+.poi:hover .bld{filter:brightness(1.06) drop-shadow(0 4px 14px rgba(58,42,16,.45)) drop-shadow(0 0 10px rgba(194,56,42,.3))}
+.poi .lbl{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.poi:hover .lbl{transform:translateY(-4px)}
+.rz{cursor:pointer}
+.rz .rfill{transition:opacity .2s}
+.rz:hover .rfill{opacity:.85}
+.rz:hover .rdeco{filter:brightness(1.08)}
 
 /* ── OVERLAY ── */
 .ov{
 position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;
-background:rgba(3,8,22,.75);backdrop-filter:blur(12px) saturate(1.2);
-opacity:0;pointer-events:none;transition:opacity .3s cubic-bezier(.4,0,.2,1)
+background:rgba(30,18,4,.62);backdrop-filter:blur(6px);
+opacity:0;pointer-events:none;transition:opacity .3s
 }
 .ov.show{opacity:1;pointer-events:all}
-.dlg{
-background:linear-gradient(155deg,#0d1d48 0%,#090f28 55%,#0a1530 100%);
-border:1px solid rgba(240,188,72,.2);border-radius:24px;
-max-width:415px;width:93%;overflow:hidden;max-height:88vh;overflow-y:auto;
+.scroll{
+background:var(–parch);
+border-radius:4px;max-width:420px;width:93%;overflow:hidden;max-height:88vh;overflow-y:auto;
 box-shadow:
-0 0 0 1px rgba(240,188,72,.09),
-inset 0 1px 0 rgba(240,188,72,.08),
-0 32px 90px rgba(0,0,0,.65),
-0 0 70px rgba(240,188,72,.08);
-transform:scale(.88) translateY(22px);
+0 0 0 1px #8a6020,0 0 0 5px rgba(42,30,10,.8),0 0 0 7px #6a4810,
+0 32px 80px rgba(0,0,0,.55);
+transform:scale(.88) translateY(24px);
 transition:transform .4s cubic-bezier(.34,1.56,.64,1)
 }
-.ov.show .dlg{transform:scale(1) translateY(0)}
-.dlg-hdr{
-padding:22px 24px 16px;display:flex;align-items:flex-start;gap:16px;
-border-bottom:1px solid rgba(240,188,72,.12);
-background:linear-gradient(135deg,rgba(240,188,72,.07),transparent)
+.ov.show .scroll{transform:scale(1) translateY(0)}
+/* Top torn-paper edge */
+.scroll-top{
+height:24px;background:var(–parch2);
+clip-path:polygon(0 100%,2% 60%,5% 80%,8% 40%,11% 70%,14% 50%,17% 80%,20% 55%,23% 75%,26% 45%,29% 70%,32% 50%,35% 78%,38% 52%,41% 72%,44% 48%,47% 70%,50% 50%,53% 75%,56% 48%,59% 68%,62% 44%,65% 72%,68% 50%,71% 74%,74% 46%,77% 68%,80% 50%,83% 74%,86% 52%,89% 70%,92% 46%,95% 68%,98% 52%,100% 65%,100% 100%);
 }
-.dlg-ico{font-size:40px;flex-shrink:0;filter:drop-shadow(0 0 14px rgba(240,188,72,.45))}
-.dlg-ttl{font-family:‘Cormorant Garamond’,serif;font-size:20px;font-weight:700;color:var(–moon);margin-bottom:5px;line-height:1.2}
-.dlg-sub{font-size:11px;color:rgba(195,178,125,.55);font-weight:300;line-height:1.7}
-.dlg-body{padding:16px 22px}
-.npage{background:rgba(255,255,255,.032);border-radius:14px;border:1px solid rgba(240,188,72,.12);overflow:hidden}
-.nphdr{background:linear-gradient(135deg,rgba(240,188,72,.12),rgba(240,188,72,.05));padding:11px 16px;border-bottom:1px solid rgba(240,188,72,.1)}
-.nphdr-t{font-family:‘Cormorant Garamond’,serif;font-size:13.5px;font-weight:600;color:var(–gold)}
-.ni{display:flex;align-items:center;gap:11px;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.042);
-font-size:12px;color:rgba(218,200,162,.8);cursor:default;transition:background .18s}
-.ni:last-child{border-bottom:none}
-.ni:hover{background:rgba(240,188,72,.055)}
-.nd{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 7px currentColor}
-.dlg-ft{padding:12px 22px 20px;display:flex;justify-content:center;border-top:1px solid rgba(240,188,72,.1)}
+.scroll-hdr{padding:14px 22px 12px;border-bottom:1px solid rgba(138,96,32,.3);display:flex;align-items:flex-start;gap:14px;
+background:linear-gradient(180deg,var(–parch2),var(–parch))}
+.scroll-ico{font-size:38px;flex-shrink:0}
+.scroll-ttl{font-family:‘Playfair Display’,serif;font-size:18px;font-weight:700;color:var(–ink);margin-bottom:3px}
+.scroll-sub{font-size:10.5px;color:var(–ink3);font-style:italic;line-height:1.6;font-family:‘IM Fell English’,serif}
+.scroll-body{padding:14px 20px}
+.mappage{background:rgba(255,255,255,.35);border-radius:3px;border:1px solid rgba(138,96,32,.3);overflow:hidden}
+.maphdr{background:linear-gradient(135deg,rgba(138,96,32,.14),rgba(138,96,32,.06));padding:9px 15px;border-bottom:1px solid rgba(138,96,32,.2)}
+.maphdr-t{font-family:‘Playfair Display’,serif;font-size:13px;font-weight:700;color:var(–ink)}
+.mi{display:flex;align-items:center;gap:11px;padding:8px 15px;border-bottom:1px solid rgba(138,96,32,.12);
+font-size:12px;color:var(–ink2);transition:background .15s}
+.mi:last-child{border-bottom:none}
+.mi:hover{background:rgba(138,96,32,.07)}
+.mdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.scroll-ft{padding:10px 20px 16px;display:flex;justify-content:center;border-top:1px solid rgba(138,96,32,.2)}
+/* Bottom torn edge */
+.scroll-bot{
+height:22px;background:var(–parch2);
+clip-path:polygon(0 0,2% 40%,5% 20%,8% 55%,11% 28%,14% 50%,17% 22%,20% 48%,23% 26%,26% 52%,29% 30%,32% 52%,35% 22%,38% 48%,41% 28%,44% 52%,47% 30%,50% 52%,53% 24%,56% 52%,59% 30%,62% 56%,65% 28%,68% 52%,71% 26%,74% 54%,77% 30%,80% 52%,83% 26%,86% 50%,89% 30%,92% 54%,95% 30%,98% 48%,100% 32%,100% 0);
+}
 .close-btn{
-background:transparent;border:1px solid rgba(240,188,72,.38);border-radius:50px;
-padding:9px 38px;font-family:‘Cormorant Garamond’,serif;font-weight:600;font-size:14px;
-color:var(–gold);cursor:pointer;letter-spacing:1.5px;
-transition:all .25s cubic-bezier(.34,1.56,.64,1)
+background:transparent;border:1.5px solid rgba(138,96,32,.55);border-radius:3px;
+padding:8px 34px;font-family:‘IM Fell English’,serif;font-size:14px;
+color:var(–ink2);cursor:pointer;letter-spacing:1px;transition:all .22s
 }
-.close-btn:hover{background:rgba(240,188,72,.12);border-color:var(–gold);color:var(–moon);transform:scale(1.04)}
-
-/* POI */
-.poi{cursor:pointer}
-.poi:hover .lbl-bg{fill:rgba(4,10,26,.95);stroke-opacity:.7}
-.poi:hover .lbl-txt{fill:rgba(255,248,210,.98)}
-.rz{cursor:pointer}
-.rz:hover .rf{opacity:.92}
-.rf{opacity:.7;transition:opacity .2s}
+.close-btn:hover{background:rgba(138,96,32,.1);border-color:var(–ink2);transform:scale(1.03)}
 
 /* Animations */
-@keyframes twinkle{0%,100%{opacity:.18;r:0.9}50%{opacity:1;r:2.2}}
-@keyframes twinkle2{0%,100%{opacity:.45}50%{opacity:.12}}
-@keyframes twinkle3{0%,100%{opacity:.08}50%{opacity:.88}}
-@keyframes lanSway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
-@keyframes lanSway2{0%,100%{transform:rotate(6deg)}50%{transform:rotate(-8deg)}}
-@keyframes lanSway3{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(9deg)}}
-@keyframes smokeUp{0%{opacity:.5;transform:translate(0,0) scale(.55)}100%{opacity:0;transform:translate(-2px,-38px) scale(1.7)}}
-@keyframes moonGlow{0%,100%{opacity:.28}50%{opacity:.52}}
-@keyframes shimmer{0%,100%{opacity:.1}50%{opacity:.36}}
-@keyframes firefly{
-0%{transform:translate(0,0);opacity:.1}
-20%{transform:translate(12px,-10px);opacity:.92}
-50%{transform:translate(24px,5px);opacity:.35}
-75%{transform:translate(8px,14px);opacity:.88}
-100%{transform:translate(0,0);opacity:.1}
-}
-@keyframes catBlink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
-@keyframes catTail{0%,100%{transform:rotate(-22deg)}50%{transform:rotate(20deg)}}
-@keyframes signBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes hintPulse{0%,100%{opacity:.42}50%{opacity:.72}}
+@keyframes flagWave{0%,100%{transform:skewX(0deg)}50%{transform:skewX(4deg)}}
+@keyframes smokeDrift{0%{opacity:.55;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(-3px,-30px) scale(1.6)}}
+@keyframes bobFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes stampAppear{0%{opacity:0;transform:scale(.6) rotate(-8deg)}100%{opacity:1;transform:scale(1) rotate(-5deg)}}
+@keyframes waterRipple{0%,100%{rx:12;opacity:.35}50%{rx:16;opacity:.55}}
+@keyframes treeSway{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
 
-.la{animation:lanSway  3.5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0%}
-.lb{animation:lanSway2 4.3s ease-in-out infinite .6s;transform-box:fill-box;transform-origin:50% 0%}
-.lc{animation:lanSway3 3s ease-in-out infinite 1.1s;transform-box:fill-box;transform-origin:50% 0%}
-.s1{animation:smokeUp 3.8s ease-out infinite}
-.s2{animation:smokeUp 3.8s ease-out infinite 1.3s}
-.s3{animation:smokeUp 3.8s ease-out infinite 2.6s}
-.mg{animation:moonGlow 5s ease-in-out infinite}
-.sh{animation:shimmer 3.4s ease-in-out infinite}
-.sh2{animation:shimmer 3.4s ease-in-out infinite 1.1s}
-.sh3{animation:shimmer 3.4s ease-in-out infinite 2.2s}
-.f1{animation:firefly 7s ease-in-out infinite}
-.f2{animation:firefly 9s ease-in-out infinite 2.1s}
-.f3{animation:firefly 6.5s ease-in-out infinite 3.8s}
-.f4{animation:firefly 8.5s ease-in-out infinite 1s}
-.f5{animation:firefly 10s ease-in-out infinite 4.5s}
-.sbob{animation:signBob 3.2s ease-in-out infinite}
-.hint{animation:hintPulse 2.4s ease-in-out infinite}
+.fw{animation:flagWave 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:0% 50%}
+.sm{animation:smokeDrift 3.5s ease-out infinite}
+.sm2{animation:smokeDrift 3.5s ease-out infinite 1.2s}
+.sm3{animation:smokeDrift 3.5s ease-out infinite 2.4s}
+.bob{animation:bobFloat 3s ease-in-out infinite}
+.bob2{animation:bobFloat 3.8s ease-in-out infinite .7s}
+.stamp{animation:stampAppear .6s cubic-bezier(.34,1.56,.64,1) .3s both}
+.wr{animation:waterRipple 2.8s ease-in-out infinite}
+.wr2{animation:waterRipple 2.8s ease-in-out infinite .9s}
+.wr3{animation:waterRipple 2.8s ease-in-out infinite 1.8s}
+.ts{animation:treeSway 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.ts2{animation:treeSway 4s ease-in-out infinite .8s;transform-box:fill-box;transform-origin:50% 100%}
 </style>
 
 </head>
 <body>
 <div class="frame">
 
-<!-- ══════════════════ TITLE ══════════════════ -->
+<!-- ═══════════════ VILLAGE MAP ═══════════════ -->
 
-<div id="s0" class="screen">
-  <!-- Starfield -->
-  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 960 590" preserveAspectRatio="xMidYMid slice">
-    <defs>
-      <radialGradient id="tBg" cx="50%" cy="35%" r="70%">
-        <stop offset="0%" stop-color="#18296a"/><stop offset="100%" stop-color="#060f22"/>
-      </radialGradient>
-    </defs>
-    <rect width="960" height="590" fill="url(#tBg)"/>
-    <!-- Stars with individual twinkle -->
-    <circle cx="62"  cy="48"  r="1.6" fill="#fffae0" style="animation:twinkle  2.9s ease-in-out infinite"/>
-    <circle cx="188" cy="31"  r="2.1" fill="#fff5c8" style="animation:twinkle  4.2s ease-in-out infinite .9s"/>
-    <circle cx="384" cy="19"  r="1.3" fill="white"   style="animation:twinkle3 3.6s ease-in-out infinite 1.5s"/>
-    <circle cx="558" cy="37"  r="1.9" fill="#fffae0" style="animation:twinkle  2.4s ease-in-out infinite 2.1s"/>
-    <circle cx="706" cy="25"  r="1.6" fill="white"   style="animation:twinkle2 3.8s ease-in-out infinite .4s"/>
-    <circle cx="874" cy="49"  r="1.8" fill="#fff5c8" style="animation:twinkle  5s   ease-in-out infinite 1.3s"/>
-    <circle cx="130" cy="116" r="1.2" fill="white"   style="animation:twinkle3 3.2s ease-in-out infinite .2s"/>
-    <circle cx="314" cy="80"  r="1.4" fill="#fffae0" style="animation:twinkle  2.8s ease-in-out infinite 1.9s"/>
-    <circle cx="812" cy="99"  r="1.2" fill="white"   style="animation:twinkle2 4s   ease-in-out infinite 2.5s"/>
-    <circle cx="470" cy="62"  r="1"   fill="white"   style="animation:twinkle3 3s   ease-in-out infinite .8s"/>
-    <circle cx="44"  cy="148" r=".8"  fill="rgba(255,248,220,.5)" style="animation:twinkle2 3.5s ease-in-out infinite"/>
-    <circle cx="242" cy="44"  r=".7"  fill="rgba(255,248,220,.45)" style="animation:twinkle  2.6s ease-in-out infinite 1.7s"/>
-    <circle cx="638" cy="68"  r=".7"  fill="rgba(255,248,220,.48)" style="animation:twinkle3 4.4s ease-in-out infinite .6s"/>
-    <circle cx="914" cy="126" r=".8"  fill="rgba(255,248,220,.4)" style="animation:twinkle2 3.1s ease-in-out infinite 1.2s"/>
-    <circle cx="422" cy="128" r=".6"  fill="rgba(255,248,220,.42)" style="animation:twinkle  2.9s ease-in-out infinite 2.3s"/>
-    <circle cx="752" cy="156" r=".7"  fill="rgba(255,248,220,.45)" style="animation:twinkle3 3.8s ease-in-out infinite .3s"/>
-    <circle cx="92"  cy="190" r=".6"  fill="rgba(255,248,220,.38)" style="animation:twinkle2 4.5s ease-in-out infinite 1.6s"/>
-    <circle cx="510" cy="52"  r=".65" fill="rgba(255,248,220,.4)" style="animation:twinkle  3.3s ease-in-out infinite 2.8s"/>
-    <circle cx="344" cy="108" r=".6"  fill="rgba(255,248,220,.38)" style="animation:twinkle3 2.7s ease-in-out infinite .7s"/>
-    <circle cx="664" cy="40"  r=".75" fill="rgba(255,248,220,.42)" style="animation:twinkle2 4.8s ease-in-out infinite 1.1s"/>
-    <!-- Crescent moon (decorative title bg) -->
-    <circle cx="826" cy="68" r="62" fill="rgba(240,190,72,.14)" class="mg"/>
-    <circle cx="826" cy="68" r="44" fill="rgba(240,190,72,.22)" class="mg" style="animation-delay:.8s"/>
-    <circle cx="826" cy="68" r="28" fill="#f8e068"/>
-    <circle cx="815" cy="60" r="24" fill="#0e1d45"/>
-    <circle cx="826" cy="68" r="7" fill="#f8e068" opacity=".38"/>
-    <!-- Shooting star -->
-    <line x1="282" y1="86" x2="208" y2="152" stroke="white" stroke-width="1.4" stroke-linecap="round" style="animation:twinkle2 5.5s ease-in-out infinite 1.2s"/>
-    <circle cx="282" cy="86" r="2.2" fill="white" style="animation:twinkle2 5.5s ease-in-out infinite 1.2s"/>
-    <!-- Torii gate bottom silhouette -->
-    <g fill="#04091a" opacity=".92">
-      <rect x="392" y="372" width="176" height="7" rx="3.5"/>
-      <rect x="386" y="390" width="188" height="5.5" rx="2.5"/>
-      <rect x="408" y="395" width="17" height="195"/>
-      <rect x="535" y="395" width="17" height="195"/>
-    </g>
-    <!-- Tree silhouettes -->
-    <path d="M0,480 Q50,438 90,458 Q120,436 152,452 Q182,428 218,446 Q252,420 292,440 L292,590 L0,590Z" fill="#030a1a"/>
-    <path d="M668,500 Q710,458 748,476 Q780,446 816,464 Q848,436 884,456 Q918,438 960,460 L960,590 L668,590Z" fill="#030a1a"/>
-  </svg>
-
-  <div class="t-moon"></div>
-  <div class="t-kr">하 젤 마 을</div>
-  <div class="t-en">Hazel Village · 달빛 야경</div>
-  <button class="t-btn" onclick="go('s0','s1')">✦ 마을 입장하기 ✦</button>
-  <div class="t-hint">🏠 집 &nbsp;·&nbsp; 🍖 K BBQ &nbsp;·&nbsp; 🌙 밤의 마을</div>
-</div>
-
-<!-- ══════════════════ VILLAGE ══════════════════ -->
-
-<div id="s1" class="screen gone">
+<div id="s1" class="screen">
 <svg class="sc" viewBox="0 0 960 590" preserveAspectRatio="xMidYMid slice">
 <defs>
-  <radialGradient id="vBg" cx="50%" cy="8%" r="88%">
-    <stop offset="0%" stop-color="#1a2a68"/><stop offset="52%" stop-color="#0c1838"/><stop offset="100%" stop-color="#050d1c"/>
+  <!-- Parchment texture using feTurbulence -->
+  <filter id="parch">
+    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+    <feBlend in="SourceGraphic" in2="grey" mode="multiply" result="blend"/>
+    <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="inkBleed">
+    <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="2" seed="2" result="t"/>
+    <feDisplacementMap in="SourceGraphic" in2="t" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="softDrop">
+    <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#3a2a10" flood-opacity=".28"/>
+  </filter>
+  <filter id="heavyDrop">
+    <feDropShadow dx="3" dy="7" stdDeviation="9" flood-color="#3a2a10" flood-opacity=".38"/>
+  </filter>
+  <filter id="wc">
+    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="4" seed="8" result="t"/>
+    <feDisplacementMap in="SourceGraphic" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+  <!-- Watercolour blobs (rough edges) -->
+
+  <radialGradient id="wcGreen" cx="50%" cy="48%">
+    <stop offset="0%" stop-color="#7aaa5a" stop-opacity=".55"/>
+    <stop offset="60%" stop-color="#5a8a3a" stop-opacity=".38"/>
+    <stop offset="100%" stop-color="#3a6a1a" stop-opacity="0"/>
   </radialGradient>
-  <radialGradient id="moonH" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#f0bc48" stop-opacity=".48"/>
-    <stop offset="40%" stop-color="#f0bc48" stop-opacity=".18"/>
-    <stop offset="100%" stop-color="#f0bc48" stop-opacity="0"/>
+  <radialGradient id="wcBlue" cx="48%" cy="44%">
+    <stop offset="0%" stop-color="#7aaccc" stop-opacity=".6"/>
+    <stop offset="55%" stop-color="#4a80a8" stop-opacity=".45"/>
+    <stop offset="100%" stop-color="#2a5880" stop-opacity="0"/>
   </radialGradient>
-  <radialGradient id="pondR" cx="38%" cy="30%">
-    <stop offset="0%" stop-color="#182e5c"/><stop offset="100%" stop-color="#060e20"/>
+  <radialGradient id="wcRose" cx="50%" cy="48%">
+    <stop offset="0%" stop-color="#d89870" stop-opacity=".55"/>
+    <stop offset="55%" stop-color="#b87850" stop-opacity=".4"/>
+    <stop offset="100%" stop-color="#906040" stop-opacity="0"/>
   </radialGradient>
-  <radialGradient id="winR" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#f5c058" stop-opacity=".55"/>
-    <stop offset="100%" stop-color="#f5a020" stop-opacity="0"/>
+  <radialGradient id="wcSage" cx="50%" cy="50%">
+    <stop offset="0%" stop-color="#8aaa6a" stop-opacity=".5"/>
+    <stop offset="100%" stop-color="#5a8a3a" stop-opacity="0"/>
   </radialGradient>
-  <radialGradient id="lanR" cx="50%" cy="28%" r="52%">
-    <stop offset="0%" stop-color="#ff6020" stop-opacity=".65"/>
-    <stop offset="100%" stop-color="#ff6020" stop-opacity="0"/>
+  <radialGradient id="wcGold" cx="50%" cy="50%">
+    <stop offset="0%" stop-color="#c8a838" stop-opacity=".45"/>
+    <stop offset="100%" stop-color="#a88018" stop-opacity="0"/>
   </radialGradient>
-  <filter id="g4"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  <filter id="g8"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  <filter id="g2"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-  <filter id="drop"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity=".52"/></filter>
-  <filter id="drop2"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#000" flood-opacity=".4"/></filter>
+  <pattern id="crosshatch" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+    <line x1="0" y1="0" x2="8" y2="8" stroke="#3a2a10" stroke-width=".4" opacity=".2"/>
+    <line x1="8" y1="0" x2="0" y2="8" stroke="#3a2a10" stroke-width=".4" opacity=".18"/>
+  </pattern>
+  <pattern id="dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+    <circle cx="5" cy="5" r=".9" fill="#3a2a10" opacity=".22"/>
+  </pattern>
 </defs>
 
-<!-- SKY -->
+<!-- ── PARCHMENT BASE ── -->
 
-<rect width="960" height="590" fill="url(#vBg)"/>
+<rect width="960" height="590" fill="#f0e4c0"/>
+<rect width="960" height="590" fill="#ede0b5" filter="url(#parch)" opacity=".7"/>
+<!-- Aged vignette corners -->
+<radialGradient id="vig" cx="50%" cy="50%" r="70%">
+  <stop offset="55%" stop-color="transparent"/>
+  <stop offset="100%" stop-color="rgba(80,52,8,.32)"/>
+</radialGradient>
+<rect width="960" height="590" fill="url(#vig)"/>
+<!-- Stain patches (authentic aging) -->
+<ellipse cx="82"  cy="74"  rx="55" ry="40" fill="#c8a838" opacity=".07"/>
+<ellipse cx="860" cy="510" rx="65" ry="48" fill="#a87818" opacity=".08"/>
+<ellipse cx="480" cy="300" rx="200" ry="160" fill="#c8a838" opacity=".04"/>
+<ellipse cx="120" cy="480" rx="70" ry="50" fill="#8a6020" opacity=".06"/>
+<ellipse cx="840" cy="100" rx="60" ry="44" fill="#8a6020" opacity=".06"/>
 
-<!-- Stars (same as title but adjusted) -->
+<!-- ── ORNATE BORDER ── -->
 
-<circle cx="60"  cy="45"  r="1.7" fill="#fffae0" style="animation:twinkle  3s ease-in-out infinite"/>
-<circle cx="184" cy="29"  r="2"   fill="#fff5c8" style="animation:twinkle  4.4s ease-in-out infinite .8s"/>
-<circle cx="378" cy="18"  r="1.3" fill="white"   style="animation:twinkle3 3.7s ease-in-out infinite 1.4s"/>
-<circle cx="552" cy="36"  r="1.9" fill="#fffae0" style="animation:twinkle  2.5s ease-in-out infinite 2s"/>
-<circle cx="700" cy="24"  r="1.5" fill="white"   style="animation:twinkle2 3.9s ease-in-out infinite .3s"/>
-<circle cx="870" cy="48"  r="1.8" fill="#fff5c8" style="animation:twinkle  5.2s ease-in-out infinite 1.2s"/>
-<circle cx="128" cy="112" r="1.2" fill="white"   style="animation:twinkle3 3.3s ease-in-out infinite .1s"/>
-<circle cx="310" cy="78"  r="1.4" fill="#fffae0" style="animation:twinkle  2.9s ease-in-out infinite 1.8s"/>
-<circle cx="808" cy="96"  r="1.2" fill="white"   style="animation:twinkle2 4.1s ease-in-out infinite 2.4s"/>
-<circle cx="466" cy="60"  r="1"   fill="white"   style="animation:twinkle3 3.1s ease-in-out infinite .7s"/>
-<circle cx="242" cy="43"  r=".7"  fill="rgba(255,248,220,.44)" style="animation:twinkle  2.7s ease-in-out infinite 1.6s"/>
-<circle cx="634" cy="67"  r=".7"  fill="rgba(255,248,220,.47)" style="animation:twinkle3 4.5s ease-in-out infinite .5s"/>
-<circle cx="752" cy="154" r=".65" fill="rgba(255,248,220,.44)" style="animation:twinkle2 3.7s ease-in-out infinite .2s"/>
-<circle cx="344" cy="106" r=".6"  fill="rgba(255,248,220,.37)" style="animation:twinkle3 2.8s ease-in-out infinite .6s"/>
-<circle cx="660" cy="39"  r=".72" fill="rgba(255,248,220,.41)" style="animation:twinkle2 4.9s ease-in-out infinite 1s"/>
+<!-- Outer ruled line -->
 
-<!-- Moon + halo -->
-
-<circle cx="856" cy="72" r="70" fill="url(#moonH)" class="mg"/>
-<circle cx="856" cy="72" r="48" fill="url(#moonH)" opacity=".65" class="mg" style="animation-delay:.9s"/>
-<circle cx="856" cy="72" r="29" fill="#fae968" filter="url(#g4)"/>
-<circle cx="856" cy="72" r="27" fill="#fdf2a0"/>
-<circle cx="845" cy="63" r="24" fill="#0c1838" opacity=".74"/>
-<circle cx="856" cy="72" r="5"  fill="#fdf2a0" opacity=".38"/>
-<!-- Shooting star -->
-<line x1="278" y1="84" x2="205" y2="150" stroke="white" stroke-width="1.4" stroke-linecap="round" style="animation:twinkle2 6s ease-in-out infinite 1.3s"/>
-<circle cx="278" cy="84" r="2.2" fill="white" style="animation:twinkle2 6s ease-in-out infinite 1.3s"/>
-
-<!-- Distant ridge / horizon glow -->
-
-<path d="M0,228 Q200,195 380,216 Q520,188 680,208 Q820,180 960,210 L960,242 L0,242Z" fill="#070e20"/>
-<!-- Atmosphere ground-sky blend -->
-<rect y="196" width="960" height="394" fill="#050c1a"/>
-
-<!-- Tree silhouettes (background, dark) -->
-
-<g fill="#060e22">
-  <path d="M30,238 L40,186 L50,238Z"/><rect x="38" y="235" width="4" height="9" rx="1"/>
-  <path d="M54,232 L67,166 L80,232Z"/><rect x="63" y="228" width="5" height="10" rx="1"/>
-  <path d="M22,240 L32,195 L42,240Z"/>
-  <path d="M112,236 L124,186 L136,236Z"/><rect x="121" y="232" width="4" height="8" rx="1"/>
-  <path d="M138,232 L152,175 L166,232Z"/><rect x="148" y="228" width="5" height="10" rx="1"/>
-  <path d="M106,240 L117,198 L128,240Z"/>
-  <path d="M808,232 L821,180 L834,232Z"/><rect x="818" y="228" width="5" height="8" rx="1"/>
-  <path d="M834,230 L848,172 L862,230Z"/><rect x="844" y="226" width="5" height="10" rx="1"/>
-  <path d="M858,234 L869,194 L880,234Z"/>
-  <path d="M892,232 L904,184 L916,232Z"/><rect x="902" y="228" width="4" height="9" rx="1"/>
-  <path d="M918,228 L930,190 L942,228Z"/>
-  <path d="M256,234 L272,172 L288,234Z" fill="#070f24"/>
-  <path d="M278,230 L295,178 L312,230Z" fill="#070f24"/>
-  <path d="M655,232 L670,175 L685,232Z" fill="#070f24"/>
-  <path d="M682,230 L698,182 L714,230Z" fill="#070f24"/>
+<rect x="14" y="14" width="932" height="562" fill="none" stroke="#3a2a10" stroke-width="3" rx="2"/>
+<!-- Inner ruled line -->
+<rect x="20" y="20" width="920" height="550" fill="none" stroke="#3a2a10" stroke-width="1.2" rx="1"/>
+<!-- Corner ornaments (cross-hatched squares) -->
+<g fill="url(#crosshatch)" stroke="#3a2a10" stroke-width="1">
+  <rect x="14" y="14" width="24" height="24" rx="1"/>
+  <rect x="922" y="14" width="24" height="24" rx="1"/>
+  <rect x="14" y="552" width="24" height="24" rx="1"/>
+  <rect x="922" y="552" width="24" height="24" rx="1"/>
+</g>
+<!-- Corner stars -->
+<g fill="#3a2a10" font-size="12">
+  <text x="26" y="29" text-anchor="middle">✦</text>
+  <text x="934" y="29" text-anchor="middle">✦</text>
+  <text x="26" y="570" text-anchor="middle">✦</text>
+  <text x="934" y="570" text-anchor="middle">✦</text>
+</g>
+<!-- Border mid ornaments -->
+<g fill="#3a2a10" font-size="10" opacity=".55">
+  <text x="480" y="28" text-anchor="middle">· · · ✦ · · ·</text>
+  <text x="480" y="578" text-anchor="middle">· · · ✦ · · ·</text>
+  <text x="26" y="300" text-anchor="middle" writing-mode="tb">· ✦ ·</text>
+  <text x="940" y="300" text-anchor="middle" writing-mode="tb">· ✦ ·</text>
 </g>
 
-<!-- Ground tone -->
+<!-- ── MAP TITLE HEADER ── -->
 
-<rect y="225" width="960" height="365" fill="#040c1a"/>
-<rect y="225" width="960" height="365" fill="rgba(14,26,60,.4)"/>
+<rect x="300" y="26" width="360" height="42" rx="3" fill="rgba(244,234,208,.7)"/>
+<rect x="300" y="26" width="360" height="42" rx="3" fill="none" stroke="#3a2a10" stroke-width="1.5"/>
+<text x="480" y="43" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" fill="#3a2a10" font-weight="400" letter-spacing="4" opacity=".65">ILLUSTRATED MAP OF</text>
+<text x="480" y="61" text-anchor="middle" font-family="'Playfair Display',serif" font-size="19" fill="#3a2a10" font-weight="900" letter-spacing="6">하 젤 마 을</text>
 
-<!-- ══ STONE LANTERN PATH ══ -->
+<!-- ── TERRAIN: WATERCOLOUR WASHES ── -->
 
-<!-- Path bed: subtle warm stone -->
+<!-- Green field (left lower) -->
 
-<path d="M252,524 C338,502 428,468 524,440 C602,418 678,404 750,396" fill="none" stroke="#0e0c08" stroke-width="50" stroke-linecap="round"/>
-<path d="M252,520 C338,498 428,464 524,436 C602,414 678,400 750,392" fill="none" stroke="#161208" stroke-width="42" stroke-linecap="round"/>
-<path d="M252,520 C338,498 428,464 524,436 C602,414 678,400 750,392" fill="none" stroke="#1e1a10" stroke-width="30" stroke-linecap="round" opacity=".5"/>
-<!-- Stone slab cracks/joints -->
-<path d="M252,520 C338,498 428,464 524,436 C602,414 678,400 750,392" fill="none" stroke="#2a2416" stroke-width="2" stroke-dasharray="20 14" stroke-linecap="round" opacity=".45"/>
-<!-- Warm glow cast by lanterns on path -->
-<path d="M252,520 C338,498 428,464 524,436 C602,414 678,400 750,392" fill="none" stroke="#f5a030" stroke-width="26" stroke-linecap="round" opacity=".035"/>
+<ellipse cx="185" cy="390" rx="185" ry="140" fill="url(#wcGreen)" filter="url(#wc)"/>
+<ellipse cx="195" cy="395" rx="175" ry="130" fill="url(#wcGreen)" opacity=".45" filter="url(#wc)"/>
+<!-- Green field (right middle) -->
+<ellipse cx="760" cy="380" rx="165" ry="128" fill="url(#wcGreen)" filter="url(#wc)"/>
+<ellipse cx="750" cy="385" rx="148" ry="118" fill="url(#wcGreen)" opacity=".4" filter="url(#wc)"/>
+<!-- Rose/terracotta zone (centre-right top) -->
+<ellipse cx="690" cy="180" rx="160" ry="115" fill="url(#wcRose)" filter="url(#wc)"/>
+<!-- Sage zone (centre path area) -->
+<ellipse cx="440" cy="380" rx="130" ry="100" fill="url(#wcSage)" filter="url(#wc)" opacity=".55"/>
 
-<!-- Stone lanterns (6 along path) -->
+<!-- ── CONTOUR LINES (topographic) ── -->
 
-<!-- Each: glow pool → post → cap → cap2 → light orb → halo -->
-
-<!-- 1 -->
-
-<ellipse cx="278" cy="502" rx="32" ry="16" fill="#f5a030" opacity=".09" class="sh"/>
-<rect x="274" y="494" width="8" height="15" rx="2" fill="#221e14"/>
-<rect x="269" y="490" width="18" height="7" rx="2" fill="#1c1810"/>
-<rect x="267" y="484" width="22" height="9" rx="3.5" fill="#161410"/>
-<rect x="271" y="481" width="14" height="5" rx="1.5" fill="#120e0c"/>
-<circle cx="278" cy="493" r="5.5" fill="#f5cc5a" opacity=".88" filter="url(#g2)"/>
-<ellipse cx="278" cy="493" rx="20" ry="11" fill="#f5a030" opacity=".12"/>
-<!-- 2 -->
-<ellipse cx="344" cy="484" rx="30" ry="15" fill="#f5a030" opacity=".09" class="sh2"/>
-<rect x="340" y="476" width="8" height="15" rx="2" fill="#221e14"/>
-<rect x="335" y="472" width="18" height="7" rx="2" fill="#1c1810"/>
-<rect x="333" y="466" width="22" height="9" rx="3.5" fill="#161410"/>
-<rect x="337" y="463" width="14" height="5" rx="1.5" fill="#120e0c"/>
-<circle cx="344" cy="475" r="5.5" fill="#f5cc5a" opacity=".85" filter="url(#g2)"/>
-<!-- 3 -->
-<ellipse cx="416" cy="462" rx="30" ry="14" fill="#f5a030" opacity=".09" class="sh3"/>
-<rect x="412" y="454" width="8" height="15" rx="2" fill="#221e14"/>
-<rect x="407" y="450" width="18" height="7" rx="2" fill="#1c1810"/>
-<rect x="405" y="444" width="22" height="9" rx="3.5" fill="#161410"/>
-<rect x="409" y="441" width="14" height="5" rx="1.5" fill="#120e0c"/>
-<circle cx="416" cy="453" r="5.5" fill="#f5cc5a" opacity=".82" filter="url(#g2)"/>
-<!-- 4 -->
-<ellipse cx="496" cy="440" rx="30" ry="14" fill="#f5a030" opacity=".09" class="sh"/>
-<rect x="492" y="432" width="8" height="15" rx="2" fill="#221e14"/>
-<rect x="487" y="428" width="18" height="7" rx="2" fill="#1c1810"/>
-<rect x="485" y="422" width="22" height="9" rx="3.5" fill="#161410"/>
-<rect x="489" y="419" width="14" height="5" rx="1.5" fill="#120e0c"/>
-<circle cx="496" cy="431" r="5.5" fill="#f5cc5a" opacity=".8" filter="url(#g2)"/>
-<!-- 5 -->
-<ellipse cx="572" cy="422" rx="28" ry="13" fill="#f5a030" opacity=".09" class="sh2"/>
-<rect x="568" y="414" width="8" height="15" rx="2" fill="#221e14"/>
-<rect x="563" y="410" width="18" height="7" rx="2" fill="#1c1810"/>
-<rect x="561" y="404" width="22" height="9" rx="3.5" fill="#161410"/>
-<rect x="565" y="401" width="14" height="5" rx="1.5" fill="#120e0c"/>
-<circle cx="572" cy="413" r="5.5" fill="#f5cc5a" opacity=".78" filter="url(#g2)"/>
-<!-- 6 -->
-<ellipse cx="652" cy="406" rx="28" ry="13" fill="#f5a030" opacity=".09" class="sh3"/>
-<rect x="648" y="398" width="8" height="15" rx="2" fill="#221e14"/>
-<rect x="643" y="394" width="18" height="7" rx="2" fill="#1c1810"/>
-<rect x="641" y="388" width="22" height="9" rx="3.5" fill="#161410"/>
-<rect x="645" y="385" width="14" height="5" rx="1.5" fill="#120e0c"/>
-<circle cx="652" cy="397" r="5.5" fill="#f5cc5a" opacity=".75" filter="url(#g2)"/>
-
-<!-- Directional sign -->
-
-<g transform="translate(495,420)">
-  <rect x="-6" y="-4" width="12" height="55" rx="3.5" fill="#18120a"/>
-  <!-- Left tab -->
-  <rect x="-74" y="-26" width="71" height="26" rx="7" fill="#060c1e"/>
-  <rect x="-74" y="-26" width="71" height="26" rx="7" fill="none" stroke="rgba(240,188,72,.38)" stroke-width="1.2"/>
-  <polygon points="-74,-13 -84,-1 -74,12" fill="#060c1e" stroke="rgba(240,188,72,.38)" stroke-width="1.2"/>
-  <text x="-39" y="-7" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="10.5" fill="rgba(240,212,130,.88)" font-weight="600">← 집 🏠</text>
-  <!-- Right tab -->
-  <rect x="3"   y="-26" width="71" height="26" rx="7" fill="#060c1e"/>
-  <rect x="3"   y="-26" width="71" height="26" rx="7" fill="none" stroke="rgba(240,188,72,.38)" stroke-width="1.2"/>
-  <polygon points="74,-13 84,-1 74,12" fill="#060c1e" stroke="rgba(240,188,72,.38)" stroke-width="1.2"/>
-  <text x="39" y="-7" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="10.5" fill="rgba(240,212,130,.88)" font-weight="600">K BBQ 🍖 →</text>
+<g fill="none" stroke="#8a6828" stroke-width=".8" opacity=".22">
+  <ellipse cx="200" cy="380" rx="155" ry="110"/>
+  <ellipse cx="200" cy="380" rx="130" ry="88"/>
+  <ellipse cx="200" cy="380" rx="105" ry="66"/>
+  <ellipse cx="730" cy="360" rx="148" ry="105"/>
+  <ellipse cx="730" cy="360" rx="120" ry="82"/>
+  <ellipse cx="480" cy="440" rx="168" ry="90"/>
+  <ellipse cx="480" cy="440" rx="138" ry="68"/>
 </g>
 
-<!-- ══ POND ══ -->
+<!-- ── COMPASS ROSE ── -->
 
-<ellipse cx="412" cy="388" rx="102" ry="60" fill="#122050" opacity=".4"/>
-<ellipse cx="410" cy="382" rx="98" ry="56" fill="url(#pondR)"/>
-<ellipse cx="410" cy="382" rx="98" ry="56" fill="none" stroke="rgba(80,140,220,.16)" stroke-width="1.5"/>
-<!-- Moon reflection ripple -->
-<ellipse cx="410" cy="370" rx="18" ry="7" fill="#f5e060" opacity=".42" class="sh"/>
-<ellipse cx="410" cy="376" rx="28" ry="4" fill="#f5e060" opacity=".14" class="sh2"/>
-<!-- Water shimmer -->
-<g stroke="rgba(160,210,255,.15)" stroke-width="1.1" stroke-linecap="round">
-  <line x1="332" y1="372" x2="364" y2="377" class="sh"/><line x1="342" y1="385" x2="372" y2="389" class="sh2"/>
-  <line x1="445" y1="370" x2="478" y2="375" class="sh3"/><line x1="450" y1="384" x2="480" y2="388" class="sh"/>
+<g transform="translate(876,112)" filter="url(#softDrop)">
+  <!-- Outer decorative ring -->
+  <circle r="44" fill="rgba(244,234,208,.75)" stroke="#3a2a10" stroke-width="1.2"/>
+  <circle r="38" fill="none" stroke="#3a2a10" stroke-width=".7"/>
+  <circle r="32" fill="none" stroke="#8a6020" stroke-width=".5" stroke-dasharray="3 3"/>
+  <!-- Cardinal petals -->
+  <polygon points="0,-40 5,-8 0,-2 -5,-8" fill="#3a2a10"/>
+  <polygon points="0,40 5,8 0,2 -5,8" fill="#8a6020"/>
+  <polygon points="-40,0 -8,5 -2,0 -8,-5" fill="#8a6020"/>
+  <polygon points="40,0 8,5 2,0 8,-5" fill="#8a6020"/>
+  <!-- Intercardinal petals (smaller) -->
+  <polygon points="-28,-28 -4,-6 0,-2 -6,-4" fill="#3a2a10" opacity=".55"/>
+  <polygon points="28,-28 4,-6 0,-2 6,-4" fill="#3a2a10" opacity=".55"/>
+  <polygon points="-28,28 -4,6 0,2 -6,4" fill="#3a2a10" opacity=".45"/>
+  <polygon points="28,28 4,6 0,2 6,4" fill="#3a2a10" opacity=".45"/>
+  <!-- Center -->
+  <circle r="6" fill="var(--parch)"/>
+  <circle r="3.5" fill="#3a2a10"/>
+  <!-- Cardinal labels -->
+  <text y="-22" text-anchor="middle" font-family="'Playfair Display',serif" font-size="9" fill="#3a2a10" font-weight="700">N</text>
+  <text y="28" text-anchor="middle" font-family="'Playfair Display',serif" font-size="8" fill="#3a2a10">S</text>
+  <text x="-24" y="3" text-anchor="middle" font-family="'Playfair Display',serif" font-size="8" fill="#3a2a10">W</text>
+  <text x="24" y="3" text-anchor="middle" font-family="'Playfair Display',serif" font-size="8" fill="#3a2a10">E</text>
 </g>
-<!-- Lily pads -->
-<ellipse cx="452" cy="396" rx="17" ry="10" fill="#0c2416" opacity=".88"/>
-<circle cx="452" cy="393" r="6" fill="#ff7898" opacity=".62" filter="url(#g2)"/>
-<path d="M452,396 L452,387" stroke="#0c2416" stroke-width="1.2" opacity=".5"/>
-<ellipse cx="374" cy="403" rx="14" ry="8" fill="#0c2416" opacity=".82"/>
-<ellipse cx="426" cy="360" rx="12" ry="6.5" fill="#0c2416" opacity=".78"/>
-<!-- Fireflies over pond -->
-<g class="f1"><circle cx="382" cy="354" r="2.6" fill="#b8ff38" opacity=".9" filter="url(#g2)"/></g>
-<g class="f2"><circle cx="434" cy="344" r="2.1" fill="#a0ff58" opacity=".86" filter="url(#g2)"/></g>
-<g class="f3"><circle cx="462" cy="360" r="2.4" fill="#b8ff38" opacity=".82" filter="url(#g2)"/></g>
-<text x="410" y="446" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(120,175,220,.6)" font-weight="600" letter-spacing="1.5">연 못</text>
 
-<!-- More fireflies in scene -->
+<!-- ── SCALE BAR ── -->
 
-<g class="f4"><circle cx="218" cy="328" r="2.2" fill="#b8ff38" opacity=".82" filter="url(#g2)"/></g>
-<g class="f5"><circle cx="665" cy="346" r="2.4" fill="#a0ff58" opacity=".78" filter="url(#g2)"/></g>
-<g class="f1" style="animation-delay:3.2s"><circle cx="174" cy="408" r="2" fill="#b8ff38" opacity=".72" filter="url(#g2)"/></g>
-<g class="f3" style="animation-delay:1.6s"><circle cx="730" cy="372" r="2.2" fill="#a0ff58" opacity=".74" filter="url(#g2)"/></g>
+<g transform="translate(800,510)">
+  <rect x="-56" y="-6" width="112" height="12" fill="none" stroke="#3a2a10" stroke-width="1"/>
+  <rect x="-56" y="-6" width="28" height="12" fill="#3a2a10"/>
+  <rect x="-0" y="-6" width="28" height="12" fill="#3a2a10"/>
+  <text y="-11" text-anchor="middle" font-family="'IM Fell English',serif" font-size="8" fill="#3a2a10">SCALE · 하젤 단위</text>
+  <text x="-56" y="14" font-family="'IM Fell English',serif" font-size="7" fill="#3a2a10">0</text>
+  <text x="-2" y="14" font-family="'IM Fell English',serif" font-size="7" fill="#3a2a10">50</text>
+  <text x="52" y="14" text-anchor="end" font-family="'IM Fell English',serif" font-size="7" fill="#3a2a10">100m</text>
+</g>
 
-<!-- ══════════════════ HOUSE POI ══════════════════ -->
+<!-- ── LEGEND BOX ── -->
+
+<g transform="translate(34,420)">
+  <rect width="122" height="110" rx="3" fill="rgba(244,234,208,.82)" stroke="#3a2a10" stroke-width="1.2"/>
+  <rect x="4" y="4" width="114" height="102" rx="2" fill="none" stroke="#3a2a10" stroke-width=".6"/>
+  <text x="61" y="19" text-anchor="middle" font-family="'Playfair Display',serif" font-size="10" fill="#3a2a10" font-weight="700">— 범례 —</text>
+  <line x1="8" y1="24" x2="114" y2="24" stroke="#3a2a10" stroke-width=".7"/>
+  <!-- Items -->
+  <rect x="10" y="32" width="14" height="10" rx="1" fill="#c89828" opacity=".65"/>
+  <text x="30" y="42" font-family="'IM Fell English',serif" font-size="9" fill="#3a2a10">주요 건물</text>
+  <circle cx="17" cy="58" r="5" fill="url(#wcBlue)" stroke="#3a6090" stroke-width=".8"/>
+  <text x="30" y="62" font-family="'IM Fell English',serif" font-size="9" fill="#3a2a10">연못 · 수계</text>
+  <line x1="10" y1="78" x2="24" y2="78" stroke="#8a6020" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="30" y="82" font-family="'IM Fell English',serif" font-size="9" fill="#3a2a10">산책로</text>
+  <text x="10" y="102" font-family="'IM Fell English',serif" font-size="8" fill="#3a2a10" font-style="italic">탭하면 이동합니다</text>
+</g>
+
+<!-- ── DOTTED PATH ── -->
+
+<path d="M224,480 C305,460 392,432 488,408 C562,388 636,374 706,366" fill="none" stroke="#8a6020" stroke-width="2.5" stroke-dasharray="6 8" stroke-linecap="round"/>
+<!-- Footprints along path (pairs of tiny circles) -->
+<g fill="#8a6020" opacity=".35">
+  <circle cx="248" cy="474" r="2.2"/><circle cx="252" cy="480" r="2.2"/>
+  <circle cx="278" cy="467" r="2.2"/><circle cx="282" cy="473" r="2.2"/>
+  <circle cx="312" cy="458" r="2.2"/><circle cx="316" cy="464" r="2.2"/>
+  <circle cx="356" cy="447" r="2.2"/><circle cx="360" cy="453" r="2.2"/>
+  <circle cx="398" cy="436" r="2.2"/><circle cx="402" cy="442" r="2.2"/>
+  <circle cx="442" cy="424" r="2.2"/><circle cx="446" cy="430" r="2.2"/>
+  <circle cx="488" cy="413" r="2.2"/><circle cx="492" cy="419" r="2.2"/>
+  <circle cx="534" cy="402" r="2.2"/><circle cx="538" cy="408" r="2.2"/>
+  <circle cx="578" cy="392" r="2.2"/><circle cx="582" cy="398" r="2.2"/>
+  <circle cx="624" cy="382" r="2.2"/><circle cx="628" cy="388" r="2.2"/>
+  <circle cx="668" cy="374" r="2.2"/><circle cx="672" cy="380" r="2.2"/>
+</g>
+
+<!-- ── ILLUSTRATED TREES ── -->
+
+<!-- Cluster LEFT top -->
+
+<g filter="url(#softDrop)">
+  <g class="ts2"><ellipse cx="56" cy="132" rx="22" ry="28" fill="#5a8a3a" opacity=".82" filter="url(#wc)"/>
+    <ellipse cx="56" cy="120" rx="16" ry="20" fill="#7aaa5a" opacity=".7" filter="url(#wc)"/>
+    <rect x="53" y="155" width="6" height="14" rx="2" fill="#6a4820"/></g>
+  <g class="ts"><ellipse cx="86" cy="126" rx="20" ry="25" fill="#4a7a2a" opacity=".78" filter="url(#wc)"/>
+    <ellipse cx="86" cy="116" rx="14" ry="18" fill="#6a9a4a" opacity=".68" filter="url(#wc)"/>
+    <rect x="83" y="148" width="6" height="12" rx="2" fill="#6a4820"/></g>
+  <g class="ts2" style="animation-delay:1.2s"><ellipse cx="44" cy="158" rx="18" ry="23" fill="#3a6a1a" opacity=".7" filter="url(#wc)"/>
+    <rect x="41" y="178" width="6" height="12" rx="2" fill="#6a4820"/></g>
+</g>
+<!-- Cluster LEFT bottom -->
+<g filter="url(#softDrop)">
+  <g class="ts"><ellipse cx="68" cy="340" rx="24" ry="30" fill="#5a8a3a" opacity=".82" filter="url(#wc)"/>
+    <ellipse cx="68" cy="326" rx="17" ry="22" fill="#7aaa5a" opacity=".7" filter="url(#wc)"/>
+    <rect x="65" y="366" width="6" height="16" rx="2" fill="#6a4820"/></g>
+  <g class="ts2"><ellipse cx="48" cy="358" rx="20" ry="24" fill="#4a7a2a" opacity=".75" filter="url(#wc)"/>
+    <rect x="45" y="379" width="6" height="12" rx="2" fill="#6a4820"/></g>
+</g>
+<!-- Trees near pond -->
+<g filter="url(#softDrop)">
+  <g class="ts"><ellipse cx="330" cy="318" rx="20" ry="26" fill="#5a8a3a" opacity=".78" filter="url(#wc)"/>
+    <ellipse cx="330" cy="307" rx="14" ry="19" fill="#7aaa5a" opacity=".65" filter="url(#wc)"/>
+    <rect x="327" y="341" width="6" height="12" rx="2" fill="#6a4820"/></g>
+  <g class="ts2"><ellipse cx="504" cy="322" rx="18" ry="24" fill="#4a7a2a" opacity=".72" filter="url(#wc)"/>
+    <rect x="501" y="343" width="6" height="12" rx="2" fill="#6a4820"/></g>
+</g>
+<!-- Trees right cluster -->
+<g filter="url(#softDrop)">
+  <g class="ts"><ellipse cx="874" cy="320" rx="22" ry="28" fill="#5a8a3a" opacity=".78" filter="url(#wc)"/>
+    <ellipse cx="874" cy="308" rx="15" ry="20" fill="#7aaa5a" opacity=".65" filter="url(#wc)"/>
+    <rect x="871" y="345" width="6" height="14" rx="2" fill="#6a4820"/></g>
+  <g class="ts2"><ellipse cx="900" cy="330" rx="20" ry="24" fill="#4a7a2a" opacity=".7" filter="url(#wc)"/>
+    <rect x="897" y="351" width="6" height="12" rx="2" fill="#6a4820"/></g>
+  <g class="ts"><ellipse cx="856" cy="348" rx="18" ry="22" fill="#3a6a1a" opacity=".65" filter="url(#wc)"/>
+    <rect x="853" y="367" width="6" height="12" rx="2" fill="#6a4820"/></g>
+</g>
+<!-- Pine trees (triangular) mid-right -->
+<g filter="url(#softDrop)">
+  <g class="ts2">
+    <polygon points="582,182 568,232 596,232" fill="#3a6a1a" opacity=".72" filter="url(#wc)"/>
+    <polygon points="582,200 570,232 594,232" fill="#5a8a3a" opacity=".55"/>
+    <rect x="579" y="232" width="6" height="14" rx="2" fill="#6a4820"/>
+  </g>
+  <g class="ts">
+    <polygon points="562,196 550,238 574,238" fill="#4a7a2a" opacity=".68" filter="url(#wc)"/>
+    <rect x="559" y="238" width="6" height="12" rx="2" fill="#6a4820"/>
+  </g>
+</g>
+<!-- Small flower patches -->
+<g>
+  <circle cx="150" cy="420" r="5" fill="#d87858" opacity=".65" filter="url(#wc)"/>
+  <circle cx="158" cy="428" r="4" fill="#c86848" opacity=".6" filter="url(#wc)"/>
+  <circle cx="144" cy="432" r="4.5" fill="#e09878" opacity=".58" filter="url(#wc)"/>
+  <circle cx="760" cy="432" r="5" fill="#c27858" opacity=".6" filter="url(#wc)"/>
+  <circle cx="768" cy="440" r="4" fill="#d08868" opacity=".55" filter="url(#wc)"/>
+  <circle cx="380" cy="468" r="4.5" fill="#d87858" opacity=".55" filter="url(#wc)"/>
+  <circle cx="388" cy="476" r="3.5" fill="#c86848" opacity=".5"/>
+</g>
+
+<!-- ── POND / LAKE ── -->
+
+<ellipse cx="418" cy="374" rx="104" ry="60" fill="#aacce0" opacity=".4" filter="url(#wc)"/>
+<ellipse cx="416" cy="370" rx="98" ry="56" fill="url(#wcBlue)" filter="url(#wc)"/>
+<ellipse cx="416" cy="370" rx="98" ry="56" fill="none" stroke="#3a6090" stroke-width="1.2" opacity=".4" filter="url(#inkBleed)"/>
+<!-- Water lines (hatching style) -->
+<g stroke="#3a6090" stroke-width=".8" stroke-linecap="round" opacity=".28">
+  <line x1="338" y1="368" x2="362" y2="372"/>
+  <line x1="342" y1="378" x2="366" y2="382"/>
+  <line x1="346" y1="388" x2="368" y2="392"/>
+  <line x1="454" y1="364" x2="478" y2="368"/>
+  <line x1="460" y1="375" x2="484" y2="379"/>
+  <line x1="452" y1="386" x2="476" y2="390"/>
+  <line x1="390" y1="358" x2="440" y2="360"/>
+  <line x1="386" y1="370" x2="448" y2="372"/>
+  <line x1="382" y1="382" x2="452" y2="384"/>
+</g>
+<!-- Ripple ellipses -->
+<ellipse cx="416" cy="372" rx="18" ry="8" fill="none" stroke="#3a6090" stroke-width=".8" opacity=".35" class="wr"/>
+<ellipse cx="416" cy="372" rx="30" ry="13" fill="none" stroke="#3a6090" stroke-width=".7" opacity=".25" class="wr2"/>
+<ellipse cx="416" cy="372" rx="44" ry="20" fill="none" stroke="#3a6090" stroke-width=".6" opacity=".18" class="wr3"/>
+<!-- Duck illustration (hand-drawn style) -->
+<g transform="translate(384,356)" fill="none">
+  <ellipse cx="0" cy="0" rx="12" ry="8" fill="#e8c858" stroke="#8a6828" stroke-width=".8"/>
+  <circle cx="10" cy="-4" r="6.5" fill="#e8c858" stroke="#8a6828" stroke-width=".8"/>
+  <ellipse cx="14" cy="-3" rx="4" ry="2.5" fill="#d89828" stroke="#8a6828" stroke-width=".7"/>
+  <circle cx="8" cy="-5" r="1.5" fill="#3a2a10"/>
+  <path d="M-10,4 Q-4,8 2,5" stroke="#3a6090" stroke-width=".8" stroke-linecap="round"/>
+</g>
+<!-- Pond label (handwritten style italic) -->
+<text x="416" y="440" text-anchor="middle" font-family="'IM Fell English',serif" font-size="11" fill="#3a6090" font-style="italic" font-weight="400" filter="url(#inkBleed)">Hazel Pond</text>
+<text x="416" y="453" text-anchor="middle" font-family="'IM Fell English',serif" font-size="9.5" fill="#3a6090" opacity=".7" font-style="italic">· 연못 ·</text>
+
+<!-- ── DECORATIVE MAP NOTES ── -->
+
+<text x="100" y="550" font-family="'IM Fell English',serif" font-size="9" fill="#3a2a10" opacity=".45" font-style="italic">Anno Hazel · 하젤 원년</text>
+<text x="480" y="556" text-anchor="middle" font-family="'Playfair Display',serif" font-size="8" fill="#3a2a10" opacity=".35" letter-spacing="3">ANNO · MDCCXXI · HAZEL</text>
+
+<!-- Small decorative flourishes -->
+
+<text x="168" y="78" font-family="'Playfair Display',serif" font-size="32" fill="#3a2a10" opacity=".06">❧</text>
+<text x="748" y="548" font-family="'Playfair Display',serif" font-size="28" fill="#3a2a10" opacity=".06">❧</text>
+
+<!-- ════════════════ HOUSE POI ════════════════ -->
 
 <g class="poi" onclick="go('s1','s2')">
-  <!-- Ground ambience -->
-  <ellipse cx="202" cy="512" rx="128" ry="18" fill="#f5a030" opacity=".07"/>
-  <!-- Window glow halos -->
-  <ellipse cx="162" cy="452" rx="52" ry="24" fill="url(#winR)" class="sh"/>
-  <ellipse cx="240" cy="452" rx="52" ry="24" fill="url(#winR)" class="sh2"/>
+  <!-- Watercolour glow under building -->
+  <ellipse cx="196" cy="480" rx="110" ry="28" fill="url(#wcGold)" filter="url(#wc)" opacity=".6"/>
 
-  <g filter="url(#drop)">
-    <!-- Stone plinth -->
-    <rect x="120" y="395" width="164" height="62" rx="6" fill="#0c1626"/>
-    <!-- Stone lines -->
-    <g stroke="rgba(255,255,255,.05)" stroke-width="1">
-      <line x1="120" y1="415" x2="284" y2="415"/><line x1="120" y1="433" x2="284" y2="433"/>
-      <line x1="150" y1="395" x2="150" y2="415"/><line x1="202" y1="395" x2="202" y2="415"/><line x1="254" y1="395" x2="254" y2="415"/>
-      <line x1="136" y1="415" x2="136" y2="433"/><line x1="186" y1="415" x2="186" y2="433"/><line x1="236" y1="415" x2="236" y2="433"/>
+  <g class="bld" filter="url(#heavyDrop)">
+    <!-- Garden / yard -->
+    <rect x="114" y="430" width="166" height="62" rx="5" fill="#d4b868" opacity=".3" filter="url(#wc)"/>
+    <!-- Garden cross-hatching -->
+    <rect x="114" y="430" width="166" height="62" rx="5" fill="url(#dots)" opacity=".4"/>
+    <!-- Flower bed sketches -->
+    <g fill="#c27858" opacity=".65" filter="url(#inkBleed)">
+      <circle cx="128" cy="448" r="5"/><circle cx="136" cy="456" r="4.5"/><circle cx="122" cy="458" r="4"/>
+      <circle cx="258" cy="448" r="5"/><circle cx="266" cy="456" r="4.5"/><circle cx="252" cy="458" r="4"/>
     </g>
+    <!-- Fence (hand-drawn lines) -->
+    <g stroke="#6a4820" stroke-width="1.4" stroke-linecap="round" fill="none" filter="url(#inkBleed)">
+      <line x1="118" y1="428" x2="118" y2="456"/><line x1="130" y1="428" x2="130" y2="456"/>
+      <line x1="142" y1="428" x2="142" y2="456"/><line x1="154" y1="428" x2="154" y2="456"/>
+      <line x1="168" y1="428" x2="168" y2="456"/><!-- gate gap -->
+      <line x1="224" y1="428" x2="224" y2="456"/><line x1="236" y1="428" x2="236" y2="456"/>
+      <line x1="248" y1="428" x2="248" y2="456"/><line x1="260" y1="428" x2="260" y2="456"/>
+      <line x1="272" y1="428" x2="272" y2="456"/>
+      <line x1="118" y1="436" x2="280" y2="436"/>
+      <line x1="118" y1="448" x2="280" y2="448"/>
+    </g>
+    <!-- Gate arch -->
+    <path d="M170,456 Q196,440 222,456" stroke="#6a4820" stroke-width="1.4" fill="none" filter="url(#inkBleed)"/>
 
 ```
-<!-- Main wall -->
-<rect x="120" y="316" width="164" height="88" rx="7" fill="#0c1a32"/>
-<rect x="126" y="322" width="152" height="80" rx="5" fill="#0a1628"/>
-<!-- Wall plank texture -->
-<g stroke="rgba(255,255,255,.035)" stroke-width="1">
-  <line x1="120" y1="336" x2="284" y2="336"/>
-  <line x1="120" y1="356" x2="284" y2="356"/>
-  <line x1="120" y1="376" x2="284" y2="376"/>
+<!-- Building body -->
+<rect x="126" y="332" width="140" height="104" rx="4" fill="#f0e0c0" filter="url(#parch)"/>
+<rect x="126" y="332" width="140" height="104" rx="4" fill="none" stroke="#6a4820" stroke-width="1.8" filter="url(#inkBleed)"/>
+<!-- Wall timber lines (hand-drawn) -->
+<g stroke="#8a6020" stroke-width=".8" opacity=".4" filter="url(#inkBleed)">
+  <line x1="126" y1="352" x2="266" y2="352"/><line x1="126" y1="372" x2="266" y2="372"/>
+  <line x1="126" y1="392" x2="266" y2="392"/>
+  <line x1="196" y1="332" x2="196" y2="436"/>
 </g>
+<!-- Hatched wall texture sides -->
+<rect x="126" y="332" width="20" height="104" fill="url(#crosshatch)" opacity=".35"/>
+<rect x="246" y="332" width="20" height="104" fill="url(#crosshatch)" opacity=".28"/>
 
-<!-- ROOF (dark tile, moonlit) -->
-<!-- Shadow cast below -->
-<polygon points="102,330 202,270 302,330" fill="#030810" opacity=".4"/>
-<!-- Left slope -->
-<polygon points="104,330 202,273 202,330" fill="#101c2e"/>
-<!-- Right slope -->
-<polygon points="202,273 300,330 202,330" fill="#131f34"/>
-<!-- Moonlit highlight on left edge -->
-<line x1="104" y1="328" x2="202" y2="271" stroke="rgba(200,220,255,.18)" stroke-width="1.8"/>
-<!-- Tile ribs left slope -->
-<g stroke="rgba(100,130,180,.09)" stroke-width="1.2">
-  <line x1="150" y1="298" x2="106" y2="329"/><line x1="168" y1="288" x2="124" y2="329"/><line x1="186" y1="278" x2="142" y2="329"/>
+<!-- ROOF (illustrated tile) -->
+<polygon points="108,345 196,280 284,345" fill="#d4784a" opacity=".88" filter="url(#wc)"/>
+<polygon points="112,343 196,283 280,343" fill="#e08858" opacity=".55"/>
+<!-- Roof tile lines -->
+<g stroke="#c26838" stroke-width=".9" opacity=".45" filter="url(#inkBleed)">
+  <line x1="196" y1="280" x2="112" y2="343"/>
+  <line x1="196" y1="280" x2="280" y2="343"/>
+  <line x1="148" y1="304" x2="116" y2="343"/><line x1="164" y1="294" x2="132" y2="343"/>
+  <line x1="180" y1="286" x2="148" y2="343"/>
+  <line x1="244" y1="304" x2="276" y2="343"/><line x1="228" y1="294" x2="260" y2="343"/>
+  <line x1="212" y1="286" x2="244" y2="343"/>
+  <line x1="118" y1="326" x2="274" y2="326"/><line x1="122" y1="314" x2="270" y2="314"/>
 </g>
-<!-- Tile ribs right slope -->
-<g stroke="rgba(100,130,180,.08)" stroke-width="1.2">
-  <line x1="254" y1="298" x2="298" y2="329"/><line x1="236" y1="288" x2="280" y2="329"/><line x1="218" y1="278" x2="262" y2="329"/>
-</g>
-<!-- Horizontal tile courses -->
-<g stroke="rgba(100,130,180,.1)" stroke-width="1.6">
-  <line x1="112" y1="316" x2="292" y2="316"/>
-  <line x1="124" y1="302" x2="280" y2="302"/>
-  <line x1="138" y1="288" x2="266" y2="288"/>
-</g>
-<!-- Eave -->
-<rect x="102" y="326" width="200" height="9" rx="4.5" fill="#070f1e"/>
-<!-- Lantern warm glow on eave underside -->
-<rect x="104" y="330" width="196" height="4" rx="2" fill="#f5a030" opacity=".06"/>
-<!-- Ridge beam -->
-<rect x="186" y="268" width="32" height="9" rx="4.5" fill="#050c1a"/>
-<circle cx="202" cy="268" r="6.5" fill="#080e1e"/>
-<!-- Ridge owl ornament (cute) -->
-<circle cx="202" cy="262" r="5.5" fill="#0a1224"/>
-<circle cx="199" cy="260" r="1.8" fill="#f5d560" opacity=".62"/>
-<circle cx="205" cy="260" r="1.8" fill="#f5d560" opacity=".62"/>
-<path d="M199,264 Q202,266 205,264" fill="none" stroke="rgba(245,213,96,.38)" stroke-width="1"/>
+<!-- Eave line -->
+<line x1="108" y1="345" x2="284" y2="345" stroke="#6a3818" stroke-width="2.5" stroke-linecap="round" filter="url(#inkBleed)"/>
 
 <!-- Chimney -->
-<rect x="238" y="268" width="22" height="46" rx="3.5" fill="#0c1828"/>
-<rect x="235" y="264" width="28" height="7" rx="3.5" fill="#0a1020"/>
-<!-- Smoke wisps -->
-<circle cx="245" cy="255" r="10" fill="#1c1818" class="s1"/>
-<circle cx="249" cy="243" r="8" fill="#181414" class="s2"/>
-<circle cx="246" cy="232" r="7" fill="#141010" class="s3"/>
-<circle cx="244" cy="257" r="2.8" fill="#ff5010" opacity=".48" class="s1"/>
-<circle cx="248" cy="245" r="2.2" fill="#ff4008" opacity=".38" class="s2"/>
+<rect x="234" y="272" width="22" height="44" rx="2" fill="#c09070" stroke="#6a4820" stroke-width="1.2" filter="url(#wc)"/>
+<!-- Brick hatching on chimney -->
+<g stroke="#8a6040" stroke-width=".7" opacity=".4">
+  <line x1="234" y1="285" x2="256" y2="285"/><line x1="234" y1="298" x2="256" y2="298"/>
+  <line x1="245" y1="272" x2="245" y2="285"/><line x1="240" y1="285" x2="240" y2="298"/>
+</g>
+<!-- Chimney smoke (illustrated) -->
+<path d="M242,262 Q238,250 244,240 Q250,230 246,218" stroke="#8a8280" stroke-width="3" fill="none" stroke-linecap="round" class="sm" opacity=".55"/>
+<path d="M246,260 Q243,248 248,237 Q254,226 250,215" stroke="#8a8280" stroke-width="2" fill="none" stroke-linecap="round" class="sm2" opacity=".4"/>
 
-<!-- Glowing window LEFT -->
-<ellipse cx="154" cy="349" rx="30" ry="19" fill="#f5c048" opacity=".1"/>
-<rect x="128" y="330" width="46" height="37" rx="5.5" fill="#f5c864"/>
-<rect x="130" y="332" width="42" height="33" rx="4" fill="#f5d878"/>
-<rect x="130" y="332" width="42" height="33" rx="4" fill="none" stroke="#d09010" stroke-width="1.2"/>
-<line x1="151" y1="332" x2="151" y2="365" stroke="#b07508" stroke-width="1.1"/>
-<line x1="130" y1="348" x2="172" y2="348" stroke="#b07508" stroke-width="1.1"/>
-<!-- Curtain shadow suggestion -->
-<rect x="130" y="332" width="10" height="33" rx="2" fill="#c07008" opacity=".18"/>
-<!-- Shadow person silhouette -->
-<circle cx="143" cy="341" r="5.5" fill="#b06808" opacity=".45"/>
-<rect x="140" y="347" width="6" height="9" rx="2" fill="#b06808" opacity=".4"/>
+<!-- Window LEFT (cross-hatched glass) -->
+<rect x="134" y="348" width="38" height="32" rx="3" fill="#bcd4e8" stroke="#6a4820" stroke-width="1.5" filter="url(#inkBleed)"/>
+<rect x="134" y="348" width="38" height="32" fill="url(#crosshatch)" opacity=".35"/>
+<line x1="153" y1="348" x2="153" y2="380" stroke="#6a4820" stroke-width="1.2"/>
+<line x1="134" y1="364" x2="172" y2="364" stroke="#6a4820" stroke-width="1.2"/>
+<!-- Flower box -->
+<rect x="132" y="378" width="42" height="8" rx="2" fill="#8a5830" stroke="#6a4820" stroke-width=".8" filter="url(#inkBleed)"/>
+<g fill="#d87858" filter="url(#wc)">
+  <circle cx="140" cy="378" r="4.5"/><circle cx="152" cy="377" r="4"/><circle cx="164" cy="378" r="4.5"/>
+</g>
 
-<!-- Glowing window RIGHT -->
-<ellipse cx="250" cy="349" rx="30" ry="19" fill="#f5c048" opacity=".1"/>
-<rect x="234" y="330" width="46" height="37" rx="5.5" fill="#f5c864"/>
-<rect x="236" y="332" width="42" height="33" rx="4" fill="#f5d878"/>
-<rect x="236" y="332" width="42" height="33" rx="4" fill="none" stroke="#d09010" stroke-width="1.2"/>
-<line x1="257" y1="332" x2="257" y2="365" stroke="#b07508" stroke-width="1.1"/>
-<line x1="236" y1="348" x2="278" y2="348" stroke="#b07508" stroke-width="1.1"/>
+<!-- Window RIGHT -->
+<rect x="220" y="348" width="38" height="32" rx="3" fill="#bcd4e8" stroke="#6a4820" stroke-width="1.5" filter="url(#inkBleed)"/>
+<rect x="220" y="348" width="38" height="32" fill="url(#crosshatch)" opacity=".35"/>
+<line x1="239" y1="348" x2="239" y2="380" stroke="#6a4820" stroke-width="1.2"/>
+<line x1="220" y1="364" x2="258" y2="364" stroke="#6a4820" stroke-width="1.2"/>
+<rect x="218" y="378" width="42" height="8" rx="2" fill="#8a5830" stroke="#6a4820" stroke-width=".8" filter="url(#inkBleed)"/>
+<g fill="#c86848" filter="url(#wc)">
+  <circle cx="226" cy="378" r="4"/><circle cx="238" cy="377" r="4.5"/><circle cx="250" cy="378" r="4"/>
+</g>
 
 <!-- Arched door -->
-<rect x="184" y="360" width="38" height="46" rx="20" fill="#080e1e"/>
-<rect x="186" y="362" width="34" height="44" rx="18" fill="#0a1228"/>
-<!-- Light seeping under door -->
-<ellipse cx="203" cy="406" rx="17" ry="5" fill="#f5c040" opacity=".2"/>
-<!-- Door handle -->
-<circle cx="216" cy="382" r="3" fill="#f5c040" opacity=".48" filter="url(#g2)"/>
+<rect x="178" y="378" width="36" height="44" rx="18" fill="#8a5030" stroke="#6a4820" stroke-width="1.5" filter="url(#inkBleed)"/>
+<rect x="182" y="384" width="28" height="25" rx="4" fill="#704020" opacity=".45"/>
+<circle cx="208" cy="398" r="3" fill="#c89828"/>
 
-<!-- Garden post lantern -->
-<rect x="100" y="382" width="6" height="34" rx="3" fill="#0c1220"/>
-<rect x="96"  y="376" width="14" height="11" rx="4" fill="#0e1828"/>
-<circle cx="103" cy="379" r="6" fill="#f5d060" opacity=".9" filter="url(#g4)"/>
-<ellipse cx="103" cy="390" rx="22" ry="10" fill="#f5a030" opacity=".13"/>
+<!-- Flag on roof! -->
+<line x1="196" y1="280" x2="196" y2="256" stroke="#6a4820" stroke-width="1.5"/>
+<polygon points="196,256 218,264 196,272" fill="#c2382a" opacity=".85" class="fw"/>
 
-<!-- Fence silhouette -->
-<g fill="#080e1e" stroke="rgba(200,220,255,.07)" stroke-width=".8">
-  <rect x="110" y="398" width="6.5" height="32" rx="3"/><rect x="128" y="398" width="6.5" height="32" rx="3"/>
-  <rect x="146" y="398" width="6.5" height="32" rx="3"/><rect x="164" y="398" width="6.5" height="32" rx="3"/>
-  <rect x="216" y="398" width="6.5" height="32" rx="3"/><rect x="234" y="398" width="6.5" height="32" rx="3"/>
-  <rect x="252" y="398" width="6.5" height="32" rx="3"/><rect x="270" y="398" width="6.5" height="32" rx="3"/>
-  <rect x="288" y="398" width="6.5" height="32" rx="3"/>
-</g>
-<rect x="110" y="406" width="184" height="6" rx="3" fill="#0a1222"/>
-<rect x="110" y="418" width="184" height="6" rx="3" fill="#0a1222"/>
-<!-- Gate -->
-<rect x="179" y="398" width="30" height="30" rx="4.5" fill="#0c1530"/>
-<rect x="179" y="398" width="30" height="30" rx="4.5" fill="none" stroke="rgba(240,188,72,.25)" stroke-width="1"/>
-<circle cx="205" cy="414" r="3" fill="rgba(240,188,72,.55)" filter="url(#g2)"/>
-
-<!-- CAT on fence 🐱 -->
-<g transform="translate(235,393)">
-  <ellipse cx="0" cy="0" rx="11" ry="8" fill="#070d1e"/>
-  <circle cx="10" cy="-6" r="7" fill="#070d1e"/>
-  <polygon points="6,-12 10,-18 14,-12" fill="#070d1e"/>
-  <polygon points="14,-12 18,-18 20,-12" fill="#070d1e"/>
-  <circle cx="12" cy="-7" r="2" fill="#f5e060" opacity=".78" style="animation:catBlink 5.5s ease-in-out infinite"/>
-  <!-- Moonlit ear tips -->
-  <line x1="8" y1="-17" x2="10" y2="-14" stroke="rgba(200,220,255,.18)" stroke-width="1"/>
-  <line x1="18" y1="-17" x2="16" y2="-14" stroke="rgba(200,220,255,.18)" stroke-width="1"/>
-  <!-- Tail -->
-  <path d="M-10,2 Q-22,9 -18,19 Q-14,26 -7,22" fill="none" stroke="#070d1e" stroke-width="4" stroke-linecap="round" style="animation:catTail 4.5s ease-in-out infinite;transform-box:fill-box;transform-origin:-10px 2px"/>
-</g>
+<!-- Mailbox (hand-drawn) -->
+<rect x="102" y="392" width="18" height="16" rx="3" fill="#5a8a3a" stroke="#3a6020" stroke-width="1" filter="url(#wc)"/>
+<path d="M102,397 Q111,392 120,397" fill="none" stroke="#3a6020" stroke-width=".8"/>
+<rect x="108" y="407" width="6" height="14" rx="2" fill="#6a4820"/>
 ```
 
-</g><!-- /drop -->
+</g><!-- /bld -->
 
-  <!-- LABEL -->
+  <!-- Label -->
 
-  <g class="sbob">
-    <rect x="146" y="236" width="112" height="32" rx="16" fill="rgba(4,9,22,.9)"/>
-    <rect x="146" y="236" width="112" height="32" rx="16" fill="none" stroke="rgba(240,188,72,.35)" stroke-width="1.2"/>
-    <text x="202" y="257" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="14" fill="rgba(240,215,140,.94)" font-weight="700" class="lbl-txt">🏠 하젤네 집</text>
+  <g class="lbl bob">
+    <rect x="140" y="250" width="112" height="32" rx="3" fill="rgba(244,234,208,.92)" stroke="#3a2a10" stroke-width="1.5" filter="url(#softDrop)"/>
+    <!-- Decorative corners on label -->
+    <text x="143" y="261" font-size="6" fill="#3a2a10" opacity=".55">✦</text>
+    <text x="247" y="261" text-anchor="end" font-size="6" fill="#3a2a10" opacity=".55">✦</text>
+    <text x="196" y="264" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" fill="#3a2a10" font-weight="700" letter-spacing=".5">하젤네 집</text>
+    <text x="196" y="278" text-anchor="middle" font-family="'IM Fell English',serif" font-size="9.5" fill="#6a4820" font-style="italic">Hazel's House</text>
   </g>
-  <text x="202" y="222" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="9.5" fill="rgba(240,188,72,.5)" font-weight="600" class="hint">탭해서 입장 ↓</text>
+  <text x="196" y="236" text-anchor="middle" font-family="'IM Fell English',serif" font-size="9" fill="#8a6020" font-style="italic" class="bob2">↓ 탭하면 실내 도면</text>
 </g><!-- /house poi -->
 
-<!-- ══════════════════ K BBQ POI ══════════════════ -->
+<!-- ════════════════ K BBQ POI ════════════════ -->
 
 <g class="poi" onclick="showWork()">
-  <!-- Ground ambience -->
-  <ellipse cx="726" cy="402" rx="138" ry="22" fill="#ff5020" opacity=".09"/>
+  <ellipse cx="726" cy="390" rx="125" ry="30" fill="url(#wcRose)" filter="url(#wc)" opacity=".6"/>
 
-  <g filter="url(#drop)">
-    <!-- Building body -->
-    <rect x="620" y="280" width="212" height="102" rx="8" fill="#0a1626"/>
-    <rect x="626" y="286" width="200" height="94" rx="6" fill="#08121e"/>
-    <g stroke="rgba(255,255,255,.035)" stroke-width="1">
-      <line x1="620" y1="300" x2="832" y2="300"/><line x1="620" y1="320" x2="832" y2="320"/>
-      <line x1="620" y1="340" x2="832" y2="340"/><line x1="620" y1="360" x2="832" y2="360"/>
+  <g class="bld" filter="url(#heavyDrop)">
+    <!-- Courtyard (crosshatched) -->
+    <rect x="624" y="356" width="204" height="34" rx="4" fill="#c8a860" opacity=".3" filter="url(#wc)"/>
+    <rect x="624" y="356" width="204" height="34" rx="4" fill="url(#dots)" opacity=".38"/>
+    <!-- Courtyard stones -->
+    <g stroke="#8a6820" stroke-width=".8" opacity=".3" filter="url(#inkBleed)">
+      <line x1="644" y1="356" x2="644" y2="390"/><line x1="674" y1="356" x2="674" y2="390"/>
+      <line x1="704" y1="356" x2="704" y2="390"/><line x1="734" y1="356" x2="734" y2="390"/>
+      <line x1="764" y1="356" x2="764" y2="390"/><line x1="794" y1="356" x2="794" y2="390"/>
+      <line x1="814" y1="356" x2="814" y2="390"/>
     </g>
 
 ```
-<!-- ══ KOREAN ROOF (기와지붕) ══ -->
-<!-- Deep drop shadow first -->
-<path d="M590,292 Q726,234 862,292" fill="none" stroke="#020508" stroke-width="64" stroke-linecap="butt" opacity=".55"/>
-<!-- Main roof body - two tones for depth -->
-<path d="M590,292 Q726,236 862,292" fill="none" stroke="#060b18" stroke-width="54" stroke-linecap="butt"/>
-<path d="M590,292 Q726,236 862,292" fill="none" stroke="#0a1226" stroke-width="40" stroke-linecap="butt"/>
-<!-- Moonlit top surface highlight -->
-<path d="M632,278 Q726,244 820,278" fill="none" stroke="rgba(180,205,255,.12)" stroke-width="18" stroke-linecap="round"/>
-<path d="M640,274 Q726,248 812,274" fill="none" stroke="rgba(200,220,255,.07)" stroke-width="8" stroke-linecap="round"/>
-<!-- Red glow from lanterns below eave -->
-<path d="M590,292 Q726,296 862,292" fill="none" stroke="#d02818" stroke-width="4" stroke-linecap="round" opacity=".4"/>
-<path d="M596,290 Q726,294 856,290" fill="none" stroke="#ff5020" stroke-width="20" stroke-linecap="round" opacity=".055"/>
-<!-- Eave underside (darkest) -->
-<path d="M590,292 Q726,295 862,292" fill="none" stroke="#050a16" stroke-width="12" stroke-linecap="round"/>
-<!-- Tile radiating lines left -->
-<g stroke="rgba(100,130,180,.09)" stroke-width="1.3">
-  <path d="M594,290 Q656,264 718,237" fill="none"/>
-  <path d="M594,290 Q638,268 686,250" fill="none"/>
-  <path d="M594,290 Q620,276 652,268" fill="none"/>
+<!-- Building body -->
+<rect x="620" y="268" width="212" height="98" rx="4" fill="#f0e0c0" filter="url(#parch)"/>
+<rect x="620" y="268" width="212" height="98" rx="4" fill="none" stroke="#6a4820" stroke-width="1.8" filter="url(#inkBleed)"/>
+<!-- Timber frame lines -->
+<g stroke="#8a6020" stroke-width=".8" opacity=".38" filter="url(#inkBleed)">
+  <line x1="620" y1="288" x2="832" y2="288"/><line x1="620" y1="308" x2="832" y2="308"/>
+  <line x1="620" y1="328" x2="832" y2="328"/>
 </g>
-<!-- Tile lines right -->
-<g stroke="rgba(100,130,180,.08)" stroke-width="1.3">
-  <path d="M858,290 Q796,264 734,237" fill="none"/>
-  <path d="M858,290 Q814,268 766,250" fill="none"/>
-  <path d="M858,290 Q832,276 800,268" fill="none"/>
-</g>
-<!-- Upswept corners -->
-<path d="M590,292 Q573,275 563,257" fill="none" stroke="#060b18" stroke-width="14" stroke-linecap="round"/>
-<path d="M591,291 Q575,276 567,260" fill="none" stroke="#0a1226" stroke-width="8" stroke-linecap="round"/>
-<path d="M862,292 Q879,275 889,257" fill="none" stroke="#060b18" stroke-width="14" stroke-linecap="round"/>
-<path d="M861,291 Q877,276 885,260" fill="none" stroke="#0a1226" stroke-width="8" stroke-linecap="round"/>
-<!-- Corner ornament glow (red) -->
-<circle cx="563" cy="257" r="10" fill="#050a14"/>
-<circle cx="563" cy="257" r="7" fill="#c02418" opacity=".75" filter="url(#g2)"/>
-<circle cx="889" cy="257" r="10" fill="#050a14"/>
-<circle cx="889" cy="257" r="7" fill="#c02418" opacity=".75" filter="url(#g2)"/>
-<!-- Ridge beam -->
-<path d="M642,254 Q726,240 810,254" fill="none" stroke="#030710" stroke-width="11" stroke-linecap="round"/>
-<path d="M642,254 Q726,242 810,254" fill="none" stroke="#060e1c" stroke-width="5" stroke-linecap="round" opacity=".6"/>
-<!-- Ridge gold jewel -->
-<circle cx="726" cy="237" r="13" fill="#050a18" filter="url(#g2)"/>
-<circle cx="726" cy="237" r="9"  fill="#f5cc48" opacity=".85" filter="url(#g4)"/>
-<circle cx="726" cy="237" r="5.5" fill="#f5e070"/>
-<circle cx="642" cy="253" r="6.5" fill="#050a18"/><circle cx="642" cy="253" r="4.5" fill="#f5cc48" opacity=".6"/>
-<circle cx="810" cy="253" r="6.5" fill="#050a18"/><circle cx="810" cy="253" r="4.5" fill="#f5cc48" opacity=".6"/>
+<!-- Side hatch panels -->
+<rect x="620" y="268" width="22" height="98" fill="url(#crosshatch)" opacity=".32"/>
+<rect x="810" y="268" width="22" height="98" fill="url(#crosshatch)" opacity=".25"/>
 
+<!-- KOREAN ROOF (illustrated) -->
+<!-- Shadow -->
+<path d="M590,282 Q726,220 862,282" fill="none" stroke="#3a2a10" stroke-width="58" stroke-linecap="butt" opacity=".15"/>
+<!-- Roof body (watercolour) -->
+<path d="M590,282 Q726,222 862,282" fill="none" stroke="#8a1810" stroke-width="50" stroke-linecap="butt" filter="url(#wc)"/>
+<path d="M590,282 Q726,222 862,282" fill="none" stroke="#b02818" stroke-width="36" stroke-linecap="butt"/>
+<path d="M590,282 Q726,222 862,282" fill="none" stroke="#c83828" stroke-width="22" stroke-linecap="butt" opacity=".55"/>
+<!-- Tile lines radiating -->
+<g stroke="#8a1810" stroke-width="1.1" opacity=".3" filter="url(#inkBleed)">
+  <path d="M594,280 Q656,258 718,232" fill="none"/>
+  <path d="M594,280 Q638,264 686,248" fill="none"/>
+  <path d="M858,280 Q796,258 734,232" fill="none"/>
+  <path d="M858,280 Q814,264 766,248" fill="none"/>
+  <line x1="606" y1="260" x2="846" y2="260"/>
+  <line x1="616" y1="248" x2="836" y2="248"/>
+</g>
+<!-- Eave line -->
+<path d="M590,282 Q726,286 862,282" stroke="#6a1008" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#inkBleed)"/>
+<!-- Upswept corners (illustrated) -->
+<path d="M590,282 Q574,266 566,250" stroke="#8a1810" stroke-width="12" fill="none" stroke-linecap="round"/>
+<path d="M590,282 Q576,268 570,254" stroke="#b02818" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M862,282 Q878,266 886,250" stroke="#8a1810" stroke-width="12" fill="none" stroke-linecap="round"/>
+<path d="M862,282 Q876,268 882,254" stroke="#b02818" stroke-width="7" fill="none" stroke-linecap="round"/>
+<!-- Ridge -->
+<path d="M638,248 Q726,234 814,248" stroke="#5a0808" stroke-width="9" fill="none" stroke-linecap="round" filter="url(#inkBleed)"/>
+<!-- Ridge gold ornament -->
+<circle cx="726" cy="231" r="11" fill="#5a0808" stroke="#c89828" stroke-width="1.5"/>
+<circle cx="726" cy="231" r="7" fill="#c89828"/>
+<circle cx="726" cy="231" r="3.5" fill="#f5dc60"/>
 <!-- Second tier -->
-<path d="M638,278 Q726,254 814,278" fill="none" stroke="#030710" stroke-width="28" stroke-linecap="butt"/>
-<path d="M638,278 Q726,256 814,278" fill="none" stroke="#080f20" stroke-width="20" stroke-linecap="butt"/>
-<path d="M640,278 Q726,258 812,278" fill="none" stroke="rgba(180,205,255,.08)" stroke-width="5" stroke-linecap="round"/>
-<path d="M638,278 Q726,278 814,278" fill="none" stroke="#c02418" stroke-width="3" stroke-linecap="round" opacity=".28"/>
-<path d="M638,278 Q624,268 618,255" fill="none" stroke="#030710" stroke-width="9" stroke-linecap="round"/>
-<path d="M814,278 Q826,268 832,255" fill="none" stroke="#030710" stroke-width="9" stroke-linecap="round"/>
-<circle cx="618" cy="255" r="5.5" fill="#030710"/>
-<circle cx="832" cy="255" r="5.5" fill="#030710"/>
+<path d="M638,272 Q726,248 814,272" fill="none" stroke="#6a1010" stroke-width="22" stroke-linecap="butt"/>
+<path d="M638,272 Q726,250 814,272" fill="none" stroke="#982020" stroke-width="14" stroke-linecap="butt"/>
+<path d="M638,272 Q726,272 814,272" stroke="#5a0808" stroke-width="4" fill="none" stroke-linecap="round"/>
 
-<!-- GLOWING SIGN BOARD -->
-<rect x="652" y="294" width="148" height="46" rx="6.5" fill="#06080e"/>
-<rect x="654" y="296" width="144" height="42" rx="5.5" fill="#08101a"/>
-<!-- Sign inner warm glow -->
-<rect x="656" y="298" width="140" height="38" rx="4.5" fill="#c02418" opacity=".055"/>
-<rect x="656" y="298" width="140" height="38" rx="4.5" fill="none" stroke="rgba(240,188,72,.42)" stroke-width="1.4"/>
-<rect x="659" y="301" width="134" height="32" rx="3.5" fill="none" stroke="rgba(240,188,72,.18)" stroke-width=".8"/>
-<text x="726" y="314" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="16" fill="#f0c040" font-weight="700" letter-spacing="3" filter="url(#g2)">K BBQ</text>
-<text x="726" y="330" text-anchor="middle" font-family="'Noto Sans KR',sans-serif" font-size="8.5" fill="#ff9060" font-weight="300" letter-spacing="1.5">🍖 Korean BBQ · 정통 한국식</text>
-<!-- Sign glow halo -->
-<ellipse cx="726" cy="315" rx="65" ry="20" fill="#f5c040" opacity=".055"/>
+<!-- Sign board (illustrated) -->
+<rect x="652" y="283" width="148" height="44" rx="4" fill="#3a0808" stroke="#c89828" stroke-width="1.8" filter="url(#inkBleed)"/>
+<rect x="655" y="286" width="142" height="38" rx="3" fill="#4a1010"/>
+<!-- Sign inner border -->
+<rect x="658" y="289" width="136" height="32" rx="2" fill="none" stroke="#c89828" stroke-width=".9" opacity=".6"/>
+<text x="726" y="304" text-anchor="middle" font-family="'Playfair Display',serif" font-size="16" fill="#f5dc60" font-weight="700" letter-spacing="3" filter="url(#inkBleed)">K BBQ</text>
+<text x="726" y="319" text-anchor="middle" font-family="'IM Fell English',serif" font-size="9.5" fill="#e09858" font-style="italic">Korean BBQ · 정통 한국식</text>
 
-<!-- ── LANTERN WIRE ── -->
-<path d="M624,262 Q726,256 828,262" fill="none" stroke="#0e0c10" stroke-width="1.8"/>
-
-<!-- Hanging lanterns (4) -->
-<g class="la">
-  <rect x="647" y="248" width="9" height="6.5" rx="2" fill="#0a0808"/>
-  <ellipse cx="651" cy="264" rx="13.5" ry="19" fill="#b81616"/>
-  <ellipse cx="651" cy="255" rx="9.5" ry="8" fill="#d82020" opacity=".5"/>
-  <ellipse cx="651" cy="275" rx="5.5" ry="3.8" fill="#880e0e" opacity=".55"/>
-  <!-- Gold ring details -->
-  <ellipse cx="651" cy="248" rx="7" ry="2.5" fill="#c88020" opacity=".6"/>
-  <ellipse cx="651" cy="280" rx="5" ry="2" fill="#c88020" opacity=".45"/>
-  <line x1="651" y1="283" x2="651" y2="292" stroke="#0a0808" stroke-width="1.8"/>
-  <!-- Glow -->
-  <ellipse cx="651" cy="264" rx="14" ry="20" fill="#ff6020" opacity=".18" filter="url(#g4)"/>
-  <ellipse cx="651" cy="295" rx="30" ry="12" fill="#ff4010" opacity=".09"/>
+<!-- Hanging red lanterns (illustrated) -->
+<path d="M625,257 Q726,252 827,257" stroke="#3a2010" stroke-width="1.5" fill="none"/>
+<g class="bob">
+  <path d="M650,257 Q650,262 652,276 Q654,285 650,290 Q648,295 652,296 Q656,297 652,290 Q650,285 652,276 Q654,264 654,257" stroke="#9a1010" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <ellipse cx="652" cy="268" rx="13" ry="18" fill="none" stroke="#c01818" stroke-width="2" opacity=".5"/>
 </g>
-<g class="lb">
-  <rect x="688" y="246" width="9" height="6.5" rx="2" fill="#0a0808"/>
-  <ellipse cx="692" cy="262" rx="13.5" ry="19" fill="#b81616"/>
-  <ellipse cx="692" cy="253" rx="9.5" ry="8" fill="#d82020" opacity=".5"/>
-  <ellipse cx="692" cy="273" rx="5.5" ry="3.8" fill="#880e0e" opacity=".55"/>
-  <ellipse cx="692" cy="246" rx="7" ry="2.5" fill="#c88020" opacity=".6"/>
-  <ellipse cx="692" cy="278" rx="5" ry="2" fill="#c88020" opacity=".45"/>
-  <line x1="692" y1="281" x2="692" y2="290" stroke="#0a0808" stroke-width="1.8"/>
-  <ellipse cx="692" cy="262" rx="14" ry="20" fill="#ff6020" opacity=".16" filter="url(#g4)"/>
+<g class="bob2">
+  <path d="M690,255 Q690,260 692,274 Q694,283 690,288 Q688,293 692,294 Q696,295 692,288 Q690,283 692,274 Q694,262 694,255" stroke="#9a1010" stroke-width="13" fill="none" stroke-linecap="round"/>
 </g>
-<g class="la" style="animation-delay:.35s">
-  <rect x="753" y="246" width="9" height="6.5" rx="2" fill="#0a0808"/>
-  <ellipse cx="757" cy="262" rx="13.5" ry="19" fill="#b81616"/>
-  <ellipse cx="757" cy="253" rx="9.5" ry="8" fill="#d82020" opacity=".5"/>
-  <ellipse cx="757" cy="273" rx="5.5" ry="3.8" fill="#880e0e" opacity=".55"/>
-  <ellipse cx="757" cy="246" rx="7" ry="2.5" fill="#c88020" opacity=".6"/>
-  <ellipse cx="757" cy="278" rx="5" ry="2" fill="#c88020" opacity=".45"/>
-  <line x1="757" y1="281" x2="757" y2="290" stroke="#0a0808" stroke-width="1.8"/>
-  <ellipse cx="757" cy="262" rx="14" ry="20" fill="#ff6020" opacity=".16" filter="url(#g4)"/>
+<g class="bob">
+  <path d="M757,255 Q757,260 759,274 Q761,283 757,288 Q755,293 759,294 Q763,295 759,288 Q757,283 759,274 Q761,262 761,255" stroke="#9a1010" stroke-width="13" fill="none" stroke-linecap="round"/>
 </g>
-<g class="lc">
-  <rect x="789" y="248" width="9" height="6.5" rx="2" fill="#0a0808"/>
-  <ellipse cx="793" cy="264" rx="13.5" ry="19" fill="#b81616"/>
-  <ellipse cx="793" cy="255" rx="9.5" ry="8" fill="#d82020" opacity=".5"/>
-  <ellipse cx="793" cy="275" rx="5.5" ry="3.8" fill="#880e0e" opacity=".55"/>
-  <ellipse cx="793" cy="248" rx="7" ry="2.5" fill="#c88020" opacity=".6"/>
-  <ellipse cx="793" cy="280" rx="5" ry="2" fill="#c88020" opacity=".45"/>
-  <line x1="793" y1="283" x2="793" y2="292" stroke="#0a0808" stroke-width="1.8"/>
-  <ellipse cx="793" cy="264" rx="14" ry="20" fill="#ff6020" opacity=".18" filter="url(#g4)"/>
-  <ellipse cx="793" cy="295" rx="30" ry="12" fill="#ff4010" opacity=".09"/>
+<g class="bob2">
+  <path d="M794,257 Q794,262 796,276 Q798,285 794,290 Q792,295 796,296 Q800,297 796,290 Q794,285 796,276 Q798,264 798,257" stroke="#9a1010" stroke-width="13" fill="none" stroke-linecap="round"/>
 </g>
 
-<!-- Kitchen smoke -->
-<circle cx="736" cy="260" r="13" fill="#141018" class="s1"/>
-<circle cx="741" cy="246" r="10" fill="#100c14" class="s2"/>
-<circle cx="737" cy="233" r="9"  fill="#0e0a12" class="s3"/>
-<circle cx="737" cy="262" r="2.8" fill="#ff3808" opacity=".38" class="s1"/>
-
-<!-- Windows (warm glow) -->
-<!-- Left -->
-<ellipse cx="652" cy="328" rx="32" ry="21" fill="#f5c040" opacity=".09"/>
-<rect x="632" y="310" width="48" height="37" rx="5.5" fill="#f5c864"/>
-<rect x="634" y="312" width="44" height="33" rx="4" fill="#f5d074"/>
-<rect x="634" y="312" width="44" height="33" rx="4" fill="none" stroke="#c89010" stroke-width="1.2"/>
-<line x1="656" y1="312" x2="656" y2="345" stroke="#a87008" stroke-width="1.1"/>
-<line x1="634" y1="328" x2="678" y2="328" stroke="#a87008" stroke-width="1.1"/>
-<rect x="634" y="312" width="11" height="33" rx="2" fill="#b07010" opacity=".14"/>
-<!-- Right -->
-<ellipse cx="800" cy="328" rx="32" ry="21" fill="#f5c040" opacity=".09"/>
-<rect x="780" y="310" width="48" height="37" rx="5.5" fill="#f5c864"/>
-<rect x="782" y="312" width="44" height="33" rx="4" fill="#f5d074"/>
-<rect x="782" y="312" width="44" height="33" rx="4" fill="none" stroke="#c89010" stroke-width="1.2"/>
-<line x1="804" y1="312" x2="804" y2="345" stroke="#a87008" stroke-width="1.1"/>
-<line x1="782" y1="328" x2="826" y2="328" stroke="#a87008" stroke-width="1.1"/>
+<!-- Windows -->
+<rect x="632" y="300" width="48" height="36" rx="3" fill="#bcd4e8" stroke="#6a4820" stroke-width="1.4" filter="url(#inkBleed)"/>
+<rect x="632" y="300" width="48" height="36" fill="url(#crosshatch)" opacity=".3"/>
+<line x1="656" y1="300" x2="656" y2="336" stroke="#6a4820" stroke-width="1.2"/>
+<line x1="632" y1="318" x2="680" y2="318" stroke="#6a4820" stroke-width="1.2"/>
+<rect x="772" y="300" width="48" height="36" rx="3" fill="#bcd4e8" stroke="#6a4820" stroke-width="1.4" filter="url(#inkBleed)"/>
+<rect x="772" y="300" width="48" height="36" fill="url(#crosshatch)" opacity=".3"/>
+<line x1="796" y1="300" x2="796" y2="336" stroke="#6a4820" stroke-width="1.2"/>
+<line x1="772" y1="318" x2="820" y2="318" stroke="#6a4820" stroke-width="1.2"/>
 
 <!-- Pillars -->
-<rect x="624" y="280" width="18" height="102" rx="4.5" fill="#0c1624"/>
-<rect x="626" y="280" width="14" height="102" rx="3.5" fill="#0e1c2e"/>
-<rect x="810" y="280" width="18" height="102" rx="4.5" fill="#0c1624"/>
-<rect x="812" y="280" width="14" height="102" rx="3.5" fill="#0e1c2e"/>
+<rect x="622" y="268" width="18" height="98" rx="2" fill="#d4c098" stroke="#8a6020" stroke-width="1" filter="url(#wc)"/>
+<rect x="812" y="268" width="18" height="98" rx="2" fill="#d4c098" stroke="#8a6020" stroke-width="1" filter="url(#wc)"/>
 
-<!-- Double doors -->
-<rect x="690" y="337" width="74" height="52" rx="5.5" fill="#05090e"/>
-<rect x="692" y="339" width="35" height="48" rx="4" fill="#070d1c"/>
-<rect x="729" y="339" width="35" height="48" rx="4" fill="#070d1c"/>
-<!-- Door panels -->
-<g stroke="rgba(240,188,72,.1)" stroke-width="1" fill="none">
-  <rect x="695" y="343" width="29" height="17" rx="2"/><rect x="695" y="364" width="29" height="17" rx="2"/>
-  <rect x="732" y="343" width="29" height="17" rx="2"/><rect x="732" y="364" width="29" height="17" rx="2"/>
+<!-- Doors -->
+<rect x="690" y="328" width="74" height="50" rx="3" fill="#5a2e10" stroke="#6a4820" stroke-width="1.4" filter="url(#inkBleed)"/>
+<line x1="727" y1="328" x2="727" y2="378" stroke="#6a4820" stroke-width="1.2"/>
+<g stroke="#8a6020" stroke-width=".9" opacity=".5" fill="none" filter="url(#inkBleed)">
+  <rect x="694" y="333" width="30" height="18" rx="2"/><rect x="694" y="354" width="30" height="18" rx="2"/>
+  <rect x="730" y="333" width="30" height="18" rx="2"/><rect x="730" y="354" width="30" height="18" rx="2"/>
 </g>
-<circle cx="726" cy="364" r="3.5" fill="#f5c040" opacity=".65" filter="url(#g2)"/>
-<circle cx="732" cy="364" r="3.5" fill="#f5c040" opacity=".65" filter="url(#g2)"/>
-<!-- Light under door -->
-<ellipse cx="727" cy="389" rx="28" ry="5.5" fill="#f5c040" opacity=".15"/>
-<!-- Courtyard paving -->
-<rect x="620" y="382" width="214" height="28" rx="5" fill="#0e1020" opacity=".8"/>
-<g stroke="#161412" stroke-width="1.2" opacity=".55">
-  <line x1="640" y1="382" x2="640" y2="410"/><line x1="670" y1="382" x2="670" y2="410"/>
-  <line x1="700" y1="382" x2="700" y2="410"/><line x1="730" y1="382" x2="730" y2="410"/>
-  <line x1="760" y1="382" x2="760" y2="410"/><line x1="790" y1="382" x2="790" y2="410"/>
-  <line x1="820" y1="382" x2="820" y2="410"/>
-</g>
+<circle cx="724" cy="354" r="3.5" fill="#c89828"/>
+<circle cx="730" cy="354" r="3.5" fill="#c89828"/>
+
+<!-- Chimney smoke K BBQ -->
+<path d="M730,228 Q726,216 732,204 Q738,192 734,180" stroke="#6a6060" stroke-width="4" fill="none" stroke-linecap="round" class="sm" opacity=".6"/>
+<path d="M736,226 Q733,214 738,202 Q744,190 740,178" stroke="#6a6060" stroke-width="3" fill="none" stroke-linecap="round" class="sm2" opacity=".45"/>
+<path d="M724,230 Q720,218 726,206" stroke="#6a6060" stroke-width="2.5" fill="none" stroke-linecap="round" class="sm3" opacity=".4"/>
 ```
 
-</g><!-- /drop -->
+</g><!-- /bld -->
 
-  <!-- LABEL -->
+  <!-- Label -->
 
-  <g class="sbob" style="animation-delay:.55s">
-    <rect x="644" y="212" width="164" height="32" rx="16" fill="rgba(4,8,20,.9)"/>
-    <rect x="644" y="212" width="164" height="32" rx="16" fill="none" stroke="rgba(210,50,32,.42)" stroke-width="1.2"/>
-    <text x="726" y="233" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="15" fill="rgba(255,175,115,.94)" font-weight="700" class="lbl-txt">🍖 K BBQ</text>
+  <g class="lbl bob2">
+    <rect x="641" y="196" width="170" height="32" rx="3" fill="rgba(244,234,208,.92)" stroke="#3a2a10" stroke-width="1.5" filter="url(#softDrop)"/>
+    <text x="644" y="208" font-size="6" fill="#3a2a10" opacity=".55">✦</text>
+    <text x="808" y="208" text-anchor="end" font-size="6" fill="#3a2a10" opacity=".55">✦</text>
+    <text x="726" y="211" text-anchor="middle" font-family="'Playfair Display',serif" font-size="11" fill="#3a2a10" font-weight="700" letter-spacing=".5">K BBQ 직장</text>
+    <text x="726" y="224" text-anchor="middle" font-family="'IM Fell English',serif" font-size="9.5" fill="#6a4820" font-style="italic">Korean Barbecue Restaurant</text>
   </g>
-  <text x="726" y="198" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="9.5" fill="rgba(210,80,48,.6)" font-weight="600" class="hint">탭해서 입장 ↓</text>
+  <text x="726" y="182" text-anchor="middle" font-family="'IM Fell English',serif" font-size="9" fill="#8a6020" font-style="italic" class="bob">↓ 탭하면 업무 대시보드</text>
 </g><!-- /K BBQ poi -->
 
-<!-- Village nameplate (clickable) -->
+<!-- STAMP decoration (bottom right corner area) -->
 
-<g class="poi sbob" onclick="showVillageInfo()" style="cursor:pointer">
-  <rect x="418" y="158" width="176" height="54" rx="12" fill="rgba(4,9,24,.94)" filter="url(#g2)"/>
-  <rect x="418" y="158" width="176" height="54" rx="12" fill="none" stroke="rgba(240,188,72,.38)" stroke-width="1.5"/>
-  <rect x="422" y="162" width="168" height="46" rx="10" fill="none" stroke="rgba(240,188,72,.12)" stroke-width=".8"/>
-  <text x="506" y="180" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="10.5" fill="rgba(240,188,72,.5)" font-weight="600" letter-spacing="2.5">HAZEL VILLAGE</text>
-  <text x="506" y="202" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="18" fill="rgba(240,215,140,.96)" font-weight="700" letter-spacing="3.5">하젤마을</text>
-  <ellipse cx="506" cy="183" rx="76" ry="22" fill="#f5c040" opacity=".04"/>
-  <text x="506" y="227" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="9" fill="rgba(240,188,72,.38)" font-weight="600" class="sh2">✦ 탭하면 마을 안내 ✦</text>
+<g transform="translate(162,130)" class="stamp" filter="url(#softDrop)">
+  <rect x="-38" y="-38" width="76" height="76" rx="4" fill="rgba(244,234,208,.9)" stroke="#c2382a" stroke-width="3"/>
+  <rect x="-32" y="-32" width="64" height="64" rx="2" fill="none" stroke="#c2382a" stroke-width="1"/>
+  <text y="-10" text-anchor="middle" font-family="'Playfair Display',serif" font-size="8" fill="#c2382a" letter-spacing="1">하젤마을</text>
+  <text y="4" text-anchor="middle" font-size="20">🌿</text>
+  <text y="22" text-anchor="middle" font-family="'IM Fell English',serif" font-size="8" fill="#c2382a" font-style="italic">Certified Map</text>
 </g>
 
 </svg>
 
-<div class="vnav">
-  <button class="nav-back" onclick="go('s1','s0')">← 타이틀로</button>
-  <span class="nav-title">🌙 하젤마을</span>
-  <span class="nav-r">Lv.7 · 하젤 GM</span>
+<div class="mapnav">
+  <div></div><!-- spacer -->
+  <span class="nav-title" style="font-family:'Playfair Display',serif;font-size:14px;color:#3a2a10;text-shadow:1px 1px 0 rgba(244,234,208,.9)">🗺️ 하젤마을 일러스트 지도</span>
+  <div></div>
 </div>
 </div><!-- /village -->
 
-<!-- ══════════════════ HOUSE ══════════════════ -->
+<!-- ═══════════════ HOUSE MAP ═══════════════ -->
 
 <div id="s2" class="screen gone">
-<div class="hnav">
-  <button class="nav-back" onclick="go('s2','s1')">← 마을로</button>
-  <span class="nav-title" style="pointer-events:none">🏠 하젤네 집 — 도면</span>
-  <span class="nav-r">방마다 탭해보세요 ✦</span>
-</div>
+<svg class="sc" viewBox="0 0 960 590" preserveAspectRatio="xMidYMid slice">
 
-<svg class="sc" viewBox="0 0 960 542" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:46px;left:0;width:100%;height:calc(100% - 46px)">
-<defs>
-  <linearGradient id="hBg" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#0c1a3e"/><stop offset="100%" stop-color="#060e22"/>
-  </linearGradient>
-  <radialGradient id="rg1" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#7850c0" stop-opacity=".2"/><stop offset="100%" stop-color="#7850c0" stop-opacity="0"/>
-  </radialGradient>
-  <radialGradient id="rg2" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#3870d8" stop-opacity=".18"/><stop offset="100%" stop-color="#3870d8" stop-opacity="0"/>
-  </radialGradient>
-  <radialGradient id="rg3" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#d84888" stop-opacity=".17"/><stop offset="100%" stop-color="#d84888" stop-opacity="0"/>
-  </radialGradient>
-  <radialGradient id="rg4" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#d8980a" stop-opacity=".18"/><stop offset="100%" stop-color="#d8980a" stop-opacity="0"/>
-  </radialGradient>
-  <radialGradient id="rg5" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#28b878" stop-opacity=".17"/><stop offset="100%" stop-color="#28b878" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="fs"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity=".35"/></filter>
-</defs>
+<!-- Parchment base -->
 
-<!-- Shell -->
+<rect width="960" height="590" fill="#f2e6c4"/>
+<rect width="960" height="590" fill="#ede0b5" filter="url(#parch)" opacity=".65"/>
+<rect width="960" height="590" fill="url(#vig)"/>
 
-<rect x="34" y="12" width="892" height="518" rx="16" fill="#040c1e" filter="url(#fs)"/>
-<rect x="38" y="16" width="884" height="510" rx="14" fill="url(#hBg)"/>
-<!-- Decorative border -->
-<rect x="38" y="16" width="884" height="510" rx="14" fill="none" stroke="rgba(240,188,72,.16)" stroke-width="1.5"/>
-<rect x="44" y="22" width="872" height="498" rx="12" fill="none" stroke="rgba(240,188,72,.06)" stroke-width="1"/>
-<!-- Roof strip decoration -->
-<rect x="34" y="12" width="892" height="22" rx="12" fill="#030a18"/>
-<path d="M38,23 Q480,11 922,23" fill="none" stroke="rgba(210,42,26,.32)" stroke-width="2.5"/>
-<text x="480" y="31" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(240,212,130,.62)" font-weight="600" letter-spacing="3">🏠 하젤네 집 · 방을 탭해 대시보드로 이동</text>
+<!-- Border -->
 
-<!-- Subtle dot grid -->
-
-<g fill="rgba(240,188,72,.04)">
-  <circle cx="100" cy="80" r="1"/><circle cx="200" cy="80" r="1"/><circle cx="300" cy="80" r="1"/>
-  <circle cx="400" cy="80" r="1"/><circle cx="500" cy="80" r="1"/><circle cx="600" cy="80" r="1"/>
-  <circle cx="700" cy="80" r="1"/><circle cx="800" cy="80" r="1"/><circle cx="900" cy="80" r="1"/>
-  <circle cx="100" cy="170" r="1"/><circle cx="200" cy="170" r="1"/><circle cx="300" cy="170" r="1"/>
-  <circle cx="400" cy="170" r="1"/><circle cx="500" cy="170" r="1"/><circle cx="600" cy="170" r="1"/>
-  <circle cx="700" cy="170" r="1"/><circle cx="800" cy="170" r="1"/><circle cx="900" cy="170" r="1"/>
-  <circle cx="100" cy="260" r="1"/><circle cx="200" cy="260" r="1"/><circle cx="300" cy="260" r="1"/>
-  <circle cx="400" cy="260" r="1"/><circle cx="500" cy="260" r="1"/><circle cx="600" cy="260" r="1"/>
-  <circle cx="700" cy="260" r="1"/><circle cx="800" cy="260" r="1"/><circle cx="900" cy="260" r="1"/>
-  <circle cx="100" cy="350" r="1"/><circle cx="200" cy="350" r="1"/><circle cx="300" cy="350" r="1"/>
-  <circle cx="400" cy="350" r="1"/><circle cx="500" cy="350" r="1"/><circle cx="600" cy="350" r="1"/>
-  <circle cx="700" cy="350" r="1"/><circle cx="800" cy="350" r="1"/><circle cx="900" cy="350" r="1"/>
-  <circle cx="100" cy="440" r="1"/><circle cx="200" cy="440" r="1"/><circle cx="300" cy="440" r="1"/>
-  <circle cx="400" cy="440" r="1"/><circle cx="500" cy="440" r="1"/><circle cx="600" cy="440" r="1"/>
-  <circle cx="700" cy="440" r="1"/><circle cx="800" cy="440" r="1"/><circle cx="900" cy="440" r="1"/>
+<rect x="14" y="14" width="932" height="562" fill="none" stroke="#3a2a10" stroke-width="3" rx="2"/>
+<rect x="20" y="20" width="920" height="550" fill="none" stroke="#3a2a10" stroke-width="1.2" rx="1"/>
+<g fill="#3a2a10" font-size="12">
+  <text x="26" y="29" text-anchor="middle">✦</text><text x="934" y="29" text-anchor="middle">✦</text>
+  <text x="26" y="570" text-anchor="middle">✦</text><text x="934" y="570" text-anchor="middle">✦</text>
 </g>
 
-<!-- ── WALLS ── -->
+<!-- Title -->
 
-<rect x="342" y="42" width="10" height="474" fill="#08142a"/>
-<rect x="344" y="42" width="4" height="474" fill="rgba(240,188,72,.1)"/>
-<rect x="52" y="282" width="858" height="10" fill="#08142a"/>
-<rect x="52" y="285" width="858" height="4" fill="rgba(240,188,72,.1)"/>
-<rect x="638" y="292" width="10" height="224" fill="#08142a"/>
-<rect x="640" y="295" width="4" height="221" fill="rgba(240,188,72,.1)"/>
-<rect x="638" y="42" width="10" height="240" fill="#08142a"/>
-<rect x="640" y="42" width="4" height="240" fill="rgba(240,188,72,.1)"/>
+<rect x="280" y="26" width="400" height="40" rx="3" fill="rgba(244,234,208,.75)"/>
+<rect x="280" y="26" width="400" height="40" rx="3" fill="none" stroke="#3a2a10" stroke-width="1.5"/>
+<text x="480" y="42" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#3a2a10" font-style="italic" letter-spacing="3">INTERIOR PLAN OF</text>
+<text x="480" y="59" text-anchor="middle" font-family="'Playfair Display',serif" font-size="17" fill="#3a2a10" font-weight="900" letter-spacing="5">하젤네 집 실내 도면</text>
 
-<!-- ── DOORS ── -->
+<!-- Outer house walls (thick illustrated lines) -->
 
-<!-- Bedroom ↔ Study (top, vertical wall) -->
+<rect x="48" y="74" width="864" height="490" rx="6" fill="#f5ead0" stroke="#3a2a10" stroke-width="5" filter="url(#inkBleed)"/>
+<rect x="48" y="74" width="864" height="490" rx="6" fill="url(#parch)" opacity=".4"/>
 
-<rect x="340" y="82" width="14" height="56" rx="3" fill="#0c1830"/>
-<text x="347" y="114" text-anchor="middle" font-size="7.5" fill="rgba(240,188,72,.38)" font-family="'Cormorant Garamond',serif" writing-mode="tb">문</text>
-<!-- Bedroom ↔ Living (horizontal wall) -->
-<rect x="162" y="280" width="68" height="14" rx="3" fill="#0c1830"/>
-<text x="196" y="292" text-anchor="middle" font-size="7.5" fill="rgba(240,188,72,.38)" font-family="'Cormorant Garamond',serif">문</text>
-<!-- Study ↔ Kitchen (vertical wall, bottom) -->
-<rect x="340" y="348" width="14" height="56" rx="3" fill="#0c1830"/>
-<text x="347" y="380" text-anchor="middle" font-size="7.5" fill="rgba(240,188,72,.38)" font-family="'Cormorant Garamond',serif" writing-mode="tb">문</text>
-<!-- Study ↔ Dressroom (top-right vertical) -->
-<rect x="636" y="112" width="14" height="54" rx="3" fill="#0c1830"/>
-<text x="643" y="143" text-anchor="middle" font-size="7.5" fill="rgba(240,188,72,.38)" font-family="'Cormorant Garamond',serif" writing-mode="tb">문</text>
-<!-- Kitchen ↔ Bath (bottom-right vertical) -->
-<rect x="636" y="348" width="14" height="54" rx="3" fill="#0c1830"/>
-<text x="643" y="379" text-anchor="middle" font-size="7.5" fill="rgba(240,188,72,.38)" font-family="'Cormorant Garamond',serif" writing-mode="tb">문</text>
+<!-- Floor hatching (subtle) -->
+
+<rect x="52" y="78" width="856" height="482" fill="url(#dots)" opacity=".18"/>
+
+<!-- ── WALLS (thick ink lines) ── -->
+
+<!-- Vertical center -->
+
+<line x1="352" y1="74" x2="352" y2="564" stroke="#3a2a10" stroke-width="5" filter="url(#inkBleed)"/>
+<!-- Horizontal mid -->
+<line x1="48" y1="296" x2="912" y2="296" stroke="#3a2a10" stroke-width="5" filter="url(#inkBleed)"/>
+<!-- Right zone top vertical -->
+<line x1="648" y1="74" x2="648" y2="296" stroke="#3a2a10" stroke-width="4" filter="url(#inkBleed)"/>
+<!-- Right zone bottom vertical -->
+<line x1="648" y1="296" x2="648" y2="564" stroke="#3a2a10" stroke-width="4" filter="url(#inkBleed)"/>
+
+<!-- ── DOOR OPENINGS (gap with arc) ── -->
+
+<!-- Room ↔ Living (horizontal) -->
+
+<line x1="170" y1="293" x2="238" y2="293" stroke="#f5ead0" stroke-width="7"/>
+<path d="M170,293 Q204,260 238,293" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-dasharray="3 2" filter="url(#inkBleed)"/>
+<!-- Room ↔ Study (vertical top) -->
+<line x1="349" y1="92" x2="349" y2="158" stroke="#f5ead0" stroke-width="8"/>
+<path d="M349,92 Q382,125 349,158" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-dasharray="3 2" filter="url(#inkBleed)"/>
+<!-- Living ↔ Kitchen (vertical bottom) -->
+<line x1="349" y1="356" x2="349" y2="422" stroke="#f5ead0" stroke-width="8"/>
+<path d="M349,356 Q382,389 349,422" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-dasharray="3 2" filter="url(#inkBleed)"/>
+<!-- Study ↔ Dressroom (top right vertical) -->
+<line x1="645" y1="112" x2="645" y2="178" stroke="#f5ead0" stroke-width="8"/>
+<path d="M645,112 Q612,145 645,178" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-dasharray="3 2" filter="url(#inkBleed)"/>
+<!-- Kitchen ↔ Bath (bottom right vertical) -->
+<line x1="645" y1="360" x2="645" y2="426" stroke="#f5ead0" stroke-width="8"/>
+<path d="M645,360 Q612,393 645,426" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-dasharray="3 2" filter="url(#inkBleed)"/>
 <!-- Front door -->
-<rect x="256" y="512" width="72" height="10" rx="3" fill="#c05818"/>
-<text x="292" y="524" text-anchor="middle" font-size="11" fill="rgba(240,160,80,.72)" font-family="'Cormorant Garamond',serif" font-weight="600">🚪 현관</text>
+<line x1="258" y1="561" x2="330" y2="561" stroke="#f5ead0" stroke-width="8"/>
+<path d="M258,564 Q294,530 330,564" fill="none" stroke="#3a2a10" stroke-width="1.8" filter="url(#inkBleed)"/>
+<text x="294" y="582" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#3a2a10" font-style="italic">정문 · Front Door</text>
 
-<!-- ══ ROOM ZONES ══ -->
+<!-- ── ROOM WATERCOLOUR FILLS ── -->
 
-<!-- 방 — top left -->
+<ellipse cx="200" cy="185" rx="145" ry="108" fill="url(#wcGold)" opacity=".28" filter="url(#wc)"/>
+<ellipse cx="500" cy="185" rx="135" ry="108" fill="url(#wcBlue)" opacity=".22" filter="url(#wc)"/>
+<ellipse cx="780" cy="185" rx="118" ry="108" fill="url(#wcRose)" opacity=".22" filter="url(#wc)"/>
+<ellipse cx="200" cy="430" rx="145" ry="110" fill="url(#wcSage)" opacity=".24" filter="url(#wc)"/>
+<ellipse cx="500" cy="430" rx="135" ry="110" fill="url(#wcGreen)" opacity=".2" filter="url(#wc)"/>
+<ellipse cx="780" cy="430" rx="118" ry="110" fill="url(#wcRose)" opacity=".18" filter="url(#wc)"/>
 
-<g class="rz" onclick="showRoom('방','🛏️','개인 대시보드','#7850c0',['🌙 수면 & 기상 기록','📔 감정 일기 & 하루 회고','✅ 습관 트래커 · 초집중 챌린지','📚 독서 노트 & 위시리스트','🌸 월간 회고'])">
-  <rect x="52" y="42" width="290" height="240" fill="rgba(120,80,192,.07)" rx="3" class="rf"/>
-  <ellipse cx="197" cy="162" rx="132" ry="102" fill="url(#rg1)"/>
-  <!-- Bed -->
-  <rect x="66" y="56" width="106" height="66" rx="7" fill="rgba(120,80,192,.2)"/>
-  <rect x="66" y="56" width="106" height="20" rx="7" fill="rgba(120,80,192,.3)"/>
-  <rect x="66" y="56" width="20" height="66" rx="6" fill="rgba(120,80,192,.25)"/>
-  <rect x="152" y="56" width="20" height="66" rx="6" fill="rgba(120,80,192,.25)"/>
-  <!-- Nightstand + lamp -->
-  <rect x="178" y="68" width="26" height="32" rx="3.5" fill="rgba(120,80,192,.16)"/>
-  <circle cx="191" cy="72" r="9" fill="rgba(245,195,70,.3)" filter="url(#g2)"/>
-  <ellipse cx="191" cy="82" rx="18" ry="9" fill="rgba(245,195,70,.08)"/>
+<!-- ── ROOM ZONES (clickable) ── -->
+
+<!-- 방 (Bedroom) -->
+
+<g class="rz" onclick="showRoom('방','🛏️','개인 대시보드','#8a6028',['🌙 수면 & 기상 기록','📔 감정 일기 & 하루 회고','✅ 습관 트래커 · 초집중 챌린지','📚 독서 노트 & 위시리스트','🌸 월간 회고'])">
+  <rect x="52" y="78" width="296" height="214" fill="transparent" class="rfill"/>
+  <!-- Bed illustration -->
+  <rect x="72" y="96" width="108" height="72" rx="5" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <rect x="72" y="96" width="108" height="22" rx="4" fill="#c8a860" opacity=".55" stroke="#8a6020" stroke-width=".9"/>
+  <rect x="72" y="96" width="20" height="72" rx="3" fill="#c8a860" opacity=".45" stroke="#8a6020" stroke-width=".9"/>
+  <rect x="160" y="96" width="20" height="72" rx="3" fill="#c8a860" opacity=".45" stroke="#8a6020" stroke-width=".9"/>
+  <!-- Bedding (wavy lines) -->
+  <path d="M76,135 Q92,128 108,135 Q124,142 140,135 Q156,128 172,135" fill="none" stroke="#8a6020" stroke-width=".9" opacity=".4" filter="url(#inkBleed)"/>
+  <path d="M76,148 Q92,142 108,148 Q124,154 140,148 Q156,142 172,148" fill="none" stroke="#8a6020" stroke-width=".9" opacity=".35" filter="url(#inkBleed)"/>
+  <!-- Pillow circles -->
+  <circle cx="95" cy="107" r="11" fill="none" stroke="#8a6020" stroke-width=".9" filter="url(#inkBleed)"/>
+  <circle cx="123" cy="107" r="11" fill="none" stroke="#8a6020" stroke-width=".9" filter="url(#inkBleed)"/>
+  <!-- Nightstand -->
+  <rect x="186" y="104" width="26" height="32" rx="3" fill="none" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <circle cx="199" cy="108" r="5.5" fill="none" stroke="#8a6020" stroke-width=".9"/><!-- lamp top -->
+  <text x="199" y="111" text-anchor="middle" font-size="6" fill="#8a6020" opacity=".55">💡</text>
   <!-- Wardrobe -->
-  <rect x="294" y="56" width="34" height="108" rx="5" fill="rgba(120,80,192,.16)"/>
-  <line x1="311" y1="56" x2="311" y2="164" stroke="rgba(120,80,192,.25)" stroke-width="1.2"/>
-  <circle cx="301" cy="116" r="3" fill="rgba(240,188,72,.38)"/>
-  <circle cx="321" cy="116" r="3" fill="rgba(240,188,72,.38)"/>
-  <!-- Rug -->
-  <ellipse cx="154" cy="190" rx="72" ry="46" fill="rgba(120,80,192,.09)" stroke="rgba(120,80,192,.2)" stroke-width="1.5"/>
-  <ellipse cx="154" cy="190" rx="52" ry="30" fill="none" stroke="rgba(120,80,192,.1)" stroke-width="1"/>
-  <!-- Plant -->
-  <circle cx="298" cy="218" r="19" fill="rgba(52,140,60,.2)"/>
-  <circle cx="292" cy="225" r="13" fill="rgba(38,118,46,.2)"/>
-  <rect x="288" y="233" width="10" height="14" rx="3" fill="rgba(130,95,55,.25)"/>
-  <!-- Window light (on wall) -->
-  <rect x="52" y="106" width="7" height="40" rx="3" fill="rgba(245,195,70,.2)"/>
-  <ellipse cx="54" cy="126" rx="26" ry="15" fill="rgba(245,195,70,.08)"/>
-  <!-- Room divider line (subtle) -->
-  <rect x="52" y="42" width="290" height="240" rx="3" fill="none" stroke="rgba(120,80,192,.08)" stroke-width="1"/>
-  <!-- Labels -->
-  <text x="197" y="226" text-anchor="middle" font-size="34" opacity=".68">🛏️</text>
-  <text x="197" y="254" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="17" fill="rgba(175,148,255,.92)" font-weight="700">방</text>
-  <text x="197" y="270" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(155,128,232,.68)" font-weight="600">개인 · 습관 · 일기</text>
-  <text x="197" y="283" text-anchor="middle" font-size="9" fill="rgba(120,80,192,.55)" font-family="'Cormorant Garamond',serif">✦ 탭 ✦</text>
+  <rect x="296" y="84" width="44" height="110" rx="3" fill="none" stroke="#3a2a10" stroke-width="1.8" filter="url(#inkBleed)"/>
+  <line x1="318" y1="84" x2="318" y2="194" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <circle cx="306" cy="140" r="2.5" fill="#3a2a10"/>
+  <circle cx="330" cy="140" r="2.5" fill="#3a2a10"/>
+  <!-- Plant (illustrated) -->
+  <circle cx="296" cy="236" r="18" fill="none" stroke="#5a8a3a" stroke-width="1.4" filter="url(#wc)"/>
+  <path d="M296,218 Q288,228 292,240" fill="none" stroke="#5a8a3a" stroke-width="1.2" filter="url(#inkBleed)"/>
+  <path d="M296,218 Q304,228 300,240" fill="none" stroke="#5a8a3a" stroke-width="1.2" filter="url(#inkBleed)"/>
+  <rect x="290" y="248" width="12" height="14" rx="3" fill="none" stroke="#8a6020" stroke-width="1.2" filter="url(#inkBleed)"/>
+  <!-- Room label -->
+  <text x="200" y="230" text-anchor="middle" font-size="30">🛏️</text>
+  <text x="200" y="258" text-anchor="middle" font-family="'Playfair Display',serif" font-size="16" fill="#3a2a10" font-weight="700">방</text>
+  <text x="200" y="274" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#6a4820" font-style="italic">Bedroom · 개인 · 습관</text>
+  <text x="200" y="287" text-anchor="middle" font-size="9" fill="#8a6020" font-family="'IM Fell English',serif">↑ 탭 ↑</text>
 </g>
 
-<!-- 서재 — top center -->
+<!-- 서재 (Study) -->
 
-<g class="rz" onclick="showRoom('서재 / 책상','💻','집중 & 공부 대시보드','#3870d8',['🔥 초집중 챌린지 트래커','📖 학습 노트 & 링크 보관','🧠 Hazel Check 앱 프로젝트','💡 아이디어 뱅크','📅 주간 플래너 & 목표'])">
-  <rect x="352" y="42" width="286" height="240" fill="rgba(56,112,216,.07)" rx="3" class="rf"/>
-  <ellipse cx="495" cy="162" rx="130" ry="102" fill="url(#rg2)"/>
-  <!-- Desk -->
-  <rect x="366" y="56" width="254" height="60" rx="5" fill="rgba(56,112,216,.18)"/>
-  <!-- Monitor -->
-  <rect x="450" y="60" width="92" height="52" rx="5.5" fill="rgba(56,112,216,.28)"/>
-  <rect x="454" y="64" width="84" height="44" rx="4" fill="rgba(80,160,255,.2)"/>
-  <rect x="462" y="70" width="68" height="32" rx="3" fill="rgba(120,190,255,.15)"/>
-  <ellipse cx="496" cy="86" rx="38" ry="20" fill="rgba(56,112,216,.1)" filter="url(#g2)"/>
-  <rect x="487" y="112" width="12" height="8" rx="2" fill="rgba(56,112,216,.22)"/>
-  <!-- Keyboard -->
-  <rect x="446" y="128" width="62" height="12" rx="3" fill="rgba(56,112,216,.16)"/>
-  <!-- Books -->
-  <rect x="368" y="62" width="76" height="88" rx="4" fill="rgba(56,112,216,.12)"/>
-  <g opacity=".62">
-    <rect x="374" y="68" width="11" height="76" rx="2" fill="#e07050"/>
-    <rect x="387" y="68" width="13" height="76" rx="2" fill="#50a850"/>
-    <rect x="402" y="68" width="11" height="76" rx="2" fill="#8050c0"/>
-    <rect x="415" y="68" width="13" height="76" rx="2" fill="#4878c0"/>
-    <rect x="430" y="68" width="10" height="76" rx="2" fill="#c07840"/>
+<g class="rz" onclick="showRoom('서재 / 책상','💻','집중 & 공부 대시보드','#3a6090',['🔥 초집중 챌린지 트래커','📖 학습 노트 & 링크 보관','🧠 Hazel Check 앱 프로젝트','💡 아이디어 뱅크','📅 주간 플래너 & 목표'])">
+  <rect x="356" y="78" width="288" height="214" fill="transparent" class="rfill"/>
+  <!-- Desk illustrated -->
+  <rect x="372" y="88" width="252" height="58" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <!-- Monitor (sketch) -->
+  <rect x="454" y="92" width="92" height="50" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.4" filter="url(#inkBleed)"/>
+  <rect x="458" y="96" width="84" height="42" rx="3" fill="url(#crosshatch)" opacity=".22"/>
+  <!-- Lines on screen (code/text hint) -->
+  <g stroke="#3a6090" stroke-width=".9" opacity=".45">
+    <line x1="462" y1="104" x2="502" y2="104"/><line x1="462" y1="110" x2="520" y2="110"/>
+    <line x1="462" y1="116" x2="496" y2="116"/><line x1="462" y1="122" x2="508" y2="122"/>
+    <line x1="462" y1="128" x2="492" y2="128"/>
   </g>
-  <!-- Lamp glow -->
-  <ellipse cx="564" cy="66" rx="28" ry="12" fill="rgba(245,215,115,.22)" filter="url(#g2)"/>
-  <rect x="558" y="66" width="8" height="32" rx="4" fill="rgba(56,112,216,.22)"/>
-  <!-- Chair back hint -->
-  <rect x="458" y="130" width="62" height="8" rx="4" fill="rgba(56,112,216,.18)"/>
-  <!-- Room border -->
-  <rect x="352" y="42" width="286" height="240" rx="3" fill="none" stroke="rgba(56,112,216,.07)" stroke-width="1"/>
+  <rect x="492" y="142" width="14" height="8" rx="2" fill="none" stroke="#3a2a10" stroke-width="1"/><!-- monitor stand -->
+  <!-- Books on shelf -->
+  <rect x="374" y="92" width="72" height="88" rx="3" fill="none" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <g stroke="#3a2a10" stroke-width="1" opacity=".55" fill="none">
+    <line x1="387" y1="92" x2="387" y2="180"/><line x1="400" y1="92" x2="400" y2="180"/>
+    <line x1="414" y1="92" x2="414" y2="180"/><line x1="428" y1="92" x2="428" y2="180"/>
+    <line x1="436" y1="92" x2="436" y2="180"/>
+  </g>
+  <!-- Book colours (tiny fills) -->
+  <rect x="374" y="92" width="13" height="88" fill="#c2382a" opacity=".3"/>
+  <rect x="387" y="92" width="13" height="88" fill="#3a6090" opacity=".3"/>
+  <rect x="400" y="92" width="14" height="88" fill="#5a8a3a" opacity=".3"/>
+  <rect x="414" y="92" width="14" height="88" fill="#c89828" opacity=".3"/>
+  <rect x="428" y="92" width="8" height="88" fill="#8a4a2a" opacity=".3"/>
+  <!-- Keyboard sketch -->
+  <rect x="456" y="147" width="62" height="12" rx="2" fill="none" stroke="#3a2a10" stroke-width="1" filter="url(#inkBleed)"/>
+  <g stroke="#3a2a10" stroke-width=".5" opacity=".4">
+    <line x1="464" y1="147" x2="464" y2="159"/><line x1="472" y1="147" x2="472" y2="159"/>
+    <line x1="480" y1="147" x2="480" y2="159"/><line x1="488" y1="147" x2="488" y2="159"/>
+    <line x1="496" y1="147" x2="496" y2="159"/><line x1="504" y1="147" x2="504" y2="159"/>
+  </g>
+  <!-- Lamp sketch -->
+  <line x1="562" y1="88" x2="562" y2="114" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <ellipse cx="562" cy="86" rx="22" ry="10" fill="none" stroke="#3a2a10" stroke-width="1.2" filter="url(#inkBleed)"/>
   <!-- Labels -->
-  <text x="495" y="224" text-anchor="middle" font-size="32" opacity=".7">💻</text>
-  <text x="495" y="250" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="16" fill="rgba(115,178,255,.92)" font-weight="700">서재 / 책상</text>
-  <text x="495" y="266" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(95,158,232,.68)" font-weight="600">초집중 챌린지 · 학습</text>
-  <text x="495" y="279" text-anchor="middle" font-size="9" fill="rgba(56,112,216,.55)" font-family="'Cormorant Garamond',serif">✦ 탭 ✦</text>
+  <text x="500" y="228" text-anchor="middle" font-size="28">💻</text>
+  <text x="500" y="254" text-anchor="middle" font-family="'Playfair Display',serif" font-size="15" fill="#3a2a10" font-weight="700">서재 / 책상</text>
+  <text x="500" y="270" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#6a4820" font-style="italic">Study · 초집중 · 학습</text>
+  <text x="500" y="283" text-anchor="middle" font-size="9" fill="#8a6020" font-family="'IM Fell English',serif">↑ 탭 ↑</text>
 </g>
 
-<!-- 드레스룸 — top right -->
+<!-- 드레스룸 (Dressroom) -->
 
-<g class="rz" onclick="showRoom('드레스룸','👗','스타일 & 쇼핑 대시보드','#d84888',['👗 옷 인벤토리 & 코디 기록','🛍️ 쇼핑 위시리스트','💄 뷰티 & 스킨케어 루틴','📸 OOTD 기록','✨ 셀프케어 체크리스트'])">
-  <rect x="648" y="42" width="262" height="240" fill="rgba(216,72,136,.07)" rx="3" class="rf"/>
-  <ellipse cx="779" cy="162" rx="118" ry="102" fill="url(#rg3)"/>
-  <!-- Closet rail -->
-  <rect x="660" y="58" width="238" height="110" rx="6" fill="rgba(216,72,136,.12)"/>
-  <line x1="660" y1="72" x2="898" y2="72" stroke="rgba(216,72,136,.28)" stroke-width="2"/>
-  <!-- Clothes (colour blocks) -->
-  <g opacity=".65">
-    <rect x="664" y="74" width="26" height="92" rx="5" fill="#ff6090"/>
-    <rect x="694" y="74" width="26" height="92" rx="5" fill="#78b8f8"/>
-    <rect x="724" y="74" width="26" height="92" rx="5" fill="#f8e070"/>
-    <rect x="754" y="74" width="26" height="92" rx="5" fill="#c070e8"/>
-    <rect x="784" y="74" width="26" height="92" rx="5" fill="#70e890"/>
-    <rect x="814" y="74" width="26" height="92" rx="5" fill="#f89060"/>
-    <rect x="844" y="74" width="26" height="92" rx="5" fill="#b0b0f8"/>
-    <rect x="874" y="74" width="20" height="92" rx="5" fill="#f8a0c0"/>
+<g class="rz" onclick="showRoom('드레스룸','👗','스타일 & 쇼핑 대시보드','#904a6a',['👗 옷 인벤토리 & 코디 기록','🛍️ 쇼핑 위시리스트','💄 뷰티 & 스킨케어 루틴','📸 OOTD 기록','✨ 셀프케어 체크리스트'])">
+  <rect x="652" y="78" width="256" height="214" fill="transparent" class="rfill"/>
+  <!-- Wardrobe with clothes illustrated -->
+  <rect x="664" y="84" width="232" height="110" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.8" filter="url(#inkBleed)"/>
+  <!-- Clothing rail line -->
+  <line x1="664" y1="100" x2="896" y2="100" stroke="#3a2a10" stroke-width="1.4" filter="url(#inkBleed)"/>
+  <!-- Dress/shirt silhouettes (simple sketches) -->
+  <g stroke="#904a6a" stroke-width="1.1" fill="none" opacity=".65" filter="url(#inkBleed)">
+    <path d="M676,100 Q672,108 668,106 Q672,116 676,114 L676,188 L692,188 L692,114 Q696,116 700,106 Q696,108 692,100"/>
+    <path d="M708,100 Q704,110 700,108 Q703,118 706,116 L706,188 L722,188 L722,116 Q725,118 728,108 Q724,110 720,100"/>
+    <path d="M736,100 L728,116 L736,118 L736,188 L756,188 L756,118 L764,116 L756,100"/>
+    <path d="M770,100 Q766,110 762,108 Q765,118 768,116 L768,188 L784,188 L784,116 Q787,118 790,108 Q786,110 782,100"/>
+    <path d="M798,100 L790,116 L798,118 L798,188 L818,188 L818,118 L826,116 L818,100"/>
+    <path d="M834,100 Q830,110 826,108 Q829,118 832,116 L832,188 L848,188 L848,116 Q851,118 854,108 Q850,110 846,100"/>
   </g>
-  <!-- Hanger hints -->
-  <g stroke="rgba(216,72,136,.35)" stroke-width="1.2">
-    <path d="M677,65 Q677,72 664,74"/><path d="M707,65 Q707,72 694,74"/>
-    <path d="M737,65 Q737,72 724,74"/><path d="M767,65 Q767,72 754,74"/>
-    <path d="M797,65 Q797,72 784,74"/><path d="M827,65 Q827,72 814,74"/>
-    <path d="M857,65 Q857,72 844,74"/>
-  </g>
+  <!-- Hanger dots -->
+  <g fill="#904a6a" opacity=".5"><circle cx="684" cy="99" r="2.5"/><circle cx="714" cy="99" r="2.5"/><circle cx="746" cy="99" r="2.5"/><circle cx="776" cy="99" r="2.5"/><circle cx="808" cy="99" r="2.5"/><circle cx="840" cy="99" r="2.5"/></g>
   <!-- Mirror -->
-  <rect x="766" y="172" width="56" height="92" rx="9" fill="rgba(216,72,136,.12)"/>
-  <rect x="766" y="172" width="56" height="92" rx="9" fill="none" stroke="rgba(216,72,136,.3)" stroke-width="1.5"/>
-  <ellipse cx="787" cy="193" rx="15" ry="24" fill="rgba(255,255,255,.07)"/>
+  <rect x="770" y="202" width="52" height="72" rx="5" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <ellipse cx="789" cy="222" rx="12" ry="22" fill="url(#crosshatch)" opacity=".15"/>
   <!-- Vanity table -->
-  <rect x="660" y="178" width="98" height="60" rx="5" fill="rgba(216,72,136,.1)"/>
-  <ellipse cx="709" cy="178" rx="34" ry="14" fill="rgba(180,224,255,.14)"/>
-  <!-- Room border -->
-  <rect x="648" y="42" width="262" height="240" rx="3" fill="none" stroke="rgba(216,72,136,.07)" stroke-width="1"/>
+  <rect x="664" y="202" width="96" height="56" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.4" filter="url(#inkBleed)"/>
+  <ellipse cx="712" cy="202" rx="30" ry="12" fill="none" stroke="#3a2a10" stroke-width="1.2" filter="url(#inkBleed)"/>
   <!-- Labels -->
-  <text x="779" y="232" text-anchor="middle" font-size="28" opacity=".7">👗</text>
-  <text x="779" y="256" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="15" fill="rgba(255,148,198,.92)" font-weight="700">드레스룸</text>
-  <text x="779" y="272" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(220,100,160,.68)" font-weight="600">스타일 · 쇼핑</text>
-  <text x="779" y="285" text-anchor="middle" font-size="9" fill="rgba(216,72,136,.55)" font-family="'Cormorant Garamond',serif">✦ 탭 ✦</text>
+  <text x="780" y="232" text-anchor="middle" font-size="26">👗</text>
+  <text x="780" y="256" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" fill="#3a2a10" font-weight="700">드레스룸</text>
+  <text x="780" y="272" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#6a4820" font-style="italic">Dressing Room · 스타일</text>
+  <text x="780" y="285" text-anchor="middle" font-size="9" fill="#8a6020" font-family="'IM Fell English',serif">↑ 탭 ↑</text>
 </g>
 
-<!-- 거실 — bottom left -->
+<!-- 거실 (Living Room) -->
 
-<g class="rz" onclick="showRoom('거실','🛋️','일상 & 삶 대시보드','#d8980a',['🌈 버킷리스트 & 위시리스트','🎬 보고싶은 영화 & 드라마','✈️ 여행 계획 & 기록','💌 소중한 관계 노트','🎨 취미 & 즐길거리'])">
-  <rect x="52" y="292" width="290" height="224" fill="rgba(216,152,10,.07)" rx="3" class="rf"/>
-  <ellipse cx="197" cy="404" rx="132" ry="98" fill="url(#rg4)"/>
-  <!-- Sofa -->
-  <rect x="66" y="308" width="138" height="72" rx="9" fill="rgba(216,152,10,.22)"/>
-  <rect x="66" y="308" width="138" height="22" rx="9" fill="rgba(216,152,10,.32)"/>
-  <rect x="66" y="308" width="22" height="72" rx="8" fill="rgba(216,152,10,.28)"/>
-  <rect x="182" y="308" width="22" height="72" rx="8" fill="rgba(216,152,10,.28)"/>
+<g class="rz" onclick="showRoom('거실','🛋️','일상 & 삶 대시보드','#6a4820',['🌈 버킷리스트 & 위시리스트','🎬 보고싶은 영화 & 드라마','✈️ 여행 계획 & 기록','💌 소중한 관계 노트','🎨 취미 & 즐길거리'])">
+  <rect x="52" y="300" width="296" height="260" fill="transparent" class="rfill"/>
+  <!-- Sofa illustrated -->
+  <rect x="68" y="318" width="140" height="74" rx="7" fill="none" stroke="#3a2a10" stroke-width="1.7" filter="url(#inkBleed)"/>
+  <rect x="68" y="318" width="140" height="24" rx="7" fill="#c8a860" opacity=".4" stroke="#8a6020" stroke-width=".9"/>
+  <rect x="68" y="318" width="22" height="74" rx="5" fill="#c8a860" opacity=".38" stroke="#8a6020" stroke-width=".9"/>
+  <rect x="186" y="318" width="22" height="74" rx="5" fill="#c8a860" opacity=".38" stroke="#8a6020" stroke-width=".9"/>
   <!-- Cushions -->
-  <rect x="93" y="315" width="32" height="26" rx="5.5" fill="rgba(255,100,140,.35)"/>
-  <rect x="133" y="315" width="32" height="26" rx="5.5" fill="rgba(96,200,120,.3)"/>
-  <!-- Coffee table -->
-  <rect x="82" y="388" width="100" height="54" rx="8" fill="rgba(216,152,10,.16)"/>
-  <!-- Book/magazine on table -->
-  <rect x="94" y="398" width="44" height="30" rx="3" fill="rgba(216,152,10,.2)"/>
-  <line x1="116" y1="398" x2="116" y2="428" stroke="rgba(216,152,10,.15)" stroke-width="1"/>
-  <!-- TV / screen -->
-  <rect x="224" y="312" width="88" height="58" rx="6" fill="rgba(6,12,28,.85)"/>
-  <rect x="228" y="316" width="80" height="50" rx="5" fill="rgba(12,24,56,.9)"/>
-  <rect x="236" y="322" width="64" height="36" rx="3" fill="rgba(48,96,200,.15)"/>
-  <ellipse cx="268" cy="340" rx="28" ry="14" fill="rgba(48,96,200,.1)" filter="url(#g2)"/>
-  <!-- Plant -->
-  <circle cx="302" cy="462" r="22" fill="rgba(50,138,58,.2)"/>
-  <circle cx="296" cy="470" r="14" fill="rgba(36,118,44,.2)"/>
-  <rect x="292" y="476" width="12" height="18" rx="4" fill="rgba(130,95,55,.24)"/>
-  <!-- Rug -->
-  <ellipse cx="170" cy="422" rx="86" ry="56" fill="rgba(216,152,10,.08)" stroke="rgba(216,152,10,.18)" stroke-width="1.5"/>
-  <ellipse cx="170" cy="422" rx="62" ry="38" fill="none" stroke="rgba(216,152,10,.1)" stroke-width="1"/>
-  <!-- Window -->
-  <rect x="52" y="362" width="7" height="42" rx="3" fill="rgba(245,195,70,.2)"/>
-  <ellipse cx="54" cy="383" rx="26" ry="16" fill="rgba(245,195,70,.07)"/>
-  <!-- Room border -->
-  <rect x="52" y="292" width="290" height="224" rx="3" fill="none" stroke="rgba(216,152,10,.07)" stroke-width="1"/>
-  <!-- Labels -->
-  <text x="197" y="436" text-anchor="middle" font-size="32" opacity=".7">🛋️</text>
-  <text x="197" y="462" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="17" fill="rgba(255,198,98,.92)" font-weight="700">거실</text>
-  <text x="197" y="478" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(220,170,78,.68)" font-weight="600">일상 · 취미 · 관계</text>
-  <text x="197" y="491" text-anchor="middle" font-size="9" fill="rgba(216,152,10,.55)" font-family="'Cormorant Garamond',serif">✦ 탭 ✦</text>
-</g>
-
-<!-- 키친 — bottom center -->
-
-<g class="rz" onclick="showRoom('키친','🍳','건강 & 루틴 대시보드','#28b878',['🥗 식단 & 영양 기록','💪 운동 목표 & 기록','☀️ 아침 루틴 체크리스트','🌙 저녁 루틴 체크리스트','💊 영양제 & 건강 관리'])">
-  <rect x="352" y="292" width="286" height="224" fill="rgba(40,184,120,.07)" rx="3" class="rf"/>
-  <ellipse cx="495" cy="404" rx="130" ry="98" fill="url(#rg5)"/>
-  <!-- Counter top L -->
-  <rect x="366" y="308" width="96" height="58" rx="6" fill="rgba(40,184,120,.18)"/>
-  <!-- Sink -->
-  <rect x="374" y="315" width="54" height="38" rx="5.5" fill="rgba(70,175,200,.28)"/>
-  <circle cx="401" cy="334" r="10" fill="rgba(50,158,180,.3)"/>
-  <rect x="399" y="312" width="4" height="8" rx="2" fill="rgba(70,175,200,.5)"/>
-  <!-- Stove counter -->
-  <rect x="474" y="308" width="148" height="56" rx="6" fill="rgba(40,184,120,.16)"/>
-  <rect x="482" y="316" width="62" height="44" rx="4" fill="rgba(40,184,120,.22)"/>
-  <g fill="rgba(40,184,120,.26)">
-    <circle cx="496" cy="326" r="8.5"/><circle cx="496" cy="326" r="5" fill="#e04010" opacity=".55"/>
-    <circle cx="520" cy="326" r="8.5"/><circle cx="520" cy="326" r="5" fill="#e04010" opacity=".48"/>
-    <circle cx="496" cy="348" r="8.5"/><circle cx="520" cy="348" r="8.5"/>
+  <ellipse cx="110" cy="330" rx="16" ry="10" fill="none" stroke="#c2382a" stroke-width="1.1" filter="url(#inkBleed)"/>
+  <ellipse cx="150" cy="330" rx="16" ry="10" fill="none" stroke="#3a6090" stroke-width="1.1" filter="url(#inkBleed)"/>
+  <!-- Coffee table (with oval) -->
+  <ellipse cx="138" cy="406" rx="50" ry="30" fill="none" stroke="#3a2a10" stroke-width="1.5" filter="url(#inkBleed)"/>
+  <ellipse cx="138" cy="406" rx="44" ry="25" fill="none" stroke="#3a2a10" stroke-width=".8" opacity=".5" filter="url(#inkBleed)"/>
+  <!-- Book/cup on table -->
+  <rect x="118" y="398" width="24" height="16" rx="2" fill="none" stroke="#8a6020" stroke-width="1" filter="url(#inkBleed)"/>
+  <circle cx="156" cy="406" r="7" fill="none" stroke="#8a6020" stroke-width="1" filter="url(#inkBleed)"/>
+  <!-- TV (sketch) -->
+  <rect x="226" y="320" width="88" height="58" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <rect x="230" y="324" width="80" height="50" rx="3" fill="url(#crosshatch)" opacity=".25"/>
+  <!-- Rug (hand-drawn oval) -->
+  <ellipse cx="170" cy="420" rx="90" ry="58" fill="none" stroke="#8a6020" stroke-width="1.4" filter="url(#inkBleed)"/>
+  <ellipse cx="170" cy="420" rx="74" ry="44" fill="none" stroke="#8a6020" stroke-width=".9" opacity=".6" filter="url(#inkBleed)"/>
+  <!-- Pattern on rug -->
+  <g stroke="#8a6020" stroke-width=".7" opacity=".3">
+    <line x1="130" y1="420" x2="210" y2="420"/><line x1="170" y1="380" x2="170" y2="460"/>
   </g>
-  <!-- Oven -->
-  <rect x="550" y="316" width="64" height="44" rx="4" fill="rgba(40,184,120,.2)"/>
-  <rect x="556" y="322" width="52" height="32" rx="3" fill="rgba(80,200,160,.14)"/>
-  <!-- Island -->
-  <rect x="366" y="376" width="162" height="90" rx="8" fill="rgba(40,184,120,.13)"/>
-  <ellipse cx="402" cy="408" rx="21" ry="13" fill="rgba(245,218,75,.2)"/>
-  <ellipse cx="444" cy="420" rx="17" ry="10" fill="rgba(245,138,58,.2)"/>
-  <ellipse cx="484" cy="408" rx="14" ry="10" fill="rgba(96,220,120,.2)"/>
-  <!-- Fridge -->
-  <rect x="542" y="370" width="76" height="142" rx="7" fill="rgba(40,184,120,.16)"/>
-  <line x1="580" y1="370" x2="580" y2="512" stroke="rgba(40,184,120,.2)" stroke-width="1.2"/>
-  <circle cx="566" cy="400" r="3.2" fill="rgba(40,184,120,.45)"/>
-  <circle cx="566" cy="462" r="3.2" fill="rgba(40,184,120,.45)"/>
-  <!-- Room border -->
-  <rect x="352" y="292" width="286" height="224" rx="3" fill="none" stroke="rgba(40,184,120,.07)" stroke-width="1"/>
+  <!-- Plant (illustrated) -->
+  <circle cx="298" cy="464" r="22" fill="none" stroke="#5a8a3a" stroke-width="1.5" filter="url(#wc)"/>
+  <path d="M298,442 Q290,452 294,468" fill="none" stroke="#5a8a3a" stroke-width="1.2" filter="url(#inkBleed)"/>
+  <path d="M298,442 Q306,452 302,468" fill="none" stroke="#5a8a3a" stroke-width="1.2" filter="url(#inkBleed)"/>
+  <rect x="292" y="480" width="12" height="14" rx="3" fill="none" stroke="#8a6020" stroke-width="1.2" filter="url(#inkBleed)"/>
   <!-- Labels -->
-  <text x="495" y="438" text-anchor="middle" font-size="30" opacity=".7">🍳</text>
-  <text x="495" y="462" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="16" fill="rgba(98,228,178,.92)" font-weight="700">키친</text>
-  <text x="495" y="478" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(68,200,148,.68)" font-weight="600">건강 · 식단 · 루틴</text>
-  <text x="495" y="491" text-anchor="middle" font-size="9" fill="rgba(40,184,120,.55)" font-family="'Cormorant Garamond',serif">✦ 탭 ✦</text>
+  <text x="200" y="450" text-anchor="middle" font-size="30">🛋️</text>
+  <text x="200" y="476" text-anchor="middle" font-family="'Playfair Display',serif" font-size="16" fill="#3a2a10" font-weight="700">거실</text>
+  <text x="200" y="492" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#6a4820" font-style="italic">Living Room · 일상 · 취미</text>
+  <text x="200" y="505" text-anchor="middle" font-size="9" fill="#8a6020" font-family="'IM Fell English',serif">↑ 탭 ↑</text>
 </g>
 
-<!-- 화장실 — bottom right -->
+<!-- 키친 (Kitchen) -->
 
-<g class="rz" onclick="showRoom('욕실 & 화장실','🪴','셀프케어 & 웰니스 대시보드','#c04888',['💆 스킨케어 & 뷰티 루틴','🧘 명상 & 마인드풀니스','🌺 웰니스 체크인','🏃 운동 기록','✨ 나를 위한 셀프케어 메모'])">
-  <rect x="648" y="292" width="262" height="224" fill="rgba(192,72,136,.07)" rx="3" class="rf"/>
-  <ellipse cx="779" cy="404" rx="118" ry="98" fill="url(#rg3)"/>
-  <!-- Bathtub -->
-  <rect x="662" y="312" width="112" height="62" rx="16" fill="rgba(192,72,136,.2)"/>
-  <rect x="668" y="318" width="100" height="52" rx="13" fill="rgba(192,72,136,.16)"/>
-  <ellipse cx="718" cy="324" rx="38" ry="15" fill="rgba(255,255,255,.07)"/>
+<g class="rz" onclick="showRoom('키친','🍳','건강 & 루틴 대시보드','#3a7850',['🥗 식단 & 영양 기록','💪 운동 목표 & 기록','☀️ 아침 루틴 체크리스트','🌙 저녁 루틴 체크리스트','💊 영양제 & 건강 관리'])">
+  <rect x="356" y="300" width="288" height="260" fill="transparent" class="rfill"/>
+  <!-- Counter L -->
+  <rect x="372" y="314" width="90" height="58" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <!-- Sink (circle in counter) -->
+  <ellipse cx="402" cy="343" rx="24" ry="16" fill="none" stroke="#3a7850" stroke-width="1.4" filter="url(#inkBleed)"/>
+  <circle cx="402" cy="343" r="6" fill="none" stroke="#3a7850" stroke-width="1.1"/>
   <!-- Faucet -->
-  <rect x="710" y="309" width="14" height="6" rx="3" fill="rgba(180,185,205,.32)"/>
-  <rect x="716" y="305" width="4" height="9" rx="2" fill="rgba(180,185,205,.42)"/>
-  <!-- Shower area -->
-  <rect x="782" y="304" width="112" height="110" rx="8" fill="rgba(192,72,136,.1)"/>
-  <rect x="788" y="310" width="100" height="98" rx="6" fill="rgba(192,72,136,.08)"/>
-  <!-- Showerhead -->
-  <circle cx="862" cy="315" r="11" fill="rgba(180,185,205,.22)"/>
-  <circle cx="862" cy="315" r="7.5" fill="rgba(180,185,205,.28)"/>
-  <g stroke="rgba(180,210,255,.2)" stroke-width="1.2">
-    <line x1="854" y1="326" x2="851" y2="337"/><line x1="859" y1="327" x2="857" y2="338"/>
-    <line x1="864" y1="327" x2="864" y2="338"/><line x1="869" y1="327" x2="871" y2="337"/>
+  <path d="M402,327 L402,319 Q402,314 408,314" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-linecap="round" filter="url(#inkBleed)"/>
+  <!-- Stove counter -->
+  <rect x="474" y="314" width="148" height="58" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <!-- Burners (concentric circles) -->
+  <g fill="none" stroke="#3a2a10" stroke-width="1.1" filter="url(#inkBleed)">
+    <circle cx="500" cy="330" r="11"/><circle cx="500" cy="330" r="6"/><circle cx="500" cy="330" r="2.5"/>
+    <circle cx="526" cy="330" r="11"/><circle cx="526" cy="330" r="6"/>
+    <circle cx="500" cy="356" r="9"/><circle cx="500" cy="356" r="5"/>
+    <circle cx="526" cy="356" r="9"/><circle cx="526" cy="356" r="5"/>
   </g>
-  <!-- Toilet -->
-  <ellipse cx="824" cy="442" rx="31" ry="40" fill="rgba(192,72,136,.17)"/>
-  <ellipse cx="824" cy="434" rx="27" ry="21" fill="rgba(192,72,136,.2)"/>
-  <rect x="802" y="403" width="46" height="23" rx="9" fill="rgba(192,72,136,.22)"/>
-  <!-- Sink small -->
-  <ellipse cx="700" cy="402" rx="32" ry="19" fill="rgba(180,210,255,.16)"/>
-  <ellipse cx="700" cy="399" rx="27" ry="15" fill="rgba(160,195,255,.13)"/>
-  <!-- Mirror above sink -->
-  <rect x="672" y="424" width="58" height="58" rx="8" fill="rgba(192,72,136,.1)"/>
-  <rect x="672" y="424" width="58" height="58" rx="8" fill="none" stroke="rgba(192,72,136,.28)" stroke-width="1.4"/>
-  <ellipse cx="693" cy="443" rx="16" ry="25" fill="rgba(255,255,255,.05)"/>
-  <!-- Plant -->
-  <circle cx="662" cy="474" r="21" fill="rgba(52,138,58,.2)"/>
-  <circle cx="656" cy="482" r="14" fill="rgba(38,118,44,.2)"/>
-  <rect x="653" y="488" width="12" height="16" rx="4" fill="rgba(130,95,55,.26)"/>
-  <!-- Room border -->
-  <rect x="648" y="292" width="262" height="224" rx="3" fill="none" stroke="rgba(192,72,136,.07)" stroke-width="1"/>
+  <!-- Oven box -->
+  <rect x="548" y="320" width="64" height="44" rx="3" fill="none" stroke="#3a2a10" stroke-width="1.4" filter="url(#inkBleed)"/>
+  <rect x="554" y="326" width="52" height="32" rx="2" fill="url(#crosshatch)" opacity=".2"/>
+  <!-- Island (illustrated top view) -->
+  <rect x="374" y="386" width="160" height="92" rx="6" fill="none" stroke="#3a2a10" stroke-width="1.7" filter="url(#inkBleed)"/>
+  <!-- Items on island -->
+  <circle cx="410" cy="418" r="16" fill="none" stroke="#8a6020" stroke-width="1" filter="url(#inkBleed)"/><!-- bowl -->
+  <path d="M394,418 Q410,410 426,418" fill="none" stroke="#8a6020" stroke-width=".9"/>
+  <ellipse cx="456" cy="426" rx="14" ry="10" fill="none" stroke="#c2382a" stroke-width="1" filter="url(#inkBleed)"/>
+  <ellipse cx="487" cy="416" rx="10" ry="8" fill="none" stroke="#5a8a3a" stroke-width="1" filter="url(#inkBleed)"/>
+  <!-- Fridge (side view) -->
+  <rect x="544" y="382" width="74" height="140" rx="4" fill="none" stroke="#3a2a10" stroke-width="1.8" filter="url(#inkBleed)"/>
+  <line x1="544" y1="452" x2="618" y2="452" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <rect x="550" y="390" width="20" height="8" rx="2" fill="none" stroke="#3a2a10" stroke-width="1" filter="url(#inkBleed)"/><!-- fridge handle top -->
+  <rect x="550" y="458" width="20" height="8" rx="2" fill="none" stroke="#3a2a10" stroke-width="1" filter="url(#inkBleed)"/><!-- fridge handle bottom -->
   <!-- Labels -->
-  <text x="779" y="450" text-anchor="middle" font-size="28" opacity=".7">🪴</text>
-  <text x="779" y="474" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="15" fill="rgba(255,140,192,.92)" font-weight="700">욕실 & 화장실</text>
-  <text x="779" y="490" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="11" fill="rgba(218,98,158,.68)" font-weight="600">셀프케어 · 웰니스</text>
-  <text x="779" y="503" text-anchor="middle" font-size="9" fill="rgba(192,72,136,.55)" font-family="'Cormorant Garamond',serif">✦ 탭 ✦</text>
+  <text x="500" y="452" text-anchor="middle" font-size="28">🍳</text>
+  <text x="500" y="476" text-anchor="middle" font-family="'Playfair Display',serif" font-size="15" fill="#3a2a10" font-weight="700">키친</text>
+  <text x="500" y="492" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#6a4820" font-style="italic">Kitchen · 건강 · 루틴</text>
+  <text x="500" y="505" text-anchor="middle" font-size="9" fill="#8a6020" font-family="'IM Fell English',serif">↑ 탭 ↑</text>
 </g>
 
-<!-- Compass -->
+<!-- 화장실 (Bathroom) -->
 
-<g transform="translate(884,494)">
-  <circle r="23" fill="rgba(4,10,26,.88)" stroke="rgba(240,188,72,.24)" stroke-width="1.4"/>
-  <text y="-8.5" text-anchor="middle" font-size="9.5" fill="#d02020" font-family="'Cormorant Garamond',serif" font-weight="700">N</text>
-  <text y="13"   text-anchor="middle" font-size="8.5" fill="rgba(240,212,130,.45)" font-family="'Cormorant Garamond',serif">S</text>
-  <text x="-12.5" y="5" text-anchor="middle" font-size="8.5" fill="rgba(240,212,130,.45)" font-family="'Cormorant Garamond',serif">W</text>
-  <text x="13"  y="5" text-anchor="middle" font-size="8.5" fill="rgba(240,212,130,.45)" font-family="'Cormorant Garamond',serif">E</text>
-  <polygon points="0,-16 3.5,0 0,5.5 -3.5,0" fill="#d02020"/>
-  <polygon points="0,16 3.5,0 0,5.5 -3.5,0" fill="rgba(240,212,130,.38)"/>
+<g class="rz" onclick="showRoom('욕실 & 화장실','🪴','셀프케어 & 웰니스 대시보드','#904a6a',['💆 스킨케어 & 뷰티 루틴','🧘 명상 & 마인드풀니스','🌺 웰니스 체크인','🏃 운동 기록','✨ 나를 위한 셀프케어 메모'])">
+  <rect x="652" y="300" width="256" height="260" fill="transparent" class="rfill"/>
+  <!-- Bathtub (top view illustrated) -->
+  <rect x="668" y="318" width="110" height="62" rx="18" fill="none" stroke="#3a2a10" stroke-width="1.8" filter="url(#inkBleed)"/>
+  <rect x="676" y="326" width="94" height="48" rx="14" fill="url(#crosshatch)" opacity=".15"/>
+  <ellipse cx="723" cy="350" rx="32" ry="18" fill="none" stroke="#3a7890" stroke-width=".9" opacity=".6" filter="url(#inkBleed)"/>
+  <!-- Faucet sketch -->
+  <path d="M723,316 L723,306 Q723,300 730,300" fill="none" stroke="#3a2a10" stroke-width="1.4" stroke-linecap="round" filter="url(#inkBleed)"/>
+  <!-- Shower area -->
+  <rect x="786" y="308" width="110" height="108" rx="5" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <!-- Shower head -->
+  <circle cx="866" cy="322" r="12" fill="none" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <!-- Water drops (illustrated) -->
+  <g stroke="#3a7890" stroke-width="1" stroke-linecap="round" opacity=".5">
+    <line x1="850" y1="334" x2="846" y2="348"/><line x1="858" y1="336" x2="856" y2="352"/>
+    <line x1="866" y1="336" x2="866" y2="352"/><line x1="874" y1="336" x2="876" y2="348"/>
+    <line x1="882" y1="334" x2="886" y2="346"/>
+  </g>
+  <!-- Toilet (top view) -->
+  <ellipse cx="820" cy="452" rx="32" ry="42" fill="none" stroke="#3a2a10" stroke-width="1.7" filter="url(#inkBleed)"/>
+  <ellipse cx="820" cy="440" rx="28" ry="22" fill="none" stroke="#3a2a10" stroke-width="1.3" filter="url(#inkBleed)"/>
+  <rect x="798" y="406" width="44" height="24" rx="10" fill="none" stroke="#3a2a10" stroke-width="1.6" filter="url(#inkBleed)"/>
+  <!-- Sink -->
+  <ellipse cx="700" cy="406" rx="28" ry="18" fill="none" stroke="#3a2a10" stroke-width="1.5" filter="url(#inkBleed)"/>
+  <circle cx="700" cy="406" r="7" fill="none" stroke="#3a7890" stroke-width="1.1"/>
+  <!-- Mirror above sink -->
+  <rect x="672" y="428" width="56" height="58" rx="5" fill="none" stroke="#3a2a10" stroke-width="1.5" filter="url(#inkBleed)"/>
+  <ellipse cx="692" cy="448" rx="12" ry="22" fill="url(#crosshatch)" opacity=".12"/>
+  <!-- Plant -->
+  <circle cx="664" cy="484" r="19" fill="none" stroke="#5a8a3a" stroke-width="1.4" filter="url(#wc)"/>
+  <rect x="658" y="498" width="12" height="14" rx="3" fill="none" stroke="#8a6020" stroke-width="1.2" filter="url(#inkBleed)"/>
+  <!-- Labels -->
+  <text x="780" y="458" text-anchor="middle" font-size="26">🪴</text>
+  <text x="780" y="482" text-anchor="middle" font-family="'Playfair Display',serif" font-size="14" fill="#3a2a10" font-weight="700">욕실 & 화장실</text>
+  <text x="780" y="498" text-anchor="middle" font-family="'IM Fell English',serif" font-size="10" fill="#6a4820" font-style="italic">Bath · 셀프케어 · 웰니스</text>
+  <text x="780" y="511" text-anchor="middle" font-size="9" fill="#8a6020" font-family="'IM Fell English',serif">↑ 탭 ↑</text>
 </g>
+
+<!-- Compass (small) -->
+
+<g transform="translate(893,530)" filter="url(#softDrop)">
+  <circle r="28" fill="rgba(244,234,208,.82)" stroke="#3a2a10" stroke-width="1.2"/>
+  <polygon points="0,-24 3.5,-6 0,-1 -3.5,-6" fill="#3a2a10"/>
+  <polygon points="0,24 3.5,6 0,1 -3.5,6" fill="#8a6020"/>
+  <polygon points="-24,0 -6,3.5 -1,0 -6,-3.5" fill="#8a6020"/>
+  <polygon points="24,0 6,3.5 1,0 6,-3.5" fill="#8a6020"/>
+  <circle r="4" fill="rgba(244,234,208,.9)"/>
+  <circle r="2.5" fill="#3a2a10"/>
+  <text y="-13" text-anchor="middle" font-family="'Playfair Display',serif" font-size="7.5" fill="#3a2a10" font-weight="700">N</text>
+</g>
+<!-- Note -->
+<text x="55" y="554" font-family="'IM Fell English',serif" font-size="9" fill="#3a2a10" opacity=".42" font-style="italic">· 하젤네 집 실내 도면 · Interior Floor Plan ·</text>
 
 </svg>
+
+<div class="mapnav">
+  <button class="nav-back" onclick="go('s2','s1')">← 마을 지도로</button>
+  <span class="nav-title" style="font-family:'Playfair Display',serif;font-size:13px;color:#3a2a10">🗺️ 하젤네 집 실내 도면</span>
+  <div></div>
+</div>
 </div><!-- /house -->
 
-<!-- ══════════════ OVERLAYS ══════════════ -->
+<!-- ═══════════════ OVERLAYS ═══════════════ -->
 
-<!-- Village info -->
-
-<div class="ov" id="vov" onclick="closeOv('vov')">
-  <div class="dlg" onclick="event.stopPropagation()">
-    <div class="dlg-hdr">
-      <span class="dlg-ico">🌙</span>
-      <div>
-        <div class="dlg-ttl">하젤마을에 오신 것을 환영합니다</div>
-        <div class="dlg-sub">달빛 아래 펼쳐진 하젤 GM의 작은 마을<br>각 건물을 탭하면 Notion 대시보드로 이동해요</div>
-      </div>
-    </div>
-    <div class="dlg-body">
-      <div class="npage">
-        <div class="nphdr"><span class="nphdr-t">🗺️ 마을 안내도</span></div>
-        <div class="ni"><span class="nd" style="background:#7850c0;box-shadow:0 0 7px #7850c0"></span>🏠 집 탭 → 집 도면 → 방별 대시보드</div>
-        <div class="ni"><span class="nd" style="background:#c02418;box-shadow:0 0 7px #c02418"></span>🍖 K BBQ 탭 → 업무 대시보드</div>
-        <div class="ni"><span class="nd" style="background:#b8ff38;box-shadow:0 0 7px #b8ff38"></span>🌿 반딧불이와 연못, 달빛의 밤</div>
-        <div class="ni"><span class="nd" style="background:#f5e060;box-shadow:0 0 7px #f5e060"></span>🐱 담장 위 고양이를 찾아보세요</div>
-      </div>
-    </div>
-    <div class="dlg-ft"><button class="close-btn" onclick="closeOv('vov')">닫기 ✦</button></div>
-  </div>
-</div>
-
-<!-- Work -->
+<!-- Work overlay -->
 
 <div class="ov" id="wov" onclick="closeOv('wov')">
-  <div class="dlg" onclick="event.stopPropagation()">
-    <div class="dlg-hdr">
-      <span class="dlg-ico">🍖</span>
+  <div class="scroll" onclick="event.stopPropagation()">
+    <div class="scroll-top"></div>
+    <div class="scroll-hdr">
+      <span class="scroll-ico">🍖</span>
       <div>
-        <div class="dlg-ttl">업무 대시보드 — K BBQ</div>
-        <div class="dlg-sub">직장 탭 시 이동하는 Notion 업무 허브<br>GM의 모든 업무가 이곳에서 관리됩니다</div>
+        <div class="scroll-ttl">업무 대시보드 — K BBQ</div>
+        <div class="scroll-sub">직장 탭 시 이동하는 Notion 업무 허브<br>GM의 모든 업무가 이곳에서 관리됩니다</div>
       </div>
     </div>
-    <div class="dlg-body">
-      <div class="npage">
-        <div class="nphdr"><span class="nphdr-t">📌 K BBQ · 업무 홈</span></div>
-        <div class="ni"><span class="nd" style="background:#e04848;box-shadow:0 0 7px #e04848"></span>📊 P&L 손익 관리 & 월간 분석</div>
-        <div class="ni"><span class="nd" style="background:#4888e0;box-shadow:0 0 7px #4888e0"></span>👥 직원 관리 · 스케줄 · 급여</div>
-        <div class="ni"><span class="nd" style="background:#48c068;box-shadow:0 0 7px #48c068"></span>🛒 식재료 & 벤더 관계 관리</div>
-        <div class="ni"><span class="nd" style="background:#e0a028;box-shadow:0 0 7px #e0a028"></span>📋 업무 할 일 & 프로젝트 트래킹</div>
-        <div class="ni"><span class="nd" style="background:#c048c0;box-shadow:0 0 7px #c048c0"></span>📱 SNS 콘텐츠 (@dots__hazel · 긍정하젤)</div>
-        <div class="ni"><span class="nd" style="background:#e06828;box-shadow:0 0 7px #e06828"></span>🤝 외부 파트너십 & 이벤트</div>
-        <div class="ni"><span class="nd" style="background:#2888c8;box-shadow:0 0 7px #2888c8"></span>📈 매장 KPI & 주간 리뷰</div>
+    <div class="scroll-body">
+      <div class="mappage">
+        <div class="maphdr"><span class="maphdr-t">📌 K BBQ · 업무 홈</span></div>
+        <div class="mi"><span class="mdot" style="background:#c2382a"></span>📊 P&L 손익 관리 & 월간 분석</div>
+        <div class="mi"><span class="mdot" style="background:#3a6090"></span>👥 직원 관리 · 스케줄 · 급여</div>
+        <div class="mi"><span class="mdot" style="background:#5a8a3a"></span>🛒 식재료 & 벤더 관계 관리</div>
+        <div class="mi"><span class="mdot" style="background:#c89828"></span>📋 업무 할 일 & 프로젝트 트래킹</div>
+        <div class="mi"><span class="mdot" style="background:#8a4a8a"></span>📱 SNS 콘텐츠 (@dots__hazel)</div>
+        <div class="mi"><span class="mdot" style="background:#c27858"></span>🤝 외부 파트너십 & 이벤트</div>
+        <div class="mi"><span class="mdot" style="background:#3a7890"></span>📈 매장 KPI & 주간 리뷰</div>
       </div>
     </div>
-    <div class="dlg-ft"><button class="close-btn" onclick="closeOv('wov')">닫기 ✦</button></div>
+    <div class="scroll-ft"><button class="close-btn" onclick="closeOv('wov')">✦ 닫기 ✦</button></div>
+    <div class="scroll-bot"></div>
   </div>
 </div>
 
-<!-- Room -->
+<!-- Room overlay -->
 
 <div class="ov" id="rov" onclick="closeOv('rov')">
-  <div class="dlg" onclick="event.stopPropagation()">
-    <div class="dlg-hdr">
-      <span class="dlg-ico" id="rico">🛏️</span>
+  <div class="scroll" onclick="event.stopPropagation()">
+    <div class="scroll-top"></div>
+    <div class="scroll-hdr">
+      <span class="scroll-ico" id="rico">🛏️</span>
       <div>
-        <div class="dlg-ttl" id="rttl">방</div>
-        <div class="dlg-sub" id="rsub">서브</div>
+        <div class="scroll-ttl" id="rttl">방</div>
+        <div class="scroll-sub" id="rsub">서브</div>
       </div>
     </div>
-    <div class="dlg-body">
-      <div class="npage">
-        <div class="nphdr"><span class="nphdr-t" id="rpttl">페이지</span></div>
+    <div class="scroll-body">
+      <div class="mappage">
+        <div class="maphdr"><span class="maphdr-t" id="rpttl">페이지</span></div>
         <div id="ritems"></div>
       </div>
     </div>
-    <div class="dlg-ft"><button class="close-btn" onclick="closeOv('rov')">닫기 ✦</button></div>
+    <div class="scroll-ft"><button class="close-btn" onclick="closeOv('rov')">✦ 닫기 ✦</button></div>
+    <div class="scroll-bot"></div>
   </div>
 </div>
 
@@ -1287,7 +1138,6 @@ function go(from,to){
   document.getElementById(to).classList.remove('gone');
 }
 function showWork(){document.getElementById('wov').classList.add('show')}
-function showVillageInfo(){document.getElementById('vov').classList.add('show')}
 function showRoom(name,ico,dash,color,items){
   document.getElementById('rico').textContent=ico;
   document.getElementById('rttl').textContent=name+' → '+dash;
@@ -1296,8 +1146,8 @@ function showRoom(name,ico,dash,color,items){
   const c=document.getElementById('ritems');
   c.innerHTML='';
   items.forEach(t=>{
-    const d=document.createElement('div');d.className='ni';
-    d.innerHTML=`<span class="nd" style="background:${color};box-shadow:0 0 7px ${color}"></span>${t}`;
+    const d=document.createElement('div');d.className='mi';
+    d.innerHTML=`<span class="mdot" style="background:${color}"></span>${t}`;
     c.appendChild(d);
   });
   document.getElementById('rov').classList.add('show');
