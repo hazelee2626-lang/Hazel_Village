@@ -246,11 +246,154 @@ details code{
 .shop-item .sd{font-size:.6rem;color:var(--dim);margin-top:3px;line-height:1.5}
 .shop-item .btn{padding:8px 12px;font-size:.68rem;flex-shrink:0}
 .shop-item .owned{color:var(--green);font-size:.66rem;flex-shrink:0}
+
+/* ── v7: onboarding ── */
+.onboard{
+  position:fixed;inset:0;z-index:2000;background:var(--sky);
+  display:flex;flex-direction:column;overflow-y:auto;
+  padding:0 16px calc(24px + env(safe-area-inset-bottom));
+}
+.onboard.off{display:none}
+.ob-step{display:none;flex:1;flex-direction:column;justify-content:center;min-height:100%;padding:20px 4px}
+.ob-step.on{display:flex}
+.ob-dots{display:flex;gap:7px;justify-content:center;margin:18px 0 6px}
+.ob-dots i{width:8px;height:8px;background:#3a415f}
+.ob-dots i.on{background:var(--gold)}
+.ob-logo{text-align:center;margin-bottom:8px}
+.ob-logo .em{font-size:2.6rem;margin-bottom:14px}
+.ob-logo h1{font-size:1.3rem;color:var(--gold);letter-spacing:2px;line-height:1.6;text-shadow:2px 2px 0 #7d3f38,4px 4px 0 rgba(0,0,0,.5)}
+.ob-logo .obsub{font-size:.7rem;color:var(--dim);margin-top:10px;line-height:1.8}
+.ob-h{text-align:center;font-size:1rem;color:var(--gold);letter-spacing:1px;margin-bottom:6px}
+.ob-d{text-align:center;font-size:.68rem;color:var(--dim);margin-bottom:22px;line-height:1.7}
+.ob-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.ob-opt{
+  background:var(--panel);border:3px solid var(--line);padding:14px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;font-family:inherit;color:var(--ink);
+}
+.ob-opt.sel{border-color:var(--gold);background:var(--panel2);box-shadow:0 0 0 2px rgba(255,205,117,.3)}
+.ob-opt .oe{font-size:1.3rem}
+.ob-opt .ot{flex:1;text-align:left;font-size:.82rem}
+.ob-opt .od{font-size:.6rem;color:var(--dim);margin-top:3px}
+.ob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:8px}
+.ob-card{
+  background:var(--panel);border:3px solid var(--line);padding:10px 4px 8px;
+  display:flex;flex-direction:column;align-items:center;cursor:pointer;
+}
+.ob-card.sel{border-color:var(--gold);background:var(--panel2);box-shadow:0 0 0 2px rgba(255,205,117,.3)}
+.ob-card svg{margin-bottom:6px}
+.ob-card .cn{font-size:.6rem;color:var(--ink);line-height:1.5;text-align:center}
+.ob-accents{display:flex;gap:10px;justify-content:center;margin:2px 0 16px}
+.ob-swatch{width:34px;height:34px;border:3px solid var(--line);cursor:pointer;flex-shrink:0}
+.ob-swatch.sel{border-color:var(--ink);box-shadow:0 0 0 2px var(--gold)}
+.ob-accent-label{text-align:center;font-size:.62rem;color:var(--dim);margin-bottom:8px}
+.ob-name-form .frow{margin-bottom:14px}
+.ob-name-form label{display:block;font-size:.68rem;color:var(--dim);margin-bottom:6px}
+.ob-name-form input{font-size:.9rem;padding:13px}
+.ob-recap{background:var(--panel2);border:2px solid var(--line);padding:16px;text-align:center;margin-bottom:20px}
+.ob-recap svg{margin-bottom:8px}
+.ob-recap .rn{font-size:.9rem;color:var(--gold)}
+.ob-recap .rv{font-size:.7rem;color:var(--dim);margin-top:6px}
+.ob-nav{display:flex;gap:10px;margin-top:10px}
+.ob-nav .btn{flex:1}
+.ob-nav .btn.ghost{flex:0 0 90px}
 .gold-big{font-size:1rem;color:var(--gold);text-align:center;padding:6px 0 12px}
 .chart-wrap{display:flex;justify-content:center;padding-top:4px}
+
+/* ── v6: projects / tasks / hall ── */
+.seg{display:flex;gap:0;margin:0 4px 20px;border:3px solid var(--ink);box-shadow:0 0 0 3px var(--sky),0 0 0 5px var(--line)}
+.seg button{flex:1;font-family:inherit;font-size:.76rem;padding:12px 0;background:var(--panel);color:var(--dim);border:none;cursor:pointer;letter-spacing:1px}
+.seg button.on{background:var(--panel2);color:var(--gold)}
+.proj{background:var(--panel2);border:2px solid var(--line);margin-bottom:11px}
+.proj-h{display:flex;align-items:center;gap:9px;padding:11px;cursor:pointer}
+.proj-h .pico{flex-shrink:0}
+.proj-h .pm{flex:1;min-width:0}
+.proj-h .pt{font-size:.78rem;line-height:1.4;word-break:break-word}
+.proj-h .pc{font-size:.62rem;color:var(--dim);margin-top:4px}
+.proj-h .pc b{color:var(--cyan)}
+.proj-h .parw{color:var(--dim);font-size:.72rem;flex-shrink:0;width:16px;text-align:center}
+.pbar{height:8px;background:#141625;border:2px solid var(--line);margin:0 11px 10px;overflow:hidden}
+.pbar>i{display:block;height:100%;background:repeating-linear-gradient(90deg,var(--c,var(--gold)) 0 5px,color-mix(in srgb,var(--c,var(--gold)) 70%,black) 5px 7px);transition:width .4s steps(6)}
+.proj-body{border-top:2px dotted #3a415f;padding:9px 11px 11px}
+.proj-acts{display:flex;gap:8px;padding:0 11px 11px}
+.proj-acts .btn{flex:1;padding:8px;font-size:.66rem}
+.proj-acts .btn.done-btn{background:var(--green);color:#0d2a17}
+.proj-acts .btn.del-btn{background:var(--panel);color:#8a92ab;box-shadow:none;border-color:var(--line)}
+.trow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:2px dotted #313753}
+.trow:last-of-type{border-bottom:none}
+.tchk{width:24px;height:24px;flex-shrink:0;cursor:pointer;background:#141625;border:2px solid var(--line2);color:var(--gold);font-size:.85rem;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+.trow.done .tchk{background:var(--gold);color:#3a2410;border-color:var(--gold)}
+.ttxt{flex:1;min-width:0;font-size:.76rem;line-height:1.5;word-break:break-word}
+.trow.done .ttxt{text-decoration:line-through;text-decoration-thickness:2px;color:#7d86a3}
+.ttime{font-size:.58rem;color:var(--cyan);flex-shrink:0}
+.tdel{background:none;border:none;color:#6b7396;font-family:inherit;font-size:.8rem;cursor:pointer;padding:3px}
+.tadd{display:flex;gap:7px;margin-top:9px}
+.tadd input{flex:1;padding:8px;font-size:.76rem}
+.tadd .btn{padding:8px 12px;font-size:.7rem;flex-shrink:0}
+.tgroup{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--dim);padding:10px 2px 7px;border-bottom:2px solid #3a415f;margin-bottom:4px}
+.tgroup b{color:var(--ink)}
+.tgroup .glv{margin-left:auto;color:var(--gold);font-size:.62rem}
+.hall-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.hall-stats .hst{background:var(--panel);border:2px solid var(--line);padding:10px 14px;text-align:center}
+.hall-stats .hn{font-size:1.05rem;color:var(--gold)}
+.hall-stats .hl{font-size:.58rem;color:var(--dim);margin-top:4px}
+.shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 8px}
+.trophy{background:linear-gradient(#1d2136,#171a2c);border:2px solid var(--line);border-bottom:6px solid #54401f;padding:10px 4px 8px;text-align:center;cursor:pointer}
+.trophy:active{background:#232848}
+.trophy .tn{font-size:.6rem;line-height:1.45;margin-top:6px;word-break:break-word;color:var(--ink)}
+.trophy .td{font-size:.52rem;color:#7d86a3;margin-top:3px}
 </style>
 </head>
 <body>
+
+<!-- ═══════ ONBOARDING ═══════ -->
+<div class="onboard off" id="onboard">
+
+  <div class="ob-step on" id="obStep0">
+    <div class="ob-logo">
+      <div class="em">🏘️</div>
+      <h1>나의 성장 빌리지</h1>
+      <div class="obsub">할 일을 완료하면 마을이 자라는<br>나만의 픽셀 성장 다이어리</div>
+    </div>
+    <div class="ob-nav"><button class="btn" id="ob0Next" style="width:100%">확인</button></div>
+  </div>
+
+  <div class="ob-step" id="obStep1">
+    <div class="ob-h">당신은 누구인가요?</div>
+    <div class="ob-d">선택한 성별은 캐릭터 추천에만 쓰이고<br>다음 화면에서 자유롭게 바꿀 수 있어요</div>
+    <div class="ob-opts" id="obGenderOpts"></div>
+    <div class="ob-nav"><button class="btn ghost" id="ob1Back">← 이전</button><button class="btn" id="ob1Next">다음</button></div>
+  </div>
+
+  <div class="ob-step" id="obStep2">
+    <div class="ob-h">캐릭터를 골라주세요</div>
+    <div class="ob-d">지금 고른 모습이 마을의 촌장이 돼요<br>나중에 사무소에서 언제든 바꿀 수 있어요</div>
+    <div class="ob-grid" id="obCharGrid"></div>
+    <div class="ob-accent-label">포인트 컬러</div>
+    <div class="ob-accents" id="obAccents"></div>
+    <div class="ob-nav"><button class="btn ghost" id="ob2Back">← 이전</button><button class="btn" id="ob2Next">다음</button></div>
+  </div>
+
+  <div class="ob-step" id="obStep3">
+    <div class="ob-h">이름을 지어주세요</div>
+    <div class="ob-d">코드 수정 없이 나중에 사무소에서<br>언제든 다시 바꿀 수 있어요</div>
+    <div class="ob-name-form">
+      <div class="frow"><label>마을 이름</label><input type="text" id="obVillage" maxlength="12" placeholder="예: 하젤마을"></div>
+      <div class="frow"><label>당신의 이름 (촌장)</label><input type="text" id="obHero" maxlength="12" placeholder="예: 하젤"></div>
+    </div>
+    <div class="ob-nav"><button class="btn ghost" id="ob3Back">← 이전</button><button class="btn" id="ob3Next">다음</button></div>
+  </div>
+
+  <div class="ob-step" id="obStep4">
+    <div class="ob-h">모험을 시작할까요?</div>
+    <div class="ob-recap">
+      <div id="obRecapSprite"></div>
+      <div class="rn" id="obRecapName">—</div>
+      <div class="rv" id="obRecapVillage">—</div>
+    </div>
+    <div class="ob-nav"><button class="btn ghost" id="ob4Back">← 이전</button><button class="btn" id="ob4Start" style="flex:2">✧ 모험 시작! ✧</button></div>
+  </div>
+
+</div>
 
 <!-- ═══════ VILLAGE ═══════ -->
 <section class="screen on" id="scrVillage">
@@ -271,35 +414,76 @@ details code{
   <div class="scroll-hint">◀ 옆으로 스크롤해서 마을 구경 · 건물을 탭하면 입장 ▶</div>
 </section>
 
-<!-- ═══════ QUEST BOARD ═══════ -->
-<section class="screen" id="scrQuests">
+<!-- ═══════ PLAN (projects & tasks) ═══════ -->
+<section class="screen" id="scrPlan">
   <header class="hdr">
-    <h1>📜 퀘스트 보드</h1>
-    <div class="sub">마을 전체의 할 일을 한눈에</div>
+    <h1>📋 플랜</h1>
+    <div class="sub">프로젝트를 완료하면 XP · 태스크는 +2G와 기록</div>
   </header>
-  <div class="win" style="margin-top:20px">
-    <span class="win-tag">새 퀘스트</span>
-    <div class="qform">
-      <input type="text" id="qbText" maxlength="60" placeholder="할 일을 입력…" autocomplete="off">
-      <div class="qrow">
-        <select id="qbStat" aria-label="브랜치 선택"></select>
-        <select id="qbDiff" aria-label="난이도 선택">
-          <option value="10">쉬움 +10XP</option>
-          <option value="25" selected>보통 +25XP</option>
-          <option value="50">어려움 +50XP</option>
-        </select>
+  <div class="seg">
+    <button id="segProj" class="on">📦 프로젝트</button>
+    <button id="segTask">✅ 태스크</button>
+  </div>
+
+  <div id="viewProj">
+    <div class="win">
+      <span class="win-tag">새 프로젝트</span>
+      <div class="qform">
+        <input type="text" id="pTitle" maxlength="40" placeholder="프로젝트 이름…" autocomplete="off">
+        <div class="qrow">
+          <select id="pStat" aria-label="브랜치 선택"></select>
+          <select id="pSize" aria-label="프로젝트 크기">
+            <option value="0">작은 (+50XP·20G)</option>
+            <option value="1" selected>보통 (+100XP·40G)</option>
+            <option value="2">대형 (+200XP·80G)</option>
+          </select>
+        </div>
+        <button class="btn" id="pAdd">＋ 프로젝트 만들기</button>
       </div>
-      <label class="chkrow"><input type="checkbox" id="qbRepeat"> 🔁 매일 반복 (습관 퀘스트)</label>
-      <button class="btn" id="qbAdd">＋ 퀘스트 등록</button>
+    </div>
+    <div class="win">
+      <span class="win-tag">진행 중 프로젝트</span>
+      <div id="planProjList"></div>
     </div>
   </div>
-  <div class="win">
-    <span class="win-tag">진행 중</span>
-    <div id="qbList"></div>
+
+  <div id="viewTask" style="display:none">
+    <div class="win">
+      <span class="win-tag">새 태스크</span>
+      <div class="qform">
+        <input type="text" id="tText" maxlength="60" placeholder="할 일을 입력…" autocomplete="off">
+        <div class="qrow"><select id="tProj" aria-label="프로젝트 연결"></select></div>
+        <label class="chkrow"><input type="checkbox" id="tRepeat"> 🔁 매일 반복 (습관 태스크)</label>
+        <button class="btn" id="tAdd">＋ 태스크 등록</button>
+      </div>
+    </div>
+    <div class="win">
+      <span class="win-tag">태스크 체크리스트</span>
+      <div id="planTaskList"></div>
+    </div>
+    <div class="win">
+      <span class="win-tag">최근 기록</span>
+      <div id="logList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ HALL OF RECORDS ═══════ -->
+<section class="screen" id="scrHall">
+  <div class="topbar"><button class="btn ghost" id="hBack">← 마을로</button><span class="tt">🏆 기록의 전당</span></div>
+  <header class="hdr" style="padding-top:8px">
+    <h1>🏆 기록의 전당</h1>
+    <div class="sub">완료한 프로젝트는 온전히 나의 것이 된다</div>
+  </header>
+  <div class="hall-stats">
+    <div class="hst"><div class="hn" id="hsProj">0</div><div class="hl">완료 프로젝트</div></div>
+    <div class="hst"><div class="hn" id="hsTask">0</div><div class="hl">완료 태스크</div></div>
+    <div class="hst"><div class="hn" id="hsXp">0</div><div class="hl">누적 XP</div></div>
+    <div class="hst"><div class="hn" id="hsStreak">0</div><div class="hl">최근 연속 🔥</div></div>
   </div>
   <div class="win">
-    <span class="win-tag">최근 기록</span>
-    <div id="logList"></div>
+    <span class="win-tag">트로피 진열장</span>
+    <div id="shelf"></div>
   </div>
 </section>
 
@@ -328,21 +512,20 @@ details code{
     <div class="d-next" id="dNext"></div>
   </div>
   <div class="win">
-    <span class="win-tag">이곳의 퀘스트</span>
+    <span class="win-tag">이곳의 프로젝트</span>
     <div class="qform">
-      <input type="text" id="dQText" maxlength="60" placeholder="이 공간에서 할 일을 입력…" autocomplete="off">
+      <input type="text" id="dPTitle" maxlength="40" placeholder="이 공간의 새 프로젝트…" autocomplete="off">
       <div class="qrow">
-        <select id="dQDiff" aria-label="난이도 선택">
-          <option value="10">쉬움 +10 XP</option>
-          <option value="25" selected>보통 +25 XP</option>
-          <option value="50">어려움 +50 XP</option>
+        <select id="dPSize" aria-label="프로젝트 크기">
+          <option value="0">작은 (+50XP)</option>
+          <option value="1" selected>보통 (+100XP)</option>
+          <option value="2">대형 (+200XP)</option>
         </select>
-        <button class="btn" id="dQAdd" style="flex:1">＋ 등록</button>
+        <button class="btn" id="dPAdd" style="flex:1">＋ 만들기</button>
       </div>
-      <label class="chkrow"><input type="checkbox" id="dQRepeat"> 🔁 매일 반복</label>
     </div>
     <div class="qcount" id="dQCount"></div>
-    <div id="dQList"></div>
+    <div id="dProjList"></div>
   </div>
 </section>
 
@@ -353,14 +536,25 @@ details code{
     <div class="sub">꿈이 이루어질수록 집이 견고해진다</div>
   </header>
   <div class="win" style="margin-top:20px">
-    <span class="win-tag">MY HOME</span>
-    <div class="home-hero"><div id="hHouse"></div><div id="hSprite" class="hz-idle"></div></div>
+    <span class="win-tag" id="hGenTag">MY HOME</span>
+    <div class="home-hero"><div id="hHouse"></div><div id="hSprite"></div></div>
     <div class="h-meta">
       <div>🏠 <b id="hHouseNm">—</b></div>
       <div><span id="hHeroNm">촌장 하젤</span> <b id="hLv">Lv.1</b> · 칭호 <span class="h-title" id="hTitle">견습 모험가</span></div>
       <div>진화 단계 <b id="hStage">—</b></div>
-      <div>총 클리어 <b id="hClear">0</b>회 · 🔥 연속 <b id="hStreak">0</b>일 · 💰 <b id="hGold">0</b>G</div>
+      <div>완료 태스크 <b id="hClear">0</b>개 · 🔥 연속 <b id="hStreak">0</b>일 · 💰 <b id="hGold">0</b>G</div>
+      <div style="margin-top:8px"><button class="chipbtn" id="hHallBtn">🏆 기록의 전당 보기 (<b id="hVaultN">0</b>)</button></div>
     </div>
+  </div>
+  <div class="win" id="hRebirthWin" style="display:none">
+    <span class="win-tag">✧ 환생</span>
+    <div style="font-size:.72rem;color:var(--dim);line-height:1.9;margin-bottom:10px">
+      총 레벨 <b style="color:var(--gold)">Lv.<span id="rbLv">0</span></b>에 도달해 환생할 수 있다.<br>
+      환생하면 <b style="color:var(--cyan)">능력치는 0부터 다시 시작</b>하지만,<br>
+      이번 세대의 기록은 <b style="color:var(--gold)">전당에 영원히</b> 남고<br>
+      새로운 색으로 물든 캐릭터·마을을 얻는다. (골드·장식·전당은 유지)
+    </div>
+    <button class="btn" id="rbBtn" style="width:100%">✧ 환생하기</button>
   </div>
   <div class="win">
     <span class="win-tag">주간 성장 기록</span>
@@ -444,6 +638,7 @@ details code{
     <span class="win-tag">🔧 설정</span>
     <label class="chkrow"><input type="checkbox" id="setSound"> 🔊 8비트 효과음</label>
     <label class="chkrow"><input type="checkbox" id="setAuto"> 🕐 실제 시간에 맞춰 자동 낮/밤 (07~18시 낮)</label>
+    <button class="chipbtn" id="btnCharChange" style="width:100%;margin-top:10px;padding:11px">🎭 캐릭터 변경</button>
   </div>
 
   <div class="win">
@@ -491,7 +686,7 @@ service cloud.firestore {
 <!-- ═══════ NAV ═══════ -->
 <nav class="nav">
   <button id="navVillage" class="on">🏘️ 마을</button>
-  <button id="navQuests">📜 퀘스트</button>
+  <button id="navPlan">📋 플랜</button>
   <button id="navHome">🏠 내 집</button>
 </nav>
 
@@ -520,6 +715,9 @@ const defaultState=()=>({
   custom:{village:'',hero:'',tagline:'',motto:'',stats:{},houseNames:null,charNames:null},
   gold:0,streak:{count:0,last:''},daily:{},deco:{},
   ui:{night:true,sound:true,auto:false},
+  projects:[],tasks:[],vault:[],
+  gen:0,genLog:[],
+  profile:{onboarded:false,gender:'',bodyType:'dress',hairId:'brown',hairHex:'#4a2f1d',accentId:'rose',accentHex:'#c2495e'},
   _ts:0,
 });
 function normalize(s){
@@ -537,6 +735,16 @@ function normalize(s){
   s.daily=s.daily||{};
   s.deco=s.deco||{};
   s.ui=Object.assign(d.ui,s.ui||{});
+  s.projects=s.projects||[];
+  s.vault=s.vault||[];
+  s.gen=s.gen||0;
+  s.genLog=s.genLog||[];
+  s.profile=Object.assign(d.profile,s.profile||{});
+  if(!s.tasks){
+    // migrate legacy quests[] into tasks[] (no XP; one-time gold credit already earned stays as-is)
+    s.tasks=(s.quests||[]).map(q=>({id:q.id,text:q.text,stat:q.stat,projectId:null,repeat:!!q.repeat,last:q.last||'',done:false,doneAt:null,createdAt:Date.now()}));
+  }
+  s.tasks=s.tasks||[];
   s._ts=s._ts||0;
   return s;
 }
@@ -582,6 +790,14 @@ const STATS=[
   wall:'#6e6046',wallD:'#453c2b',roof:'#ffcd75',roofD:'#b8924a',motif:'clock',
   stages:['모래시계','마을 우물','기록의 종탑','마을 시계탑','영원의 대시계탑']},
 ];
+const PROJECT_SIZES=[
+ {id:0,label:'작은',xp:50,gold:20},
+ {id:1,label:'보통',xp:100,gold:40},
+ {id:2,label:'대형',xp:200,gold:80},
+];
+const REBIRTH_LV=25; // total level needed to unlock 환생
+function genFilter(){return state.gen>0?'filter:hue-rotate('+((state.gen*47)%360)+'deg) saturate('+(1+state.gen*0.06>1.4?1.4:1+state.gen*0.06)+')':'';}
+function wrapGen(svg){return state.gen>0?'<span style="'+genFilter()+';display:inline-block">'+svg+'</span>':svg;}
 const HOUSE_STAGES=[
  {lv:1,nm:'작은 텐트'},{lv:4,nm:'통나무 오두막'},{lv:10,nm:'아늑한 목조집'},
  {lv:18,nm:'정원 딸린 벽돌집'},{lv:30,nm:'하젤 드림 저택'},
@@ -590,6 +806,9 @@ const CHAR_STAGES=[{min:1,nm:'견습 모험가'},{min:5,nm:'모험가'},{min:12,
 const OFFICE={id:'office',ico:'⚙️',nm:'촌장 사무소',sub:'편집',c:'#94b0c2',
   wall:'#5a6478',wallD:'#3a4152',roof:'#8fa2bd',roofD:'#5f6d80',motif:'clock',
   stages:['촌장 사무소','촌장 사무소','촌장 사무소','촌장 사무소','촌장 사무소']};
+const HALL={id:'hall',ico:'🏆',nm:'기록의 전당',sub:'전당',c:'#ffcd75',
+  wall:'#8a7040',wallD:'#5c4a28',roof:'#c9a24a',roofD:'#8f7330',motif:'orb',
+  stages:['기록의 전당','기록의 전당','기록의 전당','기록의 전당','기록의 전당']};
 
 /* ── custom merge getters ── */
 function getStat(id){
@@ -605,8 +824,8 @@ function getStat(id){
 }
 const allStats=()=>STATS.map(s=>getStat(s.id));
 const houseNm=i=>(state.custom.houseNames&&state.custom.houseNames[i])||HOUSE_STAGES[i].nm;
-const villageNm=()=>state.custom.village||'하젤마을';
-const heroNm=()=>state.custom.hero||'하젤';
+const villageNm=()=>state.custom.village||'나의 마을';
+const heroNm=()=>state.custom.hero||'나';
 const taglineTxt=()=>state.custom.tagline||'레벨업할수록 마을이 지어진다';
 const mottoTxt=()=>state.custom.motto||'조금씩 꾸준히 뭐라도 하면 성장하겠지';
 const charNm=i=>(state.custom.charNames&&state.custom.charNames[i])||CHAR_STAGES[i].nm;
@@ -727,14 +946,24 @@ const SPRITES=[
 {pal:{B:'#94b0c2',C:'#c2495e'},map:["...............D","....HHHHHHHH...D","...HHHHHHHHHH..D","..HCCCCCCCCCCH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BBGGBB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBGBBBBGBB...","..BBBBBBBBBBBB..","..BGGGGGGGGGGB..",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#8a4ab0',C:'#5d275d'},map:["...G..G..G.....D","...GGGGGGGG....D","..HHHHHHHHHHHH.D","..HHHHHHHHHHHH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BGGGGB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BGBBBBBBGB...","..BBGBBBBBBGBB..",".BGGGGGGGGGGGGB.",".....SS...SS....","....WWW..WWW...."]},
 ];
-function spriteSVG(stageIdx,px){
-  const s=SPRITES[stageIdx],pal=Object.assign({},PAL,s.pal);
+const SPRITES_TUNIC=[
+{pal:{B:'#a3684a',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HHHHHHHHHHHH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HH..SSSS..HH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BBBBBBBB....","....PPP..PPP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#38b764',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HCCCCCCCCCCH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HHCCSSSSCCHH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BBBBBBBB....","....PPP..PPP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#94b0c2',C:'#c2495e'},map:["...............D","....HHHHHHHH...D","...HHHHHHHHHH..D","..HCCCCCCCCCCH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BBGGBB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BGBBBBGB....","....PGP..PGP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#8a4ab0',C:'#5d275d'},map:["...G..G..G.....D","...GGGGGGGG....D","..HHHHHHHHHHHH.D","..HHHHHHHHHHHH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BGGGGB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BGBBBBGB....","....PGP..PGP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
+];
+function spriteSVG(stageIdx,px,body,hairHex,accentHex){
+  const SET=(body==='tunic')?SPRITES_TUNIC:SPRITES;
+  const s=SET[stageIdx],pal=Object.assign({},PAL,s.pal);
+  if(hairHex)pal.H=hairHex;
+  if(accentHex)pal.C=accentHex;
   const w=s.map[0].length,h=s.map.length;let out='';
   for(let y=0;y<h;y++)for(let x=0;x<w;x++){
     const ch=s.map[y][x];if(ch!=='.')out+=R(x,y,1,1,pal[ch],px);
   }
   return '<svg width="'+(w*px)+'" height="'+(h*px)+'" shape-rendering="crispEdges">'+out+'</svg>';
 }
+function heroSprite(stageIdx,px){return spriteSVG(stageIdx,px,state.profile.bodyType,state.profile.hairHex,state.profile.accentHex);}
 
 function buildingSVG(st,stage,px){
   const floors=stage+1;
@@ -859,7 +1088,7 @@ function treeSVG(px){
 }
 
 /* ═══════════ village scene ═══════════ */
-const SCENE_W=1780,SCENE_H=520,GROUND=452;
+const SCENE_W=2000,SCENE_H=520,GROUND=452;
 function renderVillage(){
   const wrap=document.getElementById('sceneWrap');
   let o='';
@@ -900,7 +1129,7 @@ function renderVillage(){
   o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="26" fill="'+(N?'#5c4b30':'#7a6544')+'"/>';
   o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="3" fill="'+(N?'#6e5a3a':'#8f7a52')+'"/>';
   for(let x=10;x<SCENE_W;x+=42)o+='<rect x="'+x+'" y="'+(GROUND+10)+'" width="14" height="4" fill="'+(N?'#6e5a3a':'#8f7a52')+'"/>';
-  [40,470,940,1500].forEach((x,i)=>{
+  [40,470,940,1500,1950].forEach((x,i)=>{
     o+='<g transform="translate('+x+','+(GROUND-66)+')">'+treeSVG(6)+'</g>';
     if(i%2)o+='<g transform="translate('+(x+38)+','+(GROUND-48)+')">'+treeSVG(4.4)+'</g>';
   });
@@ -912,18 +1141,24 @@ function renderVillage(){
     if(state.deco[dc.id])o+='<g transform="translate('+dc.x+','+GROUND+')" shape-rendering="crispEdges">'+dc.d(4)+'</g>';
   });
 
-  const order=['work','focus','health','HOUSE','care','fun','habit','OFFICE'];
-  const xs=[90,330,560,760,1020,1250,1440,1650];
+  const order=['work','focus','health','HOUSE','care','fun','habit','HALL','OFFICE'];
+  const xs=[90,330,560,760,1020,1250,1440,1650,1860];
   order.forEach((id,i)=>{
     const cx=xs[i];
     if(id==='HOUSE'){
       const hs=houseStage(totalLevel());
       const b=houseSVG(hs,5);
-      o+='<g class="bpoi" data-nav="home" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+10)+')">'
+      o+='<g class="bpoi" data-nav="home" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+10)+')" style="'+genFilter()+'">'
         +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="#ffcd75" opacity="0"/>'
         +b.svg+'</g>';
-      o+='<g class="hz-idle bpoi" data-nav="hazel" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')">'+spriteSVG(charStage(totalLevel()),4)+'</g>';
+      o+='<g class="hz-idle bpoi" data-nav="hazel" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')" style="'+genFilter()+'">'+heroSprite(charStage(totalLevel()),4)+'</g>';
       o+=chip(cx,'🏠 '+heroNm()+'의 집','Lv.'+totalLevel());
+    }else if(id==='HALL'){
+      const b=buildingSVG(HALL,4,4.6);
+      o+='<g class="bpoi" data-nav="hall" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+8)+')">'
+        +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="#ffcd75" opacity="0"/>'
+        +b.svg+'</g>';
+      o+=chip(cx,'🏆 기록의 전당','완료 '+state.vault.length);
     }else if(id==='OFFICE'){
       const b=buildingSVG(OFFICE,1,4.6);
       o+='<g class="bpoi" data-nav="office" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+8)+')">'
@@ -934,7 +1169,7 @@ function renderVillage(){
       const st=getStat(id);
       const lv=statLevel(id),bs=buildStage(lv);
       const b=buildingSVG(st,bs,4.6);
-      o+='<g class="bpoi" data-nav="'+id+'" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+8)+')">'
+      o+='<g class="bpoi" data-nav="'+id+'" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+8)+')" style="'+genFilter()+'">'
         +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="'+st.c+'" opacity="0"/>'
         +b.svg+'</g>';
       o+=chip(cx,st.ico+' '+st.stages[bs],'Lv.'+lv);
@@ -955,10 +1190,11 @@ function renderVillage(){
       if(nav==='home'){beep(SFX.tap);renderHome();showScreen('scrHome','navHome');}
       else if(nav==='office'){beep(SFX.tap);renderEdit();showScreen('scrEdit',null);}
       else if(nav==='hazel'){hazelSay();}
+      else if(nav==='hall'){beep(SFX.tap);renderHall();showScreen('scrHall',null);}
       else{beep(SFX.tap);openBuilding(nav);}
     });
   });
-  $('vTitle').textContent='🏘️ '+villageNm();
+  $('vTitle').textContent='🏘️ '+villageNm()+(state.gen>0?' · Gen.'+state.gen:'');
   $('vSub').textContent=taglineTxt();
   $('hudHero').textContent='촌장 '+heroNm();
   $('hudLv').textContent='Lv.'+totalLevel();
@@ -967,25 +1203,58 @@ function renderVillage(){
   $('dayToggle').textContent=isNight()?'🌙 밤':'☀️ 낮';
 }
 
-/* ── hazel dialog ── */
-let sayTimer=null;
+/* ── hazel dialog: rich, varied, non-repeating ── */
+let sayTimer=null,lastSayIdx=-1;
+function hazelLines(){
+  const L=[
+    '아무것도 하지 않으면 아무것도 이뤄지지 않아. 조금씩 꾸준히, 오늘도!',
+    '퀘스트 하나가 벽돌 하나야. 티끌 모아 마을 된다.',
+    '완벽하게 하려다 아예 안 하는 것보다, 어설퍼도 하는 게 낫더라.',
+    '오늘 뭐라도 하나는 했어? 그럼 충분해.',
+    '어제보다 아주 조금만 나아가면 그게 성장이야.',
+    isNight()?'별이 예쁜 밤이야. 오늘 하루도 수고했어.':'좋은 아침! 오늘의 퀘스트를 시작해볼까?',
+    '쉬는 것도 프로젝트야. 너무 몰아붙이지 마.',
+    'K BBQ 오늘도 무사히 돌아갔어? 사장님 아니 촌장님, 고생 많아.',
+    '재고 확인, 스케줄 관리… 매장 관리도 결국 레벨업이야.',
+    '직원들한테 오늘 한마디 웃으면서 건넸어? 그것도 리더십이야.',
+    'K BBQ 리뷰 이벤트 반응 좋았잖아. 또 뭔가 해볼까?',
+    '노션대학 첫 기수 결과 발표가 다가오네. 설레지 않아?',
+    '@effi_land 커뮤니티, 하나씩 쌓다 보니 여기까지 왔네.',
+    '@dots__hazel 콘텐츠 하나 올리는 것도 오늘의 퀘스트가 될 수 있어.',
+    '실수를 솔직하게 공개하는 것도 너의 강점이야. 계속 그렇게 써.',
+    '3월에 코딩 완전 처음이었잖아. 지금 이 마을을 봐, 네가 만든 거야.',
+    'Hazel Timer가 첫 배포작이었지. 여기까지 정말 많이 왔다.',
+    'iPad 하나로 여기까지 만들었어. 도구 탓할 시간에 하나 더 만들자.',
+    '오늘 윌로우랑 코이는 산책 시켜줬어?',
+    '윌로우, 코이가 옆에서 응원하고 있을 거야. 왈왈!',
+    '가끔은 멍때리는 것도 필요해. 강아지들처럼 낮잠 한숨 어때.',
+    '퀘스트 목록이 길어도 괜찮아. 오늘은 딱 하나만 해보자.',
+    '태스크는 가볍게, 프로젝트는 진득하게. 그게 우리 마을의 룰이지.',
+    '우리 마을, 점점 그럴싸해지지 않아? 다음엔 또 뭘 지을까.',
+    '어려운 프로젝트일수록 완공됐을 때 뿌듯함이 커.',
+    '완벽한 하루가 아니어도 괜찮아. 완료한 게 하나라도 있으면 그게 승리야.',
+    '가끔 뒤돌아보면 생각보다 많이 해왔다는 거, 잊지 마.',
+  ];
+  if(state.streak.count>=3)L.push('🔥 '+state.streak.count+'일 연속 출석 중! 이 흐름 놓치지 말자.');
+  if(state.streak.count>=7)L.push('한 주 내내 꾸준했네. 이게 진짜 실력이야.');
+  if(state.gold>=100)L.push('💰 골드가 꽤 모였어. 상점에 새 장식 들여올까?');
+  if(state.vault.length>=3)L.push('전당에 트로피가 '+state.vault.length+'개나 쌓였어. 다시 봐도 뿌듯하다.');
+  if(rebirthReady())L.push('✧ 이제 환생할 수 있어. 새로운 모습으로 다시 시작해볼까?');
+  if(state.gen>0)L.push('Gen.'+state.gen+'의 '+heroNm()+'이라… 몇 번째 여정인지 세어보면 재밌겠다.');
+  L.push(mottoTxt());
+  return L;
+}
 function hazelSay(){
   beep(SFX.tap);
-  const lines=[
-    '오늘도 조금씩, 뭐라도 하자!',
-    mottoTxt(),
-    '퀘스트 하나가 벽돌 하나야.',
-    '우리 마을, 점점 멋있어지지 않아?',
-    '어려운 퀘스트일수록 골드가 짭짤해!',
-    isNight()?'별이 예쁜 밤이야. 오늘 하루도 수고했어.':'좋은 아침! 오늘의 퀘스트를 시작하자.',
-  ];
-  if(state.streak.count>=3)lines.push('🔥 '+state.streak.count+'일 연속 출석 중! 꾸준함이 최고야.');
-  if(state.gold>=100)lines.push('💰 골드가 모였네. 상점에 새 장식이 있을지도?');
+  const L=hazelLines();
+  let idx=Math.floor(Math.random()*L.length);
+  if(L.length>1&&idx===lastSayIdx)idx=(idx+1)%L.length;
+  lastSayIdx=idx;
   $('hzWho').textContent='촌장 '+heroNm();
-  $('hzTxt').textContent=lines[Math.floor(Math.random()*lines.length)];
+  $('hzTxt').textContent=L[idx];
   $('hzSay').classList.add('on');
   clearTimeout(sayTimer);
-  sayTimer=setTimeout(()=>$('hzSay').classList.remove('on'),2800);
+  sayTimer=setTimeout(()=>$('hzSay').classList.remove('on'),3400);
 }
 
 /* ═══════════ navigation ═══════════ */
@@ -994,17 +1263,19 @@ let currentStat=null;
 function showScreen(id,navId){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
   $(id).classList.add('on');
-  ['navVillage','navQuests','navHome'].forEach(n=>$(n).classList.remove('on'));
+  ['navVillage','navPlan','navHome'].forEach(n=>$(n).classList.remove('on'));
   if(navId)$(navId).classList.add('on');
   window.scrollTo(0,0);
 }
 function goVillage(){renderVillage();showScreen('scrVillage','navVillage');}
 $('navVillage').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
-$('navQuests').addEventListener('click',()=>{beep(SFX.tap);renderQuests();showScreen('scrQuests','navQuests');});
+$('navPlan').addEventListener('click',()=>{beep(SFX.tap);renderPlan();showScreen('scrPlan','navPlan');});
 $('navHome').addEventListener('click',()=>{beep(SFX.tap);renderHome();showScreen('scrHome','navHome');});
 $('dBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
 $('eBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
 $('sBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('hBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('hHallBtn').addEventListener('click',()=>{beep(SFX.tap);renderHall();showScreen('scrHall',null);});
 $('hudGold').addEventListener('click',()=>{beep(SFX.tap);renderShop();showScreen('scrShop',null);});
 $('dayToggle').addEventListener('click',()=>{
   state.ui.auto=false;
@@ -1022,116 +1293,139 @@ function renderDetail(){
   $('dTag').textContent=st.ico+' '+st.nm+' · '+st.sub;
   $('dTop').textContent=st.ico+' '+st.nm;
   $('dLvChip').textContent='Lv.'+lv;
-  $('dBuild').innerHTML=buildingSVG(st,bs,7).svg;
+  $('dBuild').innerHTML=wrapGen(buildingSVG(st,bs,7).svg);
   $('dStageNm').innerHTML='<b>'+esc(st.stages[bs])+'</b> <span style="color:#6b7396">('+(bs+1)+'/5단계)</span>';
   $('dBarTxt').textContent=p+' / '+XP_PER_LEVEL;
   $('dBar').style.width=(p/XP_PER_LEVEL*100)+'%';
   $('dBar').style.setProperty('--c',st.c);
   $('dNext').textContent=bs>=4?'★ 최종 진화 완료! 마을의 자랑이다':'다음 진화 → Lv.'+BUILD_LV[bs+1]+' 「'+st.stages[bs+1]+'」';
-  renderDetailQuests();
+  renderDetailProjects();
 }
-function questCard(q){
-  const doneT=q.repeat&&q.last===todayStr();
-  return '<div class="quest'+(doneT?' doneT':'')+'" data-id="'+q.id+'">'
-    +'<button class="chk" data-act="done" aria-label="퀘스트 완료"'+(doneT?' disabled':'')+'>'+(doneT?'✓':'…')+'</button>'
-    +'<div class="qt">'+esc(q.text)+(q.repeat?'<span class="rep-badge">🔁매일</span>':'')
-    +'<div class="qm">+'+q.xp+' XP · +'+goldFor(q.xp)+'G'+(doneT?' · 오늘 완료!':'')+'</div></div>'
-    +'<button class="del" data-act="del" aria-label="퀘스트 삭제">✕</button></div>';
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function taskRow(t){
+  const proj=t.projectId?state.projects.find(p=>p.id===t.projectId):null;
+  return '<div class="trow'+(t.done?' done':'')+'" data-id="'+t.id+'">'
+    +'<button class="tchk" data-act="tog" aria-label="태스크 완료">'+(t.done?'✓':'')+'</button>'
+    +'<div class="ttxt">'+esc(t.text)+(t.repeat?'<span class="rep-badge">🔁매일</span>':'')
+    +(proj?'<div class="qm">📦 '+esc(proj.title)+'</div>':'')+'</div>'
+    +(t.done?'<span class="ttime">'+fmtTime(t.doneAt)+'</span>':'')
+    +'<button class="tdel" data-act="del" aria-label="태스크 삭제">✕</button></div>';
 }
-const goldFor=xp=>xp>=50?20:xp>=25?10:4;
-function renderDetailQuests(){
-  const list=state.quests.filter(q=>q.stat===currentStat);
-  $('dQCount').textContent='진행 중 '+list.length+'개';
-  const box=$('dQList');
-  if(!list.length){box.innerHTML='<div class="empty">이 공간의 퀘스트가 없다.<br>위에서 등록하고 건물을 키우자 ▲</div>';return;}
-  box.innerHTML=list.map(questCard).join('');
+function projectCard(p){
+  const st=getStat(p.stat),sz=PROJECT_SIZES[p.size];
+  const {total,done}=projTaskCounts(p.id);
+  const pct=total?Math.round(done/total*100):0;
+  return '<div class="proj" data-id="'+p.id+'">'
+    +'<div class="proj-h" data-act="toggle"><span class="pico">'+st.ico+'</span><div class="pm">'
+      +'<div class="pt">'+esc(p.title)+'</div>'
+      +'<div class="pc">'+esc(st.nm)+' · '+sz.label+'(+'+sz.xp+'XP) · 태스크 <b>'+done+'/'+total+'</b></div>'
+    +'</div><span class="parw" data-act="toggle">▾</span></div>'
+    +(total?'<div class="pbar"><i style="--c:'+st.c+';width:'+pct+'%"></i></div>':'')
+    +'<div class="proj-acts">'
+      +'<button class="btn done-btn" data-act="complete">🏆 프로젝트 완료</button>'
+      +'<button class="btn del-btn" data-act="delp">삭제</button>'
+    +'</div></div>';
 }
+function renderDetailProjects(){
+  const list=state.projects.filter(p=>p.stat===currentStat);
+  $('dQCount').textContent='진행 중 프로젝트 '+list.length+'개';
+  const box=$('dProjList');
+  if(!list.length){box.innerHTML='<div class="empty">이 공간의 프로젝트가 없다.<br>위에서 등록하고 건물을 키우자 ▲</div>';return;}
+  box.innerHTML=list.map(projectCard).join('');
+}
+$('dPAdd').addEventListener('click',()=>{
+  const t=$('dPTitle').value.trim();
+  if(!t)return $('dPTitle').focus();
+  addProject(t,currentStat,+$('dPSize').value);
+  $('dPTitle').value='';
+  beep(SFX.tap);renderDetailProjects();
+});
+$('dPTitle').addEventListener('keydown',e=>{if(e.key==='Enter')$('dPAdd').click();});
+$('dProjList').addEventListener('click',e=>projListClick(e,renderDetailProjects));
 
-/* ── quest board ── */
-function renderQuests(){
-  $('qbStat').innerHTML=allStats().map(s=>'<option value="'+s.id+'">'+s.ico+' '+esc(s.nm)+'</option>').join('');
-  const box=$('qbList');
-  if(!state.quests.length){
-    box.innerHTML='<div class="empty">진행 중인 퀘스트가 없다.<br>위에서 등록하거나 건물에 입장해 보자!</div>';
-  }else{
-    box.innerHTML=allStats().map(s=>{
-      const list=state.quests.filter(q=>q.stat===s.id);
-      if(!list.length)return '';
-      return '<div class="qgroup"><span>'+s.ico+'</span><b>'+esc(s.nm)+'</b><span class="glv">Lv.'+statLevel(s.id)+'</span></div>'
-        +list.map(questCard).join('');
-    }).join('');
-  }
+/* ── plan screen: segment toggle ── */
+$('segProj').addEventListener('click',()=>{
+  beep(SFX.tap);
+  $('segProj').classList.add('on');$('segTask').classList.remove('on');
+  $('viewProj').style.display='';$('viewTask').style.display='none';
+  renderProjects();
+});
+$('segTask').addEventListener('click',()=>{
+  beep(SFX.tap);
+  $('segTask').classList.add('on');$('segProj').classList.remove('on');
+  $('viewTask').style.display='';$('viewProj').style.display='none';
+  renderTasks();
+});
+function renderPlan(){
+  $('pStat').innerHTML=allStats().map(s=>'<option value="'+s.id+'">'+s.ico+' '+esc(s.nm)+'</option>').join('');
+  renderProjects();
+}
+function renderProjects(){
+  const box=$('planProjList');
+  if(!state.projects.length){box.innerHTML='<div class="empty">진행 중인 프로젝트가 없다.<br>위에서 새 프로젝트를 만들어 보자!</div>';return;}
+  box.innerHTML=allStats().map(s=>{
+    const list=state.projects.filter(p=>p.stat===s.id);
+    if(!list.length)return '';
+    return '<div class="tgroup"><span>'+s.ico+'</span><b>'+esc(s.nm)+'</b><span class="glv">Lv.'+statLevel(s.id)+'</span></div>'
+      +list.map(projectCard).join('');
+  }).join('');
+}
+function projListClick(e,rerender){
+  const proj=e.target.closest('.proj');if(!proj)return;
+  const btn=e.target.closest('[data-act]');if(!btn)return;
+  const p=state.projects.find(x=>x.id===proj.dataset.id);if(!p)return;
+  const act=btn.dataset.act;
+  if(act==='toggle'){proj.classList.toggle('open');const body=proj.querySelector('.proj-body');if(body)body.style.display=proj.classList.contains('open')?'':'none';return;}
+  if(act==='delp'){if(confirm('「'+p.title+'」 프로젝트를 삭제할까? (태스크는 남아있어)')){beep(SFX.tap);deleteProject(p.id);rerender();if($('viewTask').style.display!=='none')renderTasks();}return;}
+  if(act==='complete'){completeProject(p);rerender();}
+}
+$('planProjList').addEventListener('click',e=>projListClick(e,renderProjects));
+$('pAdd').addEventListener('click',()=>{
+  const t=$('pTitle').value.trim();
+  if(!t)return $('pTitle').focus();
+  addProject(t,$('pStat').value,+$('pSize').value);
+  $('pTitle').value='';
+  beep(SFX.tap);renderProjects();
+});
+$('pTitle').addEventListener('keydown',e=>{if(e.key==='Enter')$('pAdd').click();});
+
+/* ── plan screen: tasks ── */
+function renderTasks(){
+  $('tProj').innerHTML='<option value="">（프로젝트 없음）</option>'
+    +state.projects.map(p=>{const st=getStat(p.stat);return '<option value="'+p.id+'">'+st.ico+' '+esc(p.title)+'</option>';}).join('');
+  rolloverRepeats();
+  const box=$('planTaskList');
+  const pending=state.tasks.filter(t=>!t.done);
+  const done=state.tasks.filter(t=>t.done);
+  if(!state.tasks.length){box.innerHTML='<div class="empty">등록된 태스크가 없다.<br>위에서 오늘의 할 일을 등록하자!</div>';renderLog();return;}
+  box.innerHTML=pending.map(taskRow).join('')+(done.length?'<div class="tgroup"><b>완료됨</b></div>'+done.map(taskRow).join(''):'');
   renderLog();
 }
 function renderLog(){
   const el=$('logList');
-  if(!state.log.length){el.innerHTML='<div class="empty">아직 기록이 없다.<br>첫 퀘스트를 클리어해 보자!</div>';return;}
+  if(!state.log.length){el.innerHTML='<div class="empty">아직 기록이 없다.<br>첫 태스크·프로젝트를 완료해 보자!</div>';return;}
   el.innerHTML=state.log.slice(0,8).map(l=>{
     const s=getStat(l.stat);
-    return '<div class="dream"><span class="dd">'+(l.d||'')+'</span><span>'+s.ico+' '+esc(l.text)+' <span style="color:#ffcd75">+'+l.xp+'</span></span></div>';
+    return '<div class="dream"><span class="dd">'+(l.d||'')+'</span><span>'+s.ico+' '+esc(l.text)+(l.xp?' <span style="color:#ffcd75">+'+l.xp+'XP</span>':'')+'</span></div>';
   }).join('');
 }
-$('qbAdd').addEventListener('click',()=>{
-  const t=$('qbText').value.trim();
-  if(!t)return $('qbText').focus();
-  state.quests.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat:$('qbStat').value,xp:+$('qbDiff').value,repeat:$('qbRepeat').checked,last:''});
-  $('qbText').value='';$('qbRepeat').checked=false;
-  saveState();beep(SFX.tap);renderQuests();
+$('tAdd').addEventListener('click',()=>{
+  const t=$('tText').value.trim();
+  if(!t)return $('tText').focus();
+  const pid=$('tProj').value||null;
+  const stat=pid?state.projects.find(p=>p.id===pid).stat:allStats()[0].id;
+  state.tasks.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat,projectId:pid,repeat:$('tRepeat').checked,last:'',done:false,doneAt:null,createdAt:Date.now()});
+  $('tText').value='';$('tRepeat').checked=false;
+  saveState();beep(SFX.tap);renderTasks();
 });
-$('qbText').addEventListener('keydown',e=>{if(e.key==='Enter')$('qbAdd').click();});
-$('qbList').addEventListener('click',e=>{
+$('tText').addEventListener('keydown',e=>{if(e.key==='Enter')$('tAdd').click();});
+$('planTaskList').addEventListener('click',e=>{
+  const row=e.target.closest('.trow');if(!row)return;
   const btn=e.target.closest('[data-act]');if(!btn)return;
-  const card=btn.closest('.quest');
-  const q=state.quests.find(x=>x.id===card.dataset.id);if(!q)return;
-  if(btn.dataset.act==='del'){
-    state.quests=state.quests.filter(x=>x.id!==q.id);
-    saveState();renderQuests();return;
-  }
-  completeQuest(q,btn);
-});
-
-/* ── shop ── */
-function renderShop(){
-  $('shopGold').textContent=state.gold;
-  $('shopList').innerHTML=DECOS.map(d=>{
-    const owned=!!state.deco[d.id];
-    return '<div class="shop-item"><div class="si">'+d.ico+'</div>'
-      +'<div class="sm2"><div class="sn">'+d.nm+'</div><div class="sd">'+d.sd+'</div></div>'
-      +(owned?'<span class="owned">배치 완료 ✓</span>'
-        :'<button class="btn" data-buy="'+d.id+'">💰'+d.price+'G</button>')
-      +'</div>';
-  }).join('');
-}
-$('shopList').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-buy]');if(!btn)return;
-  const d=DECOS.find(x=>x.id===btn.dataset.buy);if(!d||state.deco[d.id])return;
-  if(state.gold<d.price){beep(SFX.nope);toast('골드가 부족해! ('+state.gold+'/'+d.price+'G)');return;}
-  state.gold-=d.price;
-  state.deco[d.id]=true;
-  saveState();beep(SFX.coin);
-  renderShop();
-  toast('✦ '+d.nm+'이(가) 마을에 배치됐다! ✦');
-});
-function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-$('dQAdd').addEventListener('click',()=>{
-  const t=$('dQText').value.trim();
-  if(!t)return $('dQText').focus();
-  state.quests.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat:currentStat,xp:+$('dQDiff').value,repeat:$('dQRepeat').checked,last:''});
-  $('dQText').value='';$('dQRepeat').checked=false;
-  saveState();beep(SFX.tap);renderDetailQuests();
-});
-$('dQText').addEventListener('keydown',e=>{if(e.key==='Enter')$('dQAdd').click();});
-
-$('dQList').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-act]');if(!btn)return;
-  const card=btn.closest('.quest');
-  const q=state.quests.find(x=>x.id===card.dataset.id);if(!q)return;
-  if(btn.dataset.act==='del'){
-    state.quests=state.quests.filter(x=>x.id!==q.id);
-    saveState();renderDetailQuests();return;
-  }
-  completeQuest(q,btn);
+  const t=state.tasks.find(x=>x.id===row.dataset.id);if(!t)return;
+  if(btn.dataset.act==='del'){deleteTask(t.id);renderTasks();return;}
+  toggleTask(t,btn);renderTasks();
+  if($('scrDetail').classList.contains('on'))renderDetailProjects();
 });
 
 /* ═══════════ quest completion & dreams ═══════════ */
@@ -1152,34 +1446,94 @@ function trackDaily(xp){
     keys.slice(0,keys.length-14).forEach(k=>delete state.daily[k]);
   }
 }
-function completeQuest(q,anchor){
-  if(q.repeat&&q.last===todayStr())return;
-  const st=getStat(q.stat);
-  const beforeLv=statLevel(q.stat);
+function fmtTime(iso){
+  const d=new Date(iso);
+  let h=d.getHours();const m=d.getMinutes();
+  const ap=h<12?'오전':'오후';h=h%12;if(h===0)h=12;
+  return ap+' '+h+':'+String(m).padStart(2,'0');
+}
+
+/* ── tasks ── */
+function projTaskCounts(pid){
+  const list=state.tasks.filter(t=>t.projectId===pid);
+  return {total:list.length,done:list.filter(t=>t.done).length};
+}
+function toggleTask(t,anchor){
+  t.done=!t.done;
+  if(t.done){
+    t.doneAt=new Date().toISOString();
+    if(t.repeat)t.last=todayStr();
+    state.gold+=2;
+    bumpStreak();
+    state.cleared++;state.today.n++;
+    if(anchor){floatXp(anchor,'+2G');beep(SFX.done);}
+  }else{
+    t.doneAt=null;
+    if(t.repeat)t.last='';
+  }
+  saveState();
+}
+function deleteTask(id){
+  state.tasks=state.tasks.filter(t=>t.id!==id);
+  saveState();
+}
+
+/* ── daily repeat rollover: uncheck repeat tasks on a new day ── */
+function rolloverRepeats(){
+  const t=todayStr();
+  let changed=false;
+  state.tasks.forEach(tk=>{
+    if(tk.repeat&&tk.done&&tk.last!==t){tk.done=false;tk.doneAt=null;changed=true;}
+  });
+  if(changed)saveLocal();
+}
+
+/* ── projects ── */
+function addProject(title,stat,size){
+  state.projects.unshift({id:Date.now()+''+Math.floor(Math.random()*999),title,stat,size,createdAt:Date.now()});
+  saveState();
+}
+function deleteProject(id){
+  state.tasks.forEach(t=>{if(t.projectId===id)t.projectId=null;}); // orphan tasks survive
+  state.projects=state.projects.filter(p=>p.id!==id);
+  saveState();
+}
+function completeProject(p){
+  const {total,done}=projTaskCounts(p.id);
+  if(total>0&&done<total){
+    if(!confirm('아직 '+(total-done)+'개의 태스크가 남았어. 그래도 프로젝트를 완료할까?'))return;
+  }
+  const st=getStat(p.stat);
+  const sz=PROJECT_SIZES[p.size];
+  const beforeLv=statLevel(p.stat);
   const beforeB=buildStage(beforeLv);
   const beforeH=houseStage(totalLevel());
-  state.xp[q.stat]=(state.xp[q.stat]||0)+q.xp;
-  const g=goldFor(q.xp);
-  state.gold+=g;
+  state.xp[p.stat]=(state.xp[p.stat]||0)+sz.xp;
+  state.gold+=sz.gold;
   bumpStreak();
-  trackDaily(q.xp);
-  if(q.repeat)q.last=todayStr();
-  else state.quests=state.quests.filter(x=>x.id!==q.id);
-  state.cleared++;state.today.n++;
-  state.log.unshift({text:q.text,stat:q.stat,xp:q.xp,d:todayStr()});
+  trackDaily(sz.xp);
+  // snapshot into vault, archive tasks
+  const taskSnap=state.tasks.filter(t=>t.projectId===p.id).map(t=>({text:t.text,done:t.done,doneAt:t.doneAt}));
+  state.tasks=state.tasks.filter(t=>{
+    if(t.projectId!==p.id)return true;
+    if(t.repeat){t.projectId=null;return true;} // repeats detach & keep running
+    return false;
+  });
+  state.vault.unshift({id:p.id,title:p.title,stat:p.stat,size:p.size,doneAt:new Date().toISOString(),tasks:taskSnap,gen:state.gen});
+  state.projects=state.projects.filter(x=>x.id!==p.id);
+  state.log.unshift({text:'📦 '+p.title,stat:p.stat,xp:sz.xp,d:todayStr()});
   state.log=state.log.slice(0,20);
-  const afterLv=statLevel(q.stat);
+  const afterLv=statLevel(p.stat);
   const afterB=buildStage(afterLv);
   const afterH=houseStage(totalLevel());
   if(afterB>beforeB)state.dreams.unshift({t:st.ico+' 「'+st.stages[afterB]+'」 완공',d:todayStr()});
   if(afterH>beforeH)state.dreams.unshift({t:'🏠 '+heroNm()+'의 집 → 「'+houseNm(afterH)+'」',d:todayStr()});
   state.dreams=state.dreams.slice(0,30);
   saveState();
-  floatXp(anchor,'+'+q.xp+'XP +'+g+'G');
   if($('scrDetail').classList.contains('on'))renderDetail();
-  if($('scrQuests').classList.contains('on'))renderQuests();
+  if($('scrPlan').classList.contains('on')){renderProjects();renderTasks();}
   if(afterH>beforeH){beep(SFX.dream);
-    showModal('꿈이 이루어졌다!',houseSVG(afterH,4).svg,
+    showModal('꿈이 이루어졌다!',wrapGen(houseSVG(afterH,4).svg),
       '레벨업의 힘으로 '+heroNm()+'의 집이<br><b>「'+esc(houseNm(afterH))+'」</b>(으)로 견고해졌다!');
   }else if(afterB>beforeB){beep(SFX.dream);
     showModal('드림 달성!',buildingSVG(st,afterB,4).svg,
@@ -1187,8 +1541,13 @@ function completeQuest(q,anchor){
   }else if(afterLv>beforeLv){beep(SFX.level);
     showModal('LEVEL UP!',buildingSVG(st,afterB,4).svg,
       st.ico+' <b>'+esc(st.nm)+'</b> Lv.'+beforeLv+' → <b>Lv.'+afterLv+'</b><br>건물이 더 단단해지고 있다…');
-  }else{beep(SFX.done);}
+  }else{
+    beep(SFX.dream);
+    showModal('프로젝트 완료!','🏆',
+      '「'+esc(p.title)+'」이(가)<br><b>기록의 전당</b>에 새겨졌다!<br>+'+sz.xp+'XP · +'+sz.gold+'G');
+  }
 }
+
 function floatXp(anchor,txt){
   const r=anchor.getBoundingClientRect();
   const el=document.createElement('div');
@@ -1209,8 +1568,8 @@ function toast(msg){
 function renderHome(){
   const lv=totalLevel(),hs=houseStage(lv);
   $('hHdr').textContent='🏠 '+heroNm()+'의 집';
-  $('hHouse').innerHTML=houseSVG(hs,6).svg;
-  $('hSprite').innerHTML=spriteSVG(charStage(lv),5);
+  $('hHouse').innerHTML=wrapGen(houseSVG(hs,6).svg);
+  $('hSprite').innerHTML=wrapGen(heroSprite(charStage(lv),5).replace('<svg','<svg style="animation:hz 1.2s steps(2) infinite"'));
   $('hHouseNm').textContent=houseNm(hs)+' ('+(hs+1)+'/5)';
   $('hHeroNm').textContent='촌장 '+heroNm();
   $('hLv').textContent='Lv.'+lv;
@@ -1220,6 +1579,10 @@ function renderHome(){
   $('hClear').textContent=state.cleared;
   $('hStreak').textContent=state.streak.count;
   $('hGold').textContent=state.gold;
+  $('hVaultN').textContent=state.vault.length;
+  $('hGenTag').textContent='MY HOME'+(state.gen>0?' · Gen.'+state.gen:'');
+  $('hRebirthWin').style.display=rebirthReady()?'':'none';
+  $('rbLv').textContent=REBIRTH_LV;
   renderRadar();
   renderWeekChart();
   $('hStats').innerHTML=allStats().map(s=>{
@@ -1330,6 +1693,7 @@ $('eSaveHouse').addEventListener('click',()=>{
   state.custom.houseNames=[0,1,2,3,4].map(i=>$('eH'+i).value.trim()||HOUSE_STAGES[i].nm);
   saveState();toast('✦ 집 이름 저장 완료 ✦');
 });
+$('btnCharChange').addEventListener('click',()=>{beep(SFX.tap);openOnboarding('edit');});
 $('setSound').addEventListener('change',e=>{
   state.ui.sound=e.target.checked;saveState();
   if(e.target.checked)beep(SFX.done);
@@ -1344,6 +1708,71 @@ $('eSaveChar').addEventListener('click',()=>{
   saveState();toast('✦ 캐릭터 이름 저장 완료 ✦');
 });
 
+/* ═══════════ hall of records ═══════════ */
+function trophySize(size){return size===2?'대':size===1?'중':'소';}
+function renderHall(){
+  const totalTasksDone=state.tasks.filter(t=>t.done).length+state.vault.reduce((a,v)=>a+v.tasks.filter(t=>t.done).length,0);
+  const totalXp=Object.values(state.xp).reduce((a,b)=>a+b,0)+state.genLog.reduce((a,g)=>a+(g.xpAtRebirth||0),0);
+  $('hsProj').textContent=state.vault.length;
+  $('hsTask').textContent=totalTasksDone;
+  $('hsXp').textContent=totalXp;
+  $('hsStreak').textContent=state.streak.count;
+  const box=$('shelf');
+  let html='';
+  if(state.genLog.length){
+    html+='<div class="win-tag" style="position:static;display:inline-block;margin-bottom:10px">🎖️ 환생 앨범</div>';
+    html+='<div class="shelf" style="margin-bottom:18px">'+state.genLog.map(g=>
+      '<div class="trophy" style="border-bottom-color:'+genColor(g.gen)+'"><div style="font-size:1.4rem">👑</div>'
+      +'<div class="tn">Gen.'+g.gen+' · '+esc(g.title)+'</div><div class="td">Lv.'+g.finalLevel+' · '+g.date+'</div></div>'
+    ).join('')+'</div>';
+  }
+  if(!state.vault.length){
+    html+='<div class="empty">아직 완료된 프로젝트가 없다.<br>플랜에서 첫 프로젝트를 완료해 보자!</div>';
+  }else{
+    html+='<div class="shelf">'+state.vault.map((v,i)=>{
+      const st=getStat(v.stat);
+      return '<div class="trophy" data-idx="'+i+'" style="border-bottom-color:'+st.c+'">'
+        +'<div style="font-size:1.3rem">'+st.ico+'🏆</div>'
+        +'<div class="tn">'+esc(v.title)+'</div>'
+        +'<div class="td">'+trophySize(v.size)+'형 · '+v.doneAt.slice(0,10)+'</div></div>';
+    }).join('')+'</div>';
+  }
+  box.innerHTML=html;
+  box.querySelectorAll('.trophy[data-idx]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      beep(SFX.tap);
+      const v=state.vault[+el.dataset.idx];
+      const st=getStat(v.stat);
+      const doneN=v.tasks.filter(t=>t.done).length;
+      const list=v.tasks.length?v.tasks.map(t=>'<div class="dream"><span class="dd">'+(t.done?'✓':'·')+'</span><span'+(t.done?' style="text-decoration:line-through;color:#7d86a3"':'')+'>'+esc(t.text)+'</span></div>').join(''):'<div class="empty" style="padding:8px">연결된 태스크가 없었다</div>';
+      showModal('🏆 '+esc(v.title),st.ico,
+        esc(st.nm)+' · '+trophySize(v.size)+'형 프로젝트<br>완료일 '+v.doneAt.slice(0,10)+' · 태스크 '+doneN+'/'+v.tasks.length
+        +'<div style="text-align:left;margin-top:12px;max-height:180px;overflow-y:auto">'+list+'</div>');
+    });
+  });
+}
+function genColor(g){const hues=['#ffcd75','#73eff7','#d867c0','#38b764','#ef7d57','#41a6f6'];return hues[g%hues.length];}
+
+/* ═══════════ rebirth (환생) ═══════════ */
+function rebirthReady(){return totalLevel()>=REBIRTH_LV;}
+function doRebirth(){
+  const totalXp=Object.values(state.xp).reduce((a,b)=>a+b,0);
+  state.genLog.unshift({
+    gen:state.gen,finalLevel:totalLevel(),title:currentTitle(),
+    date:todayStr(),xpAtRebirth:totalXp,clearedAtRebirth:state.cleared,
+  });
+  state.gen++;
+  STATS.forEach(s=>state.xp[s.id]=0);
+  state.projects=[];
+  state.tasks=state.tasks.filter(t=>t.repeat); // habits survive rebirth
+  state.tasks.forEach(t=>{t.done=false;t.doneAt=null;t.last='';t.projectId=null;});
+  saveState();
+  renderVillage();
+  beep(SFX.dream);
+  showModal('✧ 환생! ✧',wrapGen(heroSprite(0,7)),
+    heroNm()+'이(가) <b>Gen.'+state.gen+'</b>(으)로 환생했다!<br>이전 세대의 기록은 전당에 영원히 남는다.<br>새로운 모습으로 다시 성장을 시작하자.');
+}
+
 /* ═══════════ modal & reset ═══════════ */
 function showModal(big,artSvg,html){
   $('modBig').textContent=big;
@@ -1353,6 +1782,11 @@ function showModal(big,artSvg,html){
 }
 $('modOk').addEventListener('click',()=>{beep(SFX.tap);$('mod').classList.remove('on');});
 $('mod').addEventListener('click',e=>{if(e.target===$('mod'))$('mod').classList.remove('on');});
+$('rbBtn').addEventListener('click',()=>{
+  if(!rebirthReady())return;
+  if(!confirm('정말 환생할까? 능력치가 전부 초기화되고 새 세대가 시작돼. (전당 기록은 영구 보존)'))return;
+  doRebirth();renderHome();
+});
 $('resetBtn').addEventListener('click',()=>{
   if(!confirm('마을 전체를 초기화할까? 모든 건물·드림·편집 내용이 사라져!'))return;
   state=defaultState();
@@ -1435,19 +1869,149 @@ function pushCloud(){
 function adoptState(c){
   state=normalize(c);
   saveLocal();
+  rolloverRepeats();
+  if(state.profile.onboarded)$('onboard').classList.add('off');
   renderVillage();
   if($('scrHome').classList.contains('on'))renderHome();
   if($('scrDetail').classList.contains('on')&&currentStat)renderDetail();
   if($('scrEdit').classList.contains('on'))renderEdit();
+  if($('scrPlan').classList.contains('on')){renderProjects();renderTasks();}
+  if($('scrHall').classList.contains('on'))renderHall();
+}
+
+/* ═══════════ onboarding ═══════════ */
+const GENDERS=[
+ {id:'f',ico:'👧',nm:'여성',sub:'추천: 드레스형',body:'dress'},
+ {id:'m',ico:'👦',nm:'남성',sub:'추천: 튜닉형',body:'tunic'},
+ {id:'x',ico:'✨',nm:'자유롭게',sub:'상관없이 골라볼게요',body:'dress'},
+];
+const HAIRS=[
+ {id:'brown',nm:'갈색머리',hex:'#4a2f1d'},
+ {id:'black',nm:'검정머리',hex:'#2b2018'},
+ {id:'blonde',nm:'금발',hex:'#c9a24a'},
+];
+const BODIES=[{id:'dress',nm:'드레스형'},{id:'tunic',nm:'튜닉형'}];
+const ACCENTS=[
+ {id:'rose',hex:'#c2495e'},{id:'blue',hex:'#41a6f6'},{id:'green',hex:'#38b764'},
+ {id:'pink',hex:'#d867c0'},{id:'orange',hex:'#ef7d57'},{id:'gold',hex:'#ffcd75'},
+];
+let obDraft={gender:'',bodyType:'dress',hairId:'brown',hairHex:'#4a2f1d',accentId:'rose',accentHex:'#c2495e'};
+let obReturnTo=null; // if set, "캐릭터 변경" mode returns here instead of finishing onboarding
+
+function obShow(step){
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('on'));
+  $('obStep'+step).classList.add('on');
+}
+function renderObGender(){
+  $('obGenderOpts').innerHTML=GENDERS.map(g=>
+    '<button class="ob-opt'+(obDraft.gender===g.id?' sel':'')+'" data-g="'+g.id+'">'
+    +'<span class="oe">'+g.ico+'</span><span class="ot">'+g.nm+'<div class="od">'+g.sub+'</div></span></button>'
+  ).join('');
+}
+function renderObChar(){
+  const grid=$('obCharGrid');
+  let html='';
+  BODIES.forEach(b=>HAIRS.forEach(h=>{
+    const sel=(obDraft.bodyType===b.id&&obDraft.hairId===h.id);
+    html+='<div class="ob-card'+(sel?' sel':'')+'" data-body="'+b.id+'" data-hair="'+h.id+'">'
+      +spriteSVG(0,3.4,b.id,h.hex,obDraft.accentHex)
+      +'<div class="cn">'+b.nm+'<br>'+h.nm+'</div></div>';
+  }));
+  grid.innerHTML=html;
+  $('obAccents').innerHTML=ACCENTS.map(a=>
+    '<button class="ob-swatch'+(obDraft.accentId===a.id?' sel':'')+'" data-a="'+a.id+'" style="background:'+a.hex+'" aria-label="포인트 컬러"></button>'
+  ).join('');
+}
+$('obGenderOpts').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-g]');if(!btn)return;
+  const g=GENDERS.find(x=>x.id===btn.dataset.g);
+  obDraft.gender=g.id;obDraft.bodyType=g.body;
+  beep(SFX.tap);renderObGender();renderObChar();
+});
+$('obCharGrid').addEventListener('click',e=>{
+  const card=e.target.closest('[data-body]');if(!card)return;
+  obDraft.bodyType=card.dataset.body;
+  obDraft.hairId=card.dataset.hair;
+  obDraft.hairHex=HAIRS.find(h=>h.id===card.dataset.hair).hex;
+  beep(SFX.tap);renderObChar();
+});
+$('obAccents').addEventListener('click',e=>{
+  const sw=e.target.closest('[data-a]');if(!sw)return;
+  obDraft.accentId=sw.dataset.a;
+  obDraft.accentHex=ACCENTS.find(a=>a.id===sw.dataset.a).hex;
+  beep(SFX.tap);renderObChar();
+});
+$('ob0Next').addEventListener('click',()=>{beep(SFX.tap);renderObGender();obShow(1);});
+$('ob1Back').addEventListener('click',()=>{beep(SFX.tap);obShow(0);});
+$('ob1Next').addEventListener('click',()=>{
+  if(!obDraft.gender)return toast('하나를 선택해줘');
+  beep(SFX.tap);renderObChar();obShow(2);
+});
+$('ob2Back').addEventListener('click',()=>{beep(SFX.tap);obShow(1);});
+$('ob2Next').addEventListener('click',()=>{
+  beep(SFX.tap);
+  if(obReturnTo){finishCharChange();return;}
+  $('obVillage').value=state.custom.village||'';
+  $('obHero').value=state.custom.hero||'';
+  obShow(3);
+});
+$('ob3Back').addEventListener('click',()=>{beep(SFX.tap);obShow(2);});
+$('ob3Next').addEventListener('click',()=>{
+  beep(SFX.tap);
+  const st=getStat(STATS[0].id);
+  $('obRecapSprite').innerHTML=spriteSVG(0,5,obDraft.bodyType,obDraft.hairHex,obDraft.accentHex);
+  $('obRecapName').textContent='촌장 '+($('obHero').value.trim()||'나');
+  $('obRecapVillage').textContent=($('obVillage').value.trim()||'나의 마을')+'에서 모험을 시작해요';
+  obShow(4);
+});
+$('ob4Back').addEventListener('click',()=>{beep(SFX.tap);obShow(3);});
+$('ob4Start').addEventListener('click',()=>{
+  state.custom.village=$('obVillage').value.trim();
+  state.custom.hero=$('obHero').value.trim();
+  state.profile={onboarded:true,gender:obDraft.gender,bodyType:obDraft.bodyType,hairId:obDraft.hairId,hairHex:obDraft.hairHex,accentId:obDraft.accentId,accentHex:obDraft.accentHex};
+  saveState();
+  beep(SFX.dream);
+  $('onboard').classList.add('off');
+  goVillage();
+});
+function openOnboarding(returnTo){
+  obReturnTo=returnTo||null;
+  obDraft={gender:state.profile.gender,bodyType:state.profile.bodyType,hairId:state.profile.hairId,hairHex:state.profile.hairHex,accentId:state.profile.accentId,accentHex:state.profile.accentHex};
+  $('onboard').classList.remove('off');
+  if(returnTo){renderObChar();obShow(2);}
+  else{renderObGender();obShow(0);}
+}
+function finishCharChange(){
+  state.profile.bodyType=obDraft.bodyType;
+  state.profile.hairId=obDraft.hairId;
+  state.profile.hairHex=obDraft.hairHex;
+  state.profile.accentId=obDraft.accentId;
+  state.profile.accentHex=obDraft.accentHex;
+  saveState();
+  beep(SFX.dream);
+  $('onboard').classList.add('off');
+  toast('✦ 캐릭터가 바뀌었다! ✦');
+  if(obReturnTo==='edit'){renderEdit();showScreen('scrEdit',null);}
+  else goVillage();
+  obReturnTo=null;
 }
 
 /* ═══════════ boot ═══════════ */
+function centerSceneOnHouse(){
+  const w=document.getElementById('sceneWrap');
+  if(!w||!w.scrollWidth)return false;
+  w.scrollLeft=Math.max(0,w.scrollWidth*(760/SCENE_W)-w.clientWidth/2);
+  return true;
+}
+rolloverRepeats();
+if(!state.profile.onboarded)openOnboarding();
 renderVillage();
 initCloud();
-requestAnimationFrame(()=>{
-  const w=document.getElementById('sceneWrap');
-  w.scrollLeft=Math.max(0,w.scrollWidth*0.42-w.clientWidth/2);
-});
+// layout can lag one frame behind the innerHTML write, so retry across a few frames/timeouts
+requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  if(!centerSceneOnHouse())setTimeout(centerSceneOnHouse,120);
+}));
+setTimeout(centerSceneOnHouse,300); // final safety net for slow devices
 </script>
 </body>
 </html>
