@@ -36,11 +36,9 @@ body::after{
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
 
-/* ── screens ── */
 .screen{display:none;padding:12px 12px 8px}
 .screen.on{display:block}
 
-/* ── RPG window ── */
 .win{
   background:var(--panel);border:3px solid var(--ink);border-radius:2px;
   box-shadow:0 0 0 3px var(--sky),0 0 0 5px var(--line),5px 7px 0 rgba(0,0,0,.45);
@@ -52,22 +50,16 @@ body::after{
   font-size:.7rem;color:var(--gold);letter-spacing:1px;
 }
 
-/* ── header ── */
 .hdr{text-align:center;padding:16px 0 10px}
 .hdr h1{font-size:1.3rem;letter-spacing:3px;color:var(--gold);text-shadow:2px 2px 0 #7d3f38,4px 4px 0 rgba(0,0,0,.5)}
 .hdr .sub{font-size:.64rem;color:var(--dim);margin-top:6px;letter-spacing:1px}
 .blink{animation:blink 1.2s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
 
-/* ── HUD ── */
 .hud{display:flex;gap:8px;justify-content:center;margin:8px 4px 16px;flex-wrap:wrap}
-.hud .chip{
-  background:var(--panel);border:2px solid var(--line);
-  font-size:.66rem;color:var(--dim);padding:6px 10px;
-}
+.hud .chip{background:var(--panel);border:2px solid var(--line);font-size:.66rem;color:var(--dim);padding:6px 10px}
 .hud .chip b{color:var(--gold)}
 
-/* ── village scene ── */
 .scene-wrap{
   border:3px solid var(--ink);
   box-shadow:0 0 0 3px var(--sky),0 0 0 5px var(--line),5px 7px 0 rgba(0,0,0,.45);
@@ -79,7 +71,6 @@ body::after{
 .bpoi{cursor:pointer}
 .bpoi:active .bglow{opacity:.5}
 
-/* scene animations */
 .tw{animation:tw 2.4s steps(2) infinite}
 .tw2{animation:tw 3.1s steps(2) infinite 1.1s}
 @keyframes tw{50%{opacity:.15}}
@@ -94,7 +85,6 @@ body::after{
 .hz-idle{animation:hz 1.2s steps(2) infinite}
 @keyframes hz{50%{transform:translateY(-3px)}}
 
-/* ── bars & buttons ── */
 .bar{height:14px;background:#141625;border:2px solid var(--line);overflow:hidden}
 .bar>i{display:block;height:100%;transition:width .45s steps(8);
   background:repeating-linear-gradient(90deg,var(--c,var(--gold)) 0 6px,color-mix(in srgb,var(--c,var(--gold)) 70%,black) 6px 8px)}
@@ -106,8 +96,8 @@ body::after{
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.5)}
 .btn:focus-visible,.chk:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .btn.ghost{background:var(--panel2);color:var(--ink);font-size:.7rem;padding:8px 12px}
+.btn.blue{background:var(--blue);color:#0d1a2a}
 
-/* ── detail screen ── */
 .d-hero{
   background:linear-gradient(#141628,#1d2136);
   border:2px solid var(--line);padding:18px 8px 6px;
@@ -118,18 +108,17 @@ body::after{
 .d-meta b{color:var(--ink)}
 .d-next{font-size:.68rem;color:var(--cyan);margin-top:6px}
 
-/* ── quest bits ── */
 .qform{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
-.qform input[type=text]{
+input[type=text]{
   font-family:inherit;font-size:.85rem;color:var(--ink);
   background:#141625;border:2px solid var(--line);padding:10px;width:100%;border-radius:0;
 }
-.qform input:focus{outline:2px solid var(--gold);outline-offset:1px}
+input[type=text]:focus{outline:2px solid var(--gold);outline-offset:1px}
 .qrow{display:flex;gap:8px}
-.qrow select{
+select{
   flex:1;font-family:inherit;font-size:.74rem;color:var(--ink);
   background:#141625;border:2px solid var(--line);padding:9px 6px;border-radius:0;
-  appearance:none;-webkit-appearance:none;
+  appearance:none;-webkit-appearance:none;width:100%;
 }
 .quest{display:flex;align-items:center;gap:10px;background:var(--panel2);border:2px solid var(--line);padding:10px;margin-bottom:9px}
 .quest .chk{
@@ -143,7 +132,6 @@ body::after{
 .empty{text-align:center;color:var(--dim);font-size:.72rem;padding:18px 8px;line-height:1.9}
 .qcount{font-size:.66rem;color:var(--dim);text-align:right;margin-bottom:10px}
 
-/* ── home screen ── */
 .home-hero{
   background:linear-gradient(#141628,#1d2136);
   border:2px solid var(--line);padding:20px 8px 0;margin-bottom:12px;
@@ -163,12 +151,34 @@ body::after{
 .dream .dd{color:#6b7396;flex-shrink:0;font-size:.6rem;padding-top:2px}
 .radar-wrap{display:flex;justify-content:center}
 
-/* ── floating xp ── */
+/* ── edit screen ── */
+.frow{margin-bottom:11px}
+.frow label{display:block;font-size:.64rem;color:var(--dim);margin-bottom:5px}
+.frow-2{display:flex;gap:8px}
+.frow-2 .frow{flex:1}
+.stage-inputs input{margin-bottom:7px}
+.cloud-status{font-size:.7rem;line-height:1.9;color:var(--dim);margin-bottom:10px}
+.cloud-status b{color:var(--cyan)}
+details{font-size:.66rem;color:var(--dim);line-height:1.9;margin-top:12px}
+details summary{cursor:pointer;color:var(--gold);margin-bottom:6px}
+details ol{padding-left:18px}
+details li{margin-bottom:6px}
+details code{
+  display:block;background:#141625;border:2px solid var(--line);
+  padding:8px;margin:6px 0;font-family:inherit;font-size:.6rem;
+  color:var(--cyan);word-break:break-all;line-height:1.7;
+}
+
 .fxp{position:fixed;z-index:1200;pointer-events:none;font-size:.9rem;color:var(--gold);
   text-shadow:2px 2px 0 #000;animation:fxp .9s steps(6) forwards}
 @keyframes fxp{to{transform:translateY(-46px);opacity:0}}
+.toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:1300;
+  background:var(--panel);border:2px solid var(--gold);color:var(--gold);
+  font-size:.72rem;padding:9px 18px;animation:toast 1.6s steps(8) forwards;
+}
+@keyframes toast{0%{opacity:0}12%,80%{opacity:1}100%{opacity:0}}
 
-/* ── modal ── */
 .mod{position:fixed;inset:0;z-index:1100;background:rgba(8,9,18,.8);display:none;align-items:center;justify-content:center;padding:20px}
 .mod.on{display:flex}
 .mod-box{background:var(--panel);border:3px solid var(--ink);box-shadow:0 0 0 3px var(--sky),0 0 0 5px var(--line);
@@ -180,7 +190,6 @@ body::after{
 .mod-txt b{color:var(--cyan)}
 .mod .btn{margin-top:16px;width:100%}
 
-/* ── bottom nav ── */
 .nav{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:560px;z-index:900;
@@ -188,7 +197,7 @@ body::after{
   padding-bottom:env(safe-area-inset-bottom);
 }
 .nav button{
-  flex:1;font-family:inherit;font-size:.74rem;color:var(--dim);
+  flex:1;font-family:inherit;font-size:.72rem;color:var(--dim);
   background:none;border:none;padding:14px 0 12px;cursor:pointer;letter-spacing:1px;
 }
 .nav button.on{color:var(--gold);background:var(--panel2)}
@@ -201,11 +210,11 @@ body::after{
 <!-- ═══════ VILLAGE ═══════ -->
 <section class="screen on" id="scrVillage">
   <header class="hdr">
-    <h1>🏘️ 하젤마을</h1>
-    <div class="sub">레벨업할수록 마을이 지어진다 <span class="blink">▶</span></div>
+    <h1 id="vTitle">🏘️ 하젤마을</h1>
+    <div class="sub"><span id="vSub">레벨업할수록 마을이 지어진다</span> <span class="blink">▶</span></div>
   </header>
   <div class="hud">
-    <span class="chip">촌장 하젤 <b id="hudLv">Lv.1</b></span>
+    <span class="chip"><span id="hudHero">촌장 하젤</span> <b id="hudLv">Lv.1</b></span>
     <span class="chip">오늘 클리어 <b id="hudToday">0</b></span>
     <span class="chip">진행 퀘스트 <b id="hudQuests">0</b></span>
   </div>
@@ -247,15 +256,16 @@ body::after{
 <!-- ═══════ HOME ═══════ -->
 <section class="screen" id="scrHome">
   <header class="hdr">
-    <h1>🏠 하젤의 집</h1>
+    <h1 id="hHdr">🏠 하젤의 집</h1>
     <div class="sub">꿈이 이루어질수록 집이 견고해진다</div>
   </header>
   <div class="win" style="margin-top:20px">
     <span class="win-tag">MY HOME</span>
-    <div class="home-hero"><div id="hHouse"></div><div id="hSprite" class="hz-idle" style="margin-bottom:0"></div></div>
+    <div class="home-hero"><div id="hHouse"></div><div id="hSprite" class="hz-idle"></div></div>
     <div class="h-meta">
       <div>🏠 <b id="hHouseNm">—</b></div>
-      <div>촌장 하젤 <b id="hLv">Lv.1</b> · 칭호 <span class="h-title" id="hTitle">견습 모험가</span></div>
+      <div><span id="hHeroNm">촌장 하젤</span> <b id="hLv">Lv.1</b> · 칭호 <span class="h-title" id="hTitle">견습 모험가</span></div>
+      <div>진화 단계 <b id="hStage">—</b></div>
       <div>총 클리어 <b id="hClear">0</b>회</div>
     </div>
   </div>
@@ -271,10 +281,98 @@ body::after{
     <span class="win-tag">이루어진 드림</span>
     <div id="dreamList"></div>
   </div>
-  <div class="foot">
-    HAZEL VILLAGE v2.0 · 조금씩 꾸준히 뭐라도 하면 성장하겠지<br>
-    <button id="resetBtn">데이터 초기화</button>
+  <div class="foot" id="hMotto">조금씩 꾸준히 뭐라도 하면 성장하겠지</div>
+</section>
+
+<!-- ═══════ EDIT ═══════ -->
+<section class="screen" id="scrEdit">
+  <div style="padding:14px 4px 0"><button class="btn ghost" id="eBack">← 마을로</button></div>
+  <header class="hdr">
+    <h1>⚙️ 촌장 사무소</h1>
+    <div class="sub">마을의 모든 문구를 촌장이 직접 다스린다</div>
+  </header>
+
+  <div class="win" style="margin-top:20px">
+    <span class="win-tag">마을 정보</span>
+    <div class="frow"><label>마을 이름</label><input type="text" id="eVillage" maxlength="12"></div>
+    <div class="frow"><label>내 이름 (촌장)</label><input type="text" id="eHero" maxlength="12"></div>
+    <div class="frow"><label>마을 소개 문구 (마을 화면 상단)</label><input type="text" id="eTagline" maxlength="24"></div>
+    <div class="frow"><label>나의 좌우명 (내 집 맨 아래 문구)</label><input type="text" id="eMotto" maxlength="40"></div>
+    <button class="btn" id="eSaveInfo" style="width:100%">저장</button>
   </div>
+
+  <div class="win">
+    <span class="win-tag">건물 편집</span>
+    <div class="frow"><label>편집할 건물</label><select id="eBranch"></select></div>
+    <div class="frow-2">
+      <div class="frow"><label>아이콘 (이모지)</label><input type="text" id="eIco" maxlength="4"></div>
+      <div class="frow"><label>브랜치 이름</label><input type="text" id="eNm" maxlength="10"></div>
+    </div>
+    <div class="frow"><label>부제 (마을 표기)</label><input type="text" id="eSub" maxlength="10"></div>
+    <div class="frow"><label>이 브랜치의 칭호 (최고 능력치일 때)</label><input type="text" id="eTitle" maxlength="16"></div>
+    <div class="frow stage-inputs"><label>진화 단계 이름 (1 → 5단계)</label>
+      <input type="text" id="eS0" maxlength="14">
+      <input type="text" id="eS1" maxlength="14">
+      <input type="text" id="eS2" maxlength="14">
+      <input type="text" id="eS3" maxlength="14">
+      <input type="text" id="eS4" maxlength="14">
+    </div>
+    <button class="btn" id="eSaveBranch" style="width:100%">이 건물 저장</button>
+  </div>
+
+  <div class="win">
+    <span class="win-tag">내 집 단계 이름</span>
+    <div class="frow stage-inputs"><label>1 → 5단계 (총 Lv.1 / 4 / 10 / 18 / 30)</label>
+      <input type="text" id="eH0" maxlength="14">
+      <input type="text" id="eH1" maxlength="14">
+      <input type="text" id="eH2" maxlength="14">
+      <input type="text" id="eH3" maxlength="14">
+      <input type="text" id="eH4" maxlength="14">
+    </div>
+    <button class="btn" id="eSaveHouse" style="width:100%">집 이름 저장</button>
+  </div>
+
+  <div class="win">
+    <span class="win-tag">캐릭터 진화 단계 이름</span>
+    <div class="frow stage-inputs"><label>1 → 4단계 (총 Lv.1 / 5 / 12 / 25)</label>
+      <input type="text" id="eC0" maxlength="14">
+      <input type="text" id="eC1" maxlength="14">
+      <input type="text" id="eC2" maxlength="14">
+      <input type="text" id="eC3" maxlength="14">
+    </div>
+    <button class="btn" id="eSaveChar" style="width:100%">캐릭터 이름 저장</button>
+  </div>
+
+  <div class="win">
+    <span class="win-tag">☁️ 기기 연동</span>
+    <div class="cloud-status" id="cloudStatus">확인 중…</div>
+    <div class="qrow">
+      <button class="btn blue" id="btnGLogin" style="flex:1;display:none">Google 로그인</button>
+      <button class="btn ghost" id="btnGLogout" style="flex:1;display:none">로그아웃</button>
+    </div>
+    <details>
+      <summary>▸ 처음 설정하는 방법 (1회만)</summary>
+      <ol>
+        <li><b>console.firebase.google.com</b> → 프로젝트 만들기</li>
+        <li>Authentication → Sign-in method → <b>Google 사용 설정</b></li>
+        <li>Firestore Database → 데이터베이스 만들기</li>
+        <li>프로젝트 설정 ⚙️ → 웹 앱(&lt;/&gt;) 추가 → <b>firebaseConfig</b> 값을 이 파일 상단 <b>FIREBASE_CONFIG</b>에 붙여넣기</li>
+        <li>Authentication → Settings → <b>승인된 도메인</b>에 배포 주소(예: xxx.vercel.app) 추가</li>
+      </ol>
+      Firestore 규칙(보안)은 이렇게:
+      <code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /villages/{uid} {
+      allow read, write: if request.auth != null &amp;&amp; request.auth.uid == uid;
+    }
+  }
+}</code>
+      ⚠️ 로그인은 파일을 직접 열면(file://) 안 되고, <b>Vercel 배포 주소</b>에서만 동작해.
+    </details>
+  </div>
+
+  <div class="foot">HAZEL VILLAGE v4.0<br><button id="resetBtn">마을 데이터 초기화</button></div>
 </section>
 
 <!-- ═══════ MODAL ═══════ -->
@@ -293,39 +391,66 @@ body::after{
   <button id="navHome">🏠 내 집</button>
 </nav>
 
-<script>
-'use strict';
-/* ═══════════ storage & migration ═══════════ */
+<script type="module">
+/* ═══════════════════════════════════════════════
+   ☁️ FIREBASE 설정 — 여기에 본인 프로젝트 값을 붙여넣기!
+   (Firebase 콘솔 → 프로젝트 설정 → 내 앱 → firebaseConfig)
+   비워두면 로컬 저장만 사용 (앱은 정상 동작)
+═══════════════════════════════════════════════ */
+const FIREBASE_CONFIG={
+  apiKey:"",
+  authDomain:"",
+  projectId:"",
+  storageBucket:"",
+  messagingSenderId:"",
+  appId:""
+};
+
+/* ═══════════ storage ═══════════ */
 const KEY='hazelVillage_v2', OLD_KEY='hazelQuest_v1';
 let memFallback=null;
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 const defaultState=()=>({
   xp:{work:0,focus:0,health:0,care:0,fun:0,habit:0},
   quests:[],log:[],dreams:[],cleared:0,today:{d:todayStr(),n:0},
+  custom:{village:'',hero:'',tagline:'',motto:'',stats:{},houseNames:null,charNames:null},
+  _ts:0,
 });
+function normalize(s){
+  const d=defaultState();
+  if(!s||typeof s!=='object')return d;
+  s.xp=Object.assign(d.xp,s.xp||{});
+  s.quests=s.quests||[];s.log=s.log||[];s.dreams=s.dreams||[];
+  s.cleared=s.cleared||0;
+  s.today=s.today||d.today;
+  if(s.today.d!==todayStr())s.today={d:todayStr(),n:0};
+  s.custom=Object.assign(d.custom,s.custom||{});
+  s.custom.stats=s.custom.stats||{};
+  s._ts=s._ts||0;
+  return s;
+}
 function loadState(){
   try{
     const raw=localStorage.getItem(KEY);
-    if(raw)return JSON.parse(raw);
+    if(raw)return normalize(JSON.parse(raw));
     const old=localStorage.getItem(OLD_KEY);
     if(old){
-      const o=JSON.parse(old), s=defaultState();
+      const o=JSON.parse(old),s=defaultState();
       s.xp=Object.assign(s.xp,o.xp||{});
-      s.quests=o.quests||[]; s.log=o.log||[];
-      s.cleared=o.cleared||0; s.today=o.today||s.today;
-      return s;
+      s.quests=o.quests||[];s.log=o.log||[];
+      s.cleared=o.cleared||0;s.today=o.today||s.today;
+      return normalize(s);
     }
   }catch(e){}
-  return memFallback;
+  return memFallback?normalize(memFallback):defaultState();
 }
-function saveState(){memFallback=state;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
-let state=loadState()||defaultState();
-if(!state.dreams)state.dreams=[];
-if(state.today.d!==todayStr())state.today={d:todayStr(),n:0};
+function saveLocal(){memFallback=state;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function saveState(){state._ts=Date.now();saveLocal();pushCloud();}
+let state=loadState();
 
 /* ═══════════ config ═══════════ */
 const XP_PER_LEVEL=100;
-const BUILD_LV=[1,3,6,10,15];   // branch level needed for building stage 1..5
+const BUILD_LV=[1,3,6,10,15];
 const STATS=[
  {id:'work',ico:'⚔️',nm:'업무',sub:'K BBQ',c:'#c2495e',title:'K BBQ의 지배자',
   wall:'#7a4636',wallD:'#4d2b20',roof:'#b13e53',roofD:'#7d2b3a',motif:'lantern',
@@ -333,7 +458,7 @@ const STATS=[
  {id:'focus',ico:'🧠',nm:'집중·학습',sub:'서재',c:'#41a6f6',title:'초집중의 현자',
   wall:'#3b5dc9',wallD:'#26398c',roof:'#29366f',roofD:'#1b2450',motif:'orb',
   stages:['낡은 책상','서재 오두막','하젤 도서관','현자의 서재탑','대현자의 마법탑']},
- {id:'health',ico:'🌿',nm:'건강·루틴',sub:'가든',c:'#38b764',title:'강철 체력의 기사',
+ {id:'health',ico:'🌿',nm:'건강·루틴',sub:'가든',c:'#38b764',title:'강철 체력의 수호자',
   wall:'#3d7a4a',wallD:'#245231',roof:'#38b764',roofD:'#257943',motif:'plant',
   stages:['작은 텃밭','유리 온실','웰니스 가든','회복의 온천장','생명의 대정원']},
  {id:'care',ico:'✨',nm:'셀프케어',sub:'스파',c:'#d867c0',title:'빛나는 자기돌봄러',
@@ -347,37 +472,56 @@ const STATS=[
   stages:['모래시계','마을 우물','기록의 종탑','마을 시계탑','영원의 대시계탑']},
 ];
 const HOUSE_STAGES=[
- {lv:1, nm:'작은 텐트'},
- {lv:4, nm:'통나무 오두막'},
- {lv:10,nm:'아늑한 목조집'},
- {lv:18,nm:'정원 딸린 벽돌집'},
- {lv:30,nm:'하젤 드림 저택'},
+ {lv:1,nm:'작은 텐트'},{lv:4,nm:'통나무 오두막'},{lv:10,nm:'아늑한 목조집'},
+ {lv:18,nm:'정원 딸린 벽돌집'},{lv:30,nm:'하젤 드림 저택'},
 ];
-const CHAR_STAGES=[{min:1,nm:'견습 모험가'},{min:5,nm:'모험가 하젤'},{min:12,nm:'영웅 하젤'},{min:25,nm:'전설의 하젤'}];
+const CHAR_STAGES=[{min:1,nm:'견습 모험가'},{min:5,nm:'모험가'},{min:12,nm:'영웅'},{min:25,nm:'전설의 촌장'}];
+const OFFICE={id:'office',ico:'⚙️',nm:'촌장 사무소',sub:'편집',c:'#94b0c2',
+  wall:'#5a6478',wallD:'#3a4152',roof:'#8fa2bd',roofD:'#5f6d80',motif:'clock',
+  stages:['촌장 사무소','촌장 사무소','촌장 사무소','촌장 사무소','촌장 사무소']};
+
+/* ── custom merge getters ── */
+function getStat(id){
+  const base=STATS.find(s=>s.id===id);
+  const c=(state.custom.stats&&state.custom.stats[id])||{};
+  const merged=Object.assign({},base);
+  if(c.ico)merged.ico=c.ico;
+  if(c.nm)merged.nm=c.nm;
+  if(c.sub)merged.sub=c.sub;
+  if(c.title)merged.title=c.title;
+  if(c.stages&&c.stages.length===5)merged.stages=c.stages.map((v,i)=>v||base.stages[i]);
+  return merged;
+}
+const allStats=()=>STATS.map(s=>getStat(s.id));
+const houseNm=i=>(state.custom.houseNames&&state.custom.houseNames[i])||HOUSE_STAGES[i].nm;
+const villageNm=()=>state.custom.village||'하젤마을';
+const heroNm=()=>state.custom.hero||'하젤';
+const taglineTxt=()=>state.custom.tagline||'레벨업할수록 마을이 지어진다';
+const mottoTxt=()=>state.custom.motto||'조금씩 꾸준히 뭐라도 하면 성장하겠지';
+const charNm=i=>(state.custom.charNames&&state.custom.charNames[i])||CHAR_STAGES[i].nm;
 
 /* ═══════════ derived ═══════════ */
 const statLevel=id=>Math.floor((state.xp[id]||0)/XP_PER_LEVEL)+1;
 const statProg=id=>(state.xp[id]||0)%XP_PER_LEVEL;
 const totalLevel=()=>STATS.reduce((a,s)=>a+statLevel(s.id)-1,0)+1;
-function buildStage(lv){let i=0;BUILD_LV.forEach((t,k)=>{if(lv>=t)i=k;});return i;}      // 0..4
+function buildStage(lv){let i=0;BUILD_LV.forEach((t,k)=>{if(lv>=t)i=k;});return i;}
 function houseStage(lv){let i=0;HOUSE_STAGES.forEach((t,k)=>{if(lv>=t.lv)i=k;});return i;}
 function charStage(lv){let i=0;CHAR_STAGES.forEach((t,k)=>{if(lv>=t.min)i=k;});return i;}
 function currentTitle(){
   const max=Math.max(...STATS.map(s=>statLevel(s.id)));
-  if(max<=1)return '견습 모험가';
-  return STATS.filter(s=>statLevel(s.id)===max)[0].title;
+  if(max<=1)return charNm(0);
+  const top=STATS.filter(s=>statLevel(s.id)===max)[0];
+  return getStat(top.id).title;
 }
 
 /* ═══════════ pixel helpers ═══════════ */
 function R(x,y,w,h,c,p){return '<rect x="'+(x*p)+'" y="'+(y*p)+'" width="'+(w*p)+'" height="'+(h*p)+'" fill="'+c+'"/>';}
-
-/* ── character sprite (14x18) ── */
 const PAL={H:'#4a2f1d',S:'#f0c8a0',E:'#1a1c2c',M:'#c2495e',P:'#333c57',W:'#f4f4f4',G:'#ffcd75',A:'#94b0c2',D:'#dce8f0',B:'#8a5a34',C:'#c2495e'};
 const SPRITES=[
-{pal:{B:'#8a5a34',C:'#c2495e'},map:["..............","...HHHHHHHH...","..HHHHHHHHHH..",".HHHHHHHHHHH..",".HHSSSSSSSHH..",".HHSESSSESHH..",".HHSSSSSSSHH..","..HSSSMSSSH...","...SSSSSSS....","..BBBBBBBBB...",".BBBBBBBBBBB..",".SBBBBBBBBBS..",".SBBBBBBBBBS..","..BBBBBBBBB...","..PPP...PPP...","..PPP...PPP...","..SSS...SSS...",".WWWW...WWWW.."]},
-{pal:{B:'#38b764',C:'#c2495e'},map:["..............","...HHHHHHHH...","..HHHHHHHHHH..",".HCCCCCCCCCH..",".HHSSSSSSSHH..",".HHSESSSESHH..",".HHSSSSSSSHH..","..HSSSMSSSH...","..CCSSSSSCC...",".CBBBBBBBBBC..",".CBBBBBBBBBC..",".SBBBBBBBBBS..",".SBBBBBBBBBS..",".CBBBBBBBBBC..","..PPP...PPP...","..PPP...PPP...","..SSS...SSS...",".WWWW...WWWW.."]},
-{pal:{B:'#94b0c2',C:'#c2495e'},map:[".............D","...HHHHHHHH..D","..HHHHHHHHHH.D",".HCCCCCCCCCH.D",".HHSSSSSSSHH.D",".HHSESSSESHH.D",".HHSSSSSSSHH.D","..HSSSMSSSH..D","..CCSSSSSCC..G",".CBBBGBBBBBC.G",".CBBGGGBBBBC..",".SBBBGBBBBBS..",".SBBBBBBBBBS..",".CBBBBBBBBBC..","..PPP...PPP...","..PPP...PPP...","..SSS...SSS...",".WWWW...WWWW.."]},
-{pal:{B:'#94b0c2',C:'#7d3f98',P:'#4a2f6d'},map:["...G..G..G...D","...GGGGGGG...D","..HHHHHHHHHH.D",".HHHHHHHHHHH.D",".HHSSSSSSSHH.D",".HHSESSSESHH.D",".HHSSSSSSSHH.D","..HSSSMSSSH..D","..CCSSSSSCC..G",".CBGGGGGGGBC.G",".CBBBGBBBBBC..",".SBBGGGBBBBS..",".SBBBGBBBBBS..",".CBGGGGGGGBC..","..PPP...PPP...","..PPP...PPP...","..SSS...SSS...",".WWWW...WWWW.."]},
+{pal:{B:'#a3684a',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HHHHHHHHHHHH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HH..SSSS..HH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBBBBBBBBB...","..BBBBBBBBBBBB..","..BBBBBBBBBBBB..",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#38b764',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HCCCCCCCCCCH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HHCCSSSSCCHH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBBBBBBBBB...","..BBBBBBBBBBBB..","..BBBBBBBBBBBB..",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#94b0c2',C:'#c2495e'},map:["...............D","....HHHHHHHH...D","...HHHHHHHHHH..D","..HCCCCCCCCCCH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BBGGBB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBGBBBBGBB...","..BBBBBBBBBBBB..","..BGGGGGGGGGGB..",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#8a4ab0',C:'#5d275d'},map:["...G..G..G.....D","...GGGGGGGG....D","..HHHHHHHHHHHH.D","..HHHHHHHHHHHH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BGGGGB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BGBBBBBBGB...","..BBGBBBBBBGBB..",".BGGGGGGGGGGGGB.",".....SS...SS....","....WWW..WWW...."]},
 ];
 function spriteSVG(stageIdx,px){
   const s=SPRITES[stageIdx],pal=Object.assign({},PAL,s.pal);
@@ -388,53 +532,43 @@ function spriteSVG(stageIdx,px){
   return '<svg width="'+(w*px)+'" height="'+(h*px)+'" shape-rendering="crispEdges">'+out+'</svg>';
 }
 
-/* ── procedural building generator ──
-   returns {svg, W, H} in px units (cells * px) */
 function buildingSVG(st,stage,px){
-  const floors=stage+1;                 // stage 0..4 → 1..5 floors
-  const W=10+stage*3;                   // cells wide
+  const floors=stage+1;
+  const W=10+stage*3;
   const roofRows=3+Math.floor(stage/2);
   const floorH=6;
   const bodyH=floors*floorH+1;
-  const H=roofRows+bodyH+1;             // total cells tall
+  const H=roofRows+bodyH+1;
   let o='';
-  // glow for max stage
   if(stage>=4)o+='<rect x="0" y="0" width="'+(W*px)+'" height="'+(H*px)+'" fill="'+st.c+'" opacity=".12"/>';
   const top=roofRows;
-  // body outline + wall
   o+=R(0,top,W,bodyH,st.wallD,px);
   o+=R(1,top+1,W-2,bodyH-2,st.wall,px);
-  // floor divider lines
   for(let f=1;f<floors;f++)o+=R(1,top+f*floorH,W-2,1,st.wallD,px);
-  // roof (stepped)
   for(let r=0;r<roofRows;r++){
     const inset=(roofRows-r)*Math.max(1,Math.round(W/14));
     const rw=W-inset*2+2;
     if(rw>0)o+=R(inset-1,r,rw,1,r===0?st.roofD:st.roof,px);
   }
-  o+=R(-1,roofRows-1,W+2,1,st.roofD,px); // eave
-  // windows per floor
+  o+=R(-1,roofRows-1,W+2,1,st.roofD,px);
   for(let f=0;f<floors;f++){
     const wy=top+1+f*floorH+1;
     for(let wx=2;wx<=W-4;wx+=4){
       const isGround=(f===floors-1);
       const doorL=Math.floor(W/2)-2,doorR=Math.floor(W/2)+2;
-      if(isGround&&wx+2>doorL&&wx<doorR)continue;   // skip door area
+      if(isGround&&wx+2>doorL&&wx<doorR)continue;
       o+=R(wx,wy,2,3,'#5a4a20',px);
       o+=R(wx,wy,2,2,'#ffe9a8',px);
     }
   }
-  // door (ground floor center)
   const dx=Math.floor(W/2)-2,dy=top+bodyH-5;
   o+=R(dx,dy,4,5,st.wallD,px);
   o+=R(dx+1,dy+1,2,4,'#2a1c10',px);
   o+=R(dx+2,dy+3,1,1,st.c,px);
-  // sign above door (stage>=1)
   if(stage>=1){
     o+=R(dx-1,dy-4,6,3,'#141625',px);
     o+='<text x="'+((dx+2)*px)+'" y="'+((dy-1.7)*px)+'" text-anchor="middle" font-size="'+(px*2.1)+'">'+st.ico+'</text>';
   }
-  /* motif per branch */
   const mid=Math.floor(W/2);
   if(st.motif==='lantern'){
     o+=R(1,top+1,1,1,'#3a2010',px)+R(1,top+2,2,3,'#e04040',px);
@@ -451,27 +585,25 @@ function buildingSVG(st,stage,px){
   }else if(st.motif==='clock'){
     o+=R(mid-2,1,4,4,'#141625',px)+R(mid-1,2,2,2,'#ffcd75',px);
   }
-  // chimney + smoke for restaurant
   if(st.motif==='lantern'&&stage>=2){
     o+=R(W-4,-2,2,3,'#5a3a2a',px);
     o+='<g class="smoke">'+R(W-4,-4,1,1,'#8a92a8',px)+'</g><g class="smoke2">'+R(W-3,-5,1,1,'#8a92a8',px)+'</g>';
   }
-  const padTop=6; // cells of headroom for motifs above roof
+  const padTop=6;
   return {svg:'<svg width="'+((W+2)*px)+'" height="'+((H+padTop)*px)+'" shape-rendering="crispEdges" style="overflow:visible"><g transform="translate('+px+','+(padTop*px)+')">'+o+'</g></svg>',
           W:(W+2)*px,H:(H+padTop)*px};
 }
 
-/* ── house generator (5 stages, gets sturdier) ── */
 function houseSVG(stage,px){
   let o='';const padTop=6;
   let W,H;
-  if(stage===0){ /* tent */
+  if(stage===0){
     W=14;H=10;
     for(let r=0;r<8;r++){const inset=7-r;o+=R(inset,r+2,(W-inset*2),1,r%2?'#b0553a':'#ef7d57',px);}
     o+=R(6,7,2,3,'#2a1c10',px);
     o+=R(6,0,1,2,'#8a6020',px)+'<g class="flagw">'+R(7,0,3,2,'#ffcd75',px)+'</g>';
   }else{
-    const floors=stage;                 // 1..4
+    const floors=stage;
     W=14+stage*3;
     const roofRows=4,floorH=6,bodyH=floors*floorH+1;
     H=roofRows+bodyH;
@@ -495,20 +627,18 @@ function houseSVG(stage,px){
     }
     const dx=Math.floor(W/2)-2,dy=top+bodyH-5;
     o+=R(dx,dy,4,5,wallD,px)+R(dx+1,dy+1,2,4,'#2a1c10',px)+R(dx+2,dy+3,1,1,'#ffcd75',px);
-    // chimney + smoke
     o+=R(W-5,-2,2,3,'#5a3a2a',px);
     o+='<g class="smoke">'+R(W-5,-4,1,1,'#8a92a8',px)+'</g><g class="smoke2">'+R(W-4,-5,1,1,'#8a92a8',px)+'</g>';
-    // fence + garden from stage2
     if(stage>=2){
       for(let f=-4;f<0;f+=2)o+=R(f,top+bodyH-3,1,3,'#8a6a3e',px);
       for(let f=W+1;f<W+5;f+=2)o+=R(f,top+bodyH-3,1,3,'#8a6a3e',px);
       o+=R(-4,top+bodyH-2,4,1,'#8a6a3e',px)+R(W+1,top+bodyH-2,4,1,'#8a6a3e',px);
     }
-    if(stage>=3){ // garden bushes + flowers
+    if(stage>=3){
       o+=R(-4,top+bodyH-4,2,2,'#38b764',px)+R(W+3,top+bodyH-4,2,2,'#38b764',px);
       o+=R(-3,top+bodyH-5,1,1,'#d867c0',px)+R(W+4,top+bodyH-5,1,1,'#ffcd75',px);
     }
-    if(stage>=4){ // golden flag tower
+    if(stage>=4){
       o+=R(2,-4,3,8,'#9a5a48',px)+R(2,-5,3,1,'#7d2b3a',px);
       o+=R(3,-8,1,3,'#8a6020',px)+'<g class="flagw">'+R(4,-8,3,2,'#ffcd75',px)+'</g>';
     }
@@ -517,7 +647,6 @@ function houseSVG(stage,px){
           W:(W+10)*px,H:(H+padTop+2)*px};
 }
 
-/* ── pixel pine tree ── */
 function treeSVG(px){
   let o='';
   for(let r=0;r<6;r++){const inset=5-Math.min(5,r+Math.floor(r/2));o+=R(inset,r+1,10-inset*2,1,r%2?'#245231':'#2f6b40',px);}
@@ -526,55 +655,44 @@ function treeSVG(px){
 }
 
 /* ═══════════ village scene ═══════════ */
-const SCENE_W=1560,SCENE_H=520,GROUND=452;
+const SCENE_W=1780,SCENE_H=520,GROUND=452;
 function renderVillage(){
   const wrap=document.getElementById('sceneWrap');
   let o='';
-  // sky
   o+='<rect width="'+SCENE_W+'" height="360" fill="#0d0f1c"/>';
   o+='<rect y="340" width="'+SCENE_W+'" height="40" fill="#141731"/>';
-  // stars (deterministic)
   for(let i=0;i<70;i++){
     const x=Math.floor((Math.sin(i*127.1)*.5+.5)*SCENE_W);
     const y=Math.floor((Math.sin(i*311.7)*.5+.5)*300);
     o+='<rect x="'+x+'" y="'+y+'" width="3" height="3" fill="#f4f4f4" class="'+(i%3===0?'tw':i%3===1?'tw2':'')+'" opacity=".8"/>';
   }
-  // pixel moon
   o+='<g transform="translate(1400,56)" shape-rendering="crispEdges">'
     +R(1,0,4,1,'#ffe9a8',7)+R(0,1,6,4,'#ffe9a8',7)+R(1,5,4,1,'#ffe9a8',7)
-    +R(1,1,2,2,'#f0d288',7)+R(3,3,2,1,'#f0d288',7)
-    +'</g>';
-  // mountains (stepped silhouette)
+    +R(1,1,2,2,'#f0d288',7)+R(3,3,2,1,'#f0d288',7)+'</g>';
   for(let x=0;x<SCENE_W;x+=26){
     const h=60+Math.floor((Math.sin(x*.008)*.5+.5)*110);
     o+='<rect x="'+x+'" y="'+(380-h)+'" width="26" height="'+h+'" fill="#151830"/>';
   }
-  // ground
   o+='<rect y="380" width="'+SCENE_W+'" height="'+(SCENE_H-380)+'" fill="#1b2b21"/>';
   o+='<rect y="380" width="'+SCENE_W+'" height="4" fill="#28402f"/>';
-  // grass specks
   for(let i=0;i<90;i++){
     const x=Math.floor((Math.sin(i*91.3)*.5+.5)*SCENE_W);
     const y=390+Math.floor((Math.sin(i*57.7)*.5+.5)*110);
     o+='<rect x="'+x+'" y="'+y+'" width="3" height="3" fill="#28402f"/>';
   }
-  // path
   o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="26" fill="#5c4b30"/>';
   o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="3" fill="#6e5a3a"/>';
   for(let x=10;x<SCENE_W;x+=42)o+='<rect x="'+x+'" y="'+(GROUND+10)+'" width="14" height="4" fill="#6e5a3a"/>';
-  // trees between lots
-  [40,470,940,1490].forEach((x,i)=>{
+  [40,470,940,1500].forEach((x,i)=>{
     o+='<g transform="translate('+x+','+(GROUND-66)+')">'+treeSVG(6)+'</g>';
     if(i%2)o+='<g transform="translate('+(x+38)+','+(GROUND-48)+')">'+treeSVG(4.4)+'</g>';
   });
-  // fireflies
   [[240,368],[700,352],[1180,372]].forEach((p,i)=>{
     o+='<rect x="'+p[0]+'" y="'+p[1]+'" width="4" height="4" fill="#ffcd75" class="'+(i%2?'ff':'ff2')+'"/>';
   });
 
-  /* buildings — house at center */
-  const order=['work','focus','health','HOUSE','care','fun','habit'];
-  const xs=[90,330,560,760,1020,1250,1440];
+  const order=['work','focus','health','HOUSE','care','fun','habit','OFFICE'];
+  const xs=[90,330,560,760,1020,1250,1440,1650];
   order.forEach((id,i)=>{
     const cx=xs[i];
     if(id==='HOUSE'){
@@ -582,19 +700,22 @@ function renderVillage(){
       const b=houseSVG(hs,5);
       o+='<g class="bpoi" data-nav="home" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+10)+')">'
         +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="#ffcd75" opacity="0"/>'
-        +b.svg.replace('<svg','<svg x="0" y="0"')
-        +'</g>';
-      // hazel sprite by the house
-      o+='<g class="hz-idle" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')">'+spriteSVG(charStage(totalLevel()),4).replace('<svg','<svg x="0" y="0"')+'</g>';
-      o+=chip(cx,'🏠 하젤의 집','Lv.'+totalLevel());
+        +b.svg+'</g>';
+      o+='<g class="hz-idle" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')">'+spriteSVG(charStage(totalLevel()),4)+'</g>';
+      o+=chip(cx,'🏠 '+heroNm()+'의 집','Lv.'+totalLevel());
+    }else if(id==='OFFICE'){
+      const b=buildingSVG(OFFICE,1,4.6);
+      o+='<g class="bpoi" data-nav="office" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+8)+')">'
+        +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="#94b0c2" opacity="0"/>'
+        +b.svg+'</g>';
+      o+=chip(cx,'⚙️ 촌장 사무소','탭하여 편집');
     }else{
-      const st=STATS.find(s=>s.id===id);
+      const st=getStat(id);
       const lv=statLevel(id),bs=buildStage(lv);
       const b=buildingSVG(st,bs,4.6);
       o+='<g class="bpoi" data-nav="'+id+'" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+8)+')">'
         +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="'+st.c+'" opacity="0"/>'
-        +b.svg.replace('<svg','<svg x="0" y="0"')
-        +'</g>';
+        +b.svg+'</g>';
       o+=chip(cx,st.ico+' '+st.stages[bs],'Lv.'+lv);
     }
   });
@@ -607,18 +728,20 @@ function renderVillage(){
       +'</g>';
   }
   wrap.innerHTML='<svg viewBox="0 0 '+SCENE_W+' '+SCENE_H+'" width="'+SCENE_W+'" height="'+SCENE_H+'">'+o+'</svg>';
-  // tap handlers
   wrap.querySelectorAll('.bpoi').forEach(g=>{
     g.addEventListener('click',()=>{
       const nav=g.getAttribute('data-nav');
-      if(nav==='home')showScreen('scrHome','navHome');
+      if(nav==='home'){renderHome();showScreen('scrHome','navHome');}
+      else if(nav==='office'){renderEdit();showScreen('scrEdit',null);}
       else openBuilding(nav);
     });
   });
-  // HUD
-  document.getElementById('hudLv').textContent='Lv.'+totalLevel();
-  document.getElementById('hudToday').textContent=state.today.n;
-  document.getElementById('hudQuests').textContent=state.quests.length;
+  $('vTitle').textContent='🏘️ '+villageNm();
+  $('vSub').textContent=taglineTxt();
+  $('hudHero').textContent='촌장 '+heroNm();
+  $('hudLv').textContent='Lv.'+totalLevel();
+  $('hudToday').textContent=state.today.n;
+  $('hudQuests').textContent=state.quests.length;
 }
 
 /* ═══════════ navigation ═══════════ */
@@ -634,20 +757,17 @@ function showScreen(id,navId){
 $('navVillage').addEventListener('click',()=>{renderVillage();showScreen('scrVillage','navVillage');});
 $('navHome').addEventListener('click',()=>{renderHome();showScreen('scrHome','navHome');});
 $('dBack').addEventListener('click',()=>{renderVillage();showScreen('scrVillage','navVillage');});
+$('eBack').addEventListener('click',()=>{renderVillage();showScreen('scrVillage','navVillage');});
 
 /* ═══════════ building detail ═══════════ */
-function openBuilding(id){
-  currentStat=id;
-  renderDetail();
-  showScreen('scrDetail',null);
-}
+function openBuilding(id){currentStat=id;renderDetail();showScreen('scrDetail',null);}
 function renderDetail(){
-  const st=STATS.find(s=>s.id===currentStat);
+  const st=getStat(currentStat);
   const lv=statLevel(st.id),bs=buildStage(lv),p=statProg(st.id);
   $('dTag').textContent=st.ico+' '+st.nm+' · '+st.sub;
   $('dLvChip').textContent='Lv.'+lv;
   $('dBuild').innerHTML=buildingSVG(st,bs,7).svg;
-  $('dStageNm').innerHTML='<b>'+st.stages[bs]+'</b> <span style="color:#6b7396">('+(bs+1)+'/5단계)</span>';
+  $('dStageNm').innerHTML='<b>'+esc(st.stages[bs])+'</b> <span style="color:#6b7396">('+(bs+1)+'/5단계)</span>';
   $('dBarTxt').textContent=p+' / '+XP_PER_LEVEL;
   $('dBar').style.width=(p/XP_PER_LEVEL*100)+'%';
   $('dBar').style.setProperty('--c',st.c);
@@ -666,7 +786,7 @@ function renderDetailQuests(){
     +'<button class="del" data-act="del" aria-label="퀘스트 삭제">✕</button></div>'
   ).join('');
 }
-function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 $('dQAdd').addEventListener('click',()=>{
   const t=$('dQText').value.trim();
@@ -691,7 +811,7 @@ $('dQList').addEventListener('click',e=>{
 
 /* ═══════════ quest completion & dreams ═══════════ */
 function completeQuest(q,anchor){
-  const st=STATS.find(s=>s.id===q.stat);
+  const st=getStat(q.stat);
   const beforeLv=statLevel(q.stat);
   const beforeB=buildStage(beforeLv);
   const beforeH=houseStage(totalLevel());
@@ -703,23 +823,21 @@ function completeQuest(q,anchor){
   const afterLv=statLevel(q.stat);
   const afterB=buildStage(afterLv);
   const afterH=houseStage(totalLevel());
-  // record dreams
   if(afterB>beforeB)state.dreams.unshift({t:st.ico+' 「'+st.stages[afterB]+'」 완공',d:todayStr()});
-  if(afterH>beforeH)state.dreams.unshift({t:'🏠 하젤의 집 → 「'+HOUSE_STAGES[afterH].nm+'」',d:todayStr()});
+  if(afterH>beforeH)state.dreams.unshift({t:'🏠 '+heroNm()+'의 집 → 「'+houseNm(afterH)+'」',d:todayStr()});
   state.dreams=state.dreams.slice(0,30);
   saveState();
   floatXp(anchor,'+'+q.xp+' XP');
   renderDetail();
-  // modal priority: house > building > level-up
   if(afterH>beforeH){
     showModal('꿈이 이루어졌다!',houseSVG(afterH,4).svg,
-      '레벨업의 힘으로 하젤의 집이<br><b>「'+HOUSE_STAGES[afterH].nm+'」</b>(으)로 견고해졌다!');
+      '레벨업의 힘으로 '+heroNm()+'의 집이<br><b>「'+esc(houseNm(afterH))+'」</b>(으)로 견고해졌다!');
   }else if(afterB>beforeB){
     showModal('드림 달성!',buildingSVG(st,afterB,4).svg,
-      st.ico+' '+st.nm+'의 꿈이 자라나<br><b>「'+st.stages[afterB]+'」</b>이(가) 완공되었다!');
+      st.ico+' '+esc(st.nm)+'의 꿈이 자라나<br><b>「'+esc(st.stages[afterB])+'」</b>이(가) 완공되었다!');
   }else if(afterLv>beforeLv){
     showModal('LEVEL UP!',buildingSVG(st,afterB,4).svg,
-      st.ico+' <b>'+st.nm+'</b> Lv.'+beforeLv+' → <b>Lv.'+afterLv+'</b><br>건물이 더 단단해지고 있다…');
+      st.ico+' <b>'+esc(st.nm)+'</b> Lv.'+beforeLv+' → <b>Lv.'+afterLv+'</b><br>건물이 더 단단해지고 있다…');
   }
 }
 function floatXp(anchor,txt){
@@ -731,21 +849,31 @@ function floatXp(anchor,txt){
   document.body.appendChild(el);
   setTimeout(()=>el.remove(),950);
 }
+function toast(msg){
+  const el=document.createElement('div');
+  el.className='toast';el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1650);
+}
 
 /* ═══════════ home screen ═══════════ */
 function renderHome(){
   const lv=totalLevel(),hs=houseStage(lv);
+  $('hHdr').textContent='🏠 '+heroNm()+'의 집';
   $('hHouse').innerHTML=houseSVG(hs,6).svg;
   $('hSprite').innerHTML=spriteSVG(charStage(lv),5);
-  $('hHouseNm').textContent=HOUSE_STAGES[hs].nm+' ('+(hs+1)+'/5)';
+  $('hHouseNm').textContent=houseNm(hs)+' ('+(hs+1)+'/5)';
+  $('hHeroNm').textContent='촌장 '+heroNm();
   $('hLv').textContent='Lv.'+lv;
   $('hTitle').textContent=currentTitle();
+  $('hStage').textContent=charNm(charStage(lv))+' ('+(charStage(lv)+1)+'/4)';
+  $('hMotto').textContent=mottoTxt();
   $('hClear').textContent=state.cleared;
   renderRadar();
-  $('hStats').innerHTML=STATS.map(s=>{
+  $('hStats').innerHTML=allStats().map(s=>{
     const l=statLevel(s.id),p=statProg(s.id),bs=buildStage(l);
     return '<div class="stat"><div class="ico">'+s.ico+'</div><div class="meta">'
-      +'<div class="nm"><span>'+s.nm+' <span style="color:#6b7396;font-size:.6rem">'+s.stages[bs]+'</span></span><span class="lv">Lv.'+l+'</span></div>'
+      +'<div class="nm"><span>'+esc(s.nm)+' <span style="color:#6b7396;font-size:.6rem">'+esc(s.stages[bs])+'</span></span><span class="lv">Lv.'+l+'</span></div>'
       +'<div class="bar"><i style="--c:'+s.c+';width:'+(p/XP_PER_LEVEL*100)+'%"></i></div>'
       +'</div></div>';
   }).join('');
@@ -753,7 +881,7 @@ function renderHome(){
   if(!state.dreams.length){
     dl.innerHTML='<div class="empty">아직 이루어진 드림이 없다.<br>퀘스트를 깨서 첫 건물을 지어 보자!</div>';
   }else{
-    dl.innerHTML=state.dreams.map(d=>'<div class="dream"><span class="dd">'+d.d+'</span><span>'+d.t+'</span></div>').join('');
+    dl.innerHTML=state.dreams.map(d=>'<div class="dream"><span class="dd">'+d.d+'</span><span>'+esc(d.t)+'</span></div>').join('');
   }
 }
 function renderRadar(){
@@ -767,14 +895,69 @@ function renderRadar(){
   });
   STATS.forEach((_,i)=>{const [x,y]=pt(i,Rr);out+='<line x1="'+cx+'" y1="'+cy+'" x2="'+x+'" y2="'+y+'" stroke="#3a415f" stroke-width="2"/>';});
   out+='<polygon points="'+STATS.map((s,i)=>pt(i,Rr*(statLevel(s.id)/maxLv)).join(',')).join(' ')+'" fill="rgba(255,205,117,.28)" stroke="#ffcd75" stroke-width="2"/>';
-  STATS.forEach((s,i)=>{
+  allStats().forEach((s,i)=>{
     const [vx,vy]=pt(i,Rr*(statLevel(s.id)/maxLv));
     out+='<rect x="'+(vx-3)+'" y="'+(vy-3)+'" width="6" height="6" fill="'+s.c+'"/>';
     const [lx,ly]=pt(i,Rr+16);
-    out+='<text x="'+lx+'" y="'+(ly+3)+'" text-anchor="middle" font-size="10" fill="#94b0c2" font-family="DungGeunMo,monospace">'+s.ico+s.nm+'</text>';
+    out+='<text x="'+lx+'" y="'+(ly+3)+'" text-anchor="middle" font-size="10" fill="#94b0c2" font-family="DungGeunMo,monospace">'+s.ico+esc(s.nm)+'</text>';
   });
   svg.innerHTML=out;
 }
+
+/* ═══════════ edit screen ═══════════ */
+function renderEdit(){
+  $('eVillage').value=state.custom.village||'';
+  $('eVillage').placeholder=villageNm();
+  $('eHero').value=state.custom.hero||'';
+  $('eHero').placeholder=heroNm();
+  $('eTagline').value=state.custom.tagline||'';
+  $('eTagline').placeholder=taglineTxt();
+  $('eMotto').value=state.custom.motto||'';
+  $('eMotto').placeholder=mottoTxt();
+  for(let i=0;i<4;i++)$('eC'+i).value=charNm(i);
+  const sel=$('eBranch');
+  const cur=sel.value||STATS[0].id;
+  sel.innerHTML=STATS.map(s=>{
+    const g=getStat(s.id);
+    return '<option value="'+s.id+'"'+(s.id===cur?' selected':'')+'>'+g.ico+' '+esc(g.nm)+'</option>';
+  }).join('');
+  fillBranchForm(sel.value);
+  for(let i=0;i<5;i++)$('eH'+i).value=houseNm(i);
+  updateCloudUI();
+}
+function fillBranchForm(id){
+  const s=getStat(id);
+  $('eIco').value=s.ico;$('eNm').value=s.nm;$('eSub').value=s.sub;$('eTitle').value=s.title;
+  for(let i=0;i<5;i++)$('eS'+i).value=s.stages[i];
+}
+$('eBranch').addEventListener('change',e=>fillBranchForm(e.target.value));
+$('eSaveInfo').addEventListener('click',()=>{
+  state.custom.village=$('eVillage').value.trim();
+  state.custom.hero=$('eHero').value.trim();
+  state.custom.tagline=$('eTagline').value.trim();
+  state.custom.motto=$('eMotto').value.trim();
+  saveState();toast('✦ 마을 정보 저장 완료 ✦');
+});
+$('eSaveBranch').addEventListener('click',()=>{
+  const id=$('eBranch').value;
+  const base=STATS.find(s=>s.id===id);
+  state.custom.stats[id]={
+    ico:$('eIco').value.trim()||base.ico,
+    nm:$('eNm').value.trim()||base.nm,
+    sub:$('eSub').value.trim()||base.sub,
+    title:$('eTitle').value.trim()||base.title,
+    stages:[0,1,2,3,4].map(i=>$('eS'+i).value.trim()||base.stages[i]),
+  };
+  saveState();renderEdit();toast('✦ 건물 저장 완료 ✦');
+});
+$('eSaveHouse').addEventListener('click',()=>{
+  state.custom.houseNames=[0,1,2,3,4].map(i=>$('eH'+i).value.trim()||HOUSE_STAGES[i].nm);
+  saveState();toast('✦ 집 이름 저장 완료 ✦');
+});
+$('eSaveChar').addEventListener('click',()=>{
+  state.custom.charNames=[0,1,2,3].map(i=>$('eC'+i).value.trim()||CHAR_STAGES[i].nm);
+  saveState();toast('✦ 캐릭터 이름 저장 완료 ✦');
+});
 
 /* ═══════════ modal & reset ═══════════ */
 function showModal(big,artSvg,html){
@@ -786,18 +969,99 @@ function showModal(big,artSvg,html){
 $('modOk').addEventListener('click',()=>$('mod').classList.remove('on'));
 $('mod').addEventListener('click',e=>{if(e.target===$('mod'))$('mod').classList.remove('on');});
 $('resetBtn').addEventListener('click',()=>{
-  if(!confirm('마을 전체를 초기화할까? 모든 건물과 드림 기록이 사라져!'))return;
-  state=defaultState();saveState();
-  renderHome();renderVillage();showScreen('scrVillage','navVillage');
+  if(!confirm('마을 전체를 초기화할까? 모든 건물·드림·편집 내용이 사라져!'))return;
+  state=defaultState();
+  saveState();
+  renderVillage();showScreen('scrVillage','navVillage');
 });
+
+/* ═══════════ ☁️ Firebase cloud sync ═══════════ */
+let fb=null,fbUser=null,unsubSnap=null,pushTimer=null;
+const cloudConfigured=()=>!!FIREBASE_CONFIG.apiKey;
+function updateCloudUI(extra){
+  const st=$('cloudStatus'),li=$('btnGLogin'),lo=$('btnGLogout');
+  if(!cloudConfigured()){
+    st.innerHTML='아직 Firebase 설정이 비어 있어.<br>아래 가이드대로 1회만 설정하면<br><b>아이폰 ↔ 아이패드 실시간 동기화</b>가 켜져.<br><span style="color:#6b7396">(지금은 이 기기에만 저장 중)</span>';
+    li.style.display='none';lo.style.display='none';return;
+  }
+  if(extra){st.innerHTML='⚠️ '+esc(extra);li.style.display='block';lo.style.display='none';return;}
+  if(fbUser){
+    st.innerHTML='☁️ <b>실시간 동기화 중</b><br>'+esc(fbUser.email||'')+'<br><span style="color:#6b7396">다른 기기에서 같은 계정으로 로그인하면 이어져</span>';
+    li.style.display='none';lo.style.display='block';
+  }else{
+    st.innerHTML='Google 계정으로 로그인하면<br>모든 기기에서 마을이 이어진다.';
+    li.style.display='block';lo.style.display='none';
+  }
+}
+async function initCloud(){
+  updateCloudUI();
+  if(!cloudConfigured())return;
+  try{
+    const appM=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+    const authM=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+    const fsM=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const app=appM.initializeApp(FIREBASE_CONFIG);
+    fb={auth:authM.getAuth(app),db:fsM.getFirestore(app),authM,fsM};
+    authM.getRedirectResult(fb.auth).catch(()=>{});
+    authM.onAuthStateChanged(fb.auth,async u=>{
+      fbUser=u;updateCloudUI();
+      if(u)await startSync();else stopSync();
+    });
+  }catch(e){updateCloudUI('Firebase 로드 실패: '+e.message);}
+}
+$('btnGLogin').addEventListener('click',()=>{
+  if(!fb)return toast('설정을 먼저 확인해줘');
+  const p=new fb.authM.GoogleAuthProvider();
+  fb.authM.signInWithRedirect(fb.auth,p);
+});
+$('btnGLogout').addEventListener('click',()=>{if(fb)fb.authM.signOut(fb.auth);});
+async function startSync(){
+  try{
+    const {doc,getDoc,setDoc,onSnapshot}=fb.fsM;
+    const ref=doc(fb.db,'villages',fbUser.uid);
+    const snap=await getDoc(ref);
+    if(snap.exists()){
+      const cloud=snap.data();
+      if((cloud._ts||0)>(state._ts||0))adoptState(cloud);
+      else await setDoc(ref,state);
+    }else{
+      await setDoc(ref,state);
+    }
+    stopSync();
+    unsubSnap=onSnapshot(ref,s=>{
+      if(!s.exists())return;
+      const c=s.data();
+      if((c._ts||0)>(state._ts||0))adoptState(c);
+    });
+    updateCloudUI();
+  }catch(e){updateCloudUI('동기화 오류: '+e.message);}
+}
+function stopSync(){if(unsubSnap){unsubSnap();unsubSnap=null;}}
+function pushCloud(){
+  if(!fb||!fbUser)return;
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(async()=>{
+    try{
+      const {doc,setDoc}=fb.fsM;
+      await setDoc(doc(fb.db,'villages',fbUser.uid),JSON.parse(JSON.stringify(state)));
+    }catch(e){}
+  },800);
+}
+function adoptState(c){
+  state=normalize(c);
+  saveLocal();
+  renderVillage();
+  if($('scrHome').classList.contains('on'))renderHome();
+  if($('scrDetail').classList.contains('on')&&currentStat)renderDetail();
+  if($('scrEdit').classList.contains('on'))renderEdit();
+}
 
 /* ═══════════ boot ═══════════ */
 renderVillage();
-// center the scroll on the house
+initCloud();
 requestAnimationFrame(()=>{
   const w=document.getElementById('sceneWrap');
-  const svgW=w.scrollWidth;
-  w.scrollLeft=Math.max(0,svgW*0.42-w.clientWidth/2);
+  w.scrollLeft=Math.max(0,w.scrollWidth*0.42-w.clientWidth/2);
 });
 </script>
 </body>
