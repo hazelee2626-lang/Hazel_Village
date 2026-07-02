@@ -203,6 +203,51 @@ details code{
 .nav button.on{color:var(--gold);background:var(--panel2)}
 .foot{text-align:center;font-size:.58rem;color:#565e80;line-height:2;padding:4px 0 14px}
 .foot button{background:none;border:none;color:#565e80;font-family:inherit;font-size:.58rem;text-decoration:underline;cursor:pointer}
+
+/* ── v5: topbar / chips / shop / chart / dialog ── */
+.topbar{
+  position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;
+  background:rgba(16,18,31,.94);padding:12px 4px 10px;margin:0 -12px 6px;
+  padding-left:16px;padding-right:16px;border-bottom:3px solid var(--ink);
+}
+.topbar .tt{font-size:.85rem;color:var(--gold);letter-spacing:1px}
+.chipbtn{
+  background:var(--panel);border:2px solid var(--line);font-size:.66rem;
+  color:var(--ink);padding:6px 10px;font-family:inherit;cursor:pointer;
+}
+.chipbtn:active{background:var(--panel2)}
+.chipbtn b{color:var(--gold)}
+.scene-wrap{position:relative}
+.hzsay{
+  position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:40;
+  width:min(86%,340px);background:rgba(20,22,37,.95);border:3px solid var(--ink);
+  box-shadow:0 0 0 2px var(--line);padding:10px 12px;font-size:.72rem;line-height:1.7;
+  color:var(--ink);display:none;
+}
+.hzsay.on{display:block;animation:pop .25s steps(3)}
+.hzsay .who{color:var(--gold);font-size:.6rem;margin-bottom:3px}
+.cloud{animation:cloudDrift 30s linear infinite}
+.cloud2{animation:cloudDrift 44s linear infinite}
+@keyframes cloudDrift{from{transform:translateX(0)}to{transform:translateX(-220px)}}
+.qgroup{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--dim);
+  padding:10px 2px 7px;border-bottom:2px solid #3a415f;margin-bottom:9px}
+.qgroup b{color:var(--ink)}
+.qgroup .glv{margin-left:auto;color:var(--gold);font-size:.64rem}
+.quest.doneT{opacity:.55}
+.quest.doneT .chk{background:var(--gold);color:#3a2410;border-color:var(--gold)}
+.rep-badge{color:var(--cyan);font-size:.58rem;margin-left:5px}
+.chkrow{display:flex;align-items:center;gap:9px;font-size:.7rem;color:var(--dim);padding:4px 0}
+.chkrow input{width:20px;height:20px;accent-color:#ffcd75}
+.shop-item{display:flex;align-items:center;gap:11px;background:var(--panel2);
+  border:2px solid var(--line);padding:11px;margin-bottom:10px}
+.shop-item .si{font-size:1.3rem;width:34px;text-align:center;flex-shrink:0}
+.shop-item .sm2{flex:1;min-width:0}
+.shop-item .sn{font-size:.76rem}
+.shop-item .sd{font-size:.6rem;color:var(--dim);margin-top:3px;line-height:1.5}
+.shop-item .btn{padding:8px 12px;font-size:.68rem;flex-shrink:0}
+.shop-item .owned{color:var(--green);font-size:.66rem;flex-shrink:0}
+.gold-big{font-size:1rem;color:var(--gold);text-align:center;padding:6px 0 12px}
+.chart-wrap{display:flex;justify-content:center;padding-top:4px}
 </style>
 </head>
 <body>
@@ -215,16 +260,63 @@ details code{
   </header>
   <div class="hud">
     <span class="chip"><span id="hudHero">촌장 하젤</span> <b id="hudLv">Lv.1</b></span>
-    <span class="chip">오늘 클리어 <b id="hudToday">0</b></span>
-    <span class="chip">진행 퀘스트 <b id="hudQuests">0</b></span>
+    <span class="chip">🔥 <b id="hudStreak">0</b>일</span>
+    <button class="chipbtn" id="hudGold">💰 <b id="hudGoldN">0</b>G · 상점</button>
+    <button class="chipbtn" id="dayToggle">🌙 밤</button>
   </div>
-  <div class="scene-wrap" id="sceneWrap"></div>
+  <div style="position:relative;margin:0 4px 10px">
+    <div class="scene-wrap" id="sceneWrap" style="margin:0"></div>
+    <div class="hzsay" id="hzSay"><div class="who" id="hzWho">촌장 하젤</div><div id="hzTxt"></div></div>
+  </div>
   <div class="scroll-hint">◀ 옆으로 스크롤해서 마을 구경 · 건물을 탭하면 입장 ▶</div>
+</section>
+
+<!-- ═══════ QUEST BOARD ═══════ -->
+<section class="screen" id="scrQuests">
+  <header class="hdr">
+    <h1>📜 퀘스트 보드</h1>
+    <div class="sub">마을 전체의 할 일을 한눈에</div>
+  </header>
+  <div class="win" style="margin-top:20px">
+    <span class="win-tag">새 퀘스트</span>
+    <div class="qform">
+      <input type="text" id="qbText" maxlength="60" placeholder="할 일을 입력…" autocomplete="off">
+      <div class="qrow">
+        <select id="qbStat" aria-label="브랜치 선택"></select>
+        <select id="qbDiff" aria-label="난이도 선택">
+          <option value="10">쉬움 +10XP</option>
+          <option value="25" selected>보통 +25XP</option>
+          <option value="50">어려움 +50XP</option>
+        </select>
+      </div>
+      <label class="chkrow"><input type="checkbox" id="qbRepeat"> 🔁 매일 반복 (습관 퀘스트)</label>
+      <button class="btn" id="qbAdd">＋ 퀘스트 등록</button>
+    </div>
+  </div>
+  <div class="win">
+    <span class="win-tag">진행 중</span>
+    <div id="qbList"></div>
+  </div>
+  <div class="win">
+    <span class="win-tag">최근 기록</span>
+    <div id="logList"></div>
+  </div>
+</section>
+
+<!-- ═══════ SHOP ═══════ -->
+<section class="screen" id="scrShop">
+  <div class="topbar"><button class="btn ghost" id="sBack">← 마을로</button><span class="tt">🛒 마을 상점</span></div>
+  <div class="gold-big">보유 골드 💰 <b id="shopGold">0</b>G</div>
+  <div class="win">
+    <span class="win-tag">마을 장식</span>
+    <div id="shopList"></div>
+    <div class="empty" style="padding-top:12px">퀘스트를 깨면 골드를 얻는다<br>쉬움 +4G · 보통 +10G · 어려움 +20G</div>
+  </div>
 </section>
 
 <!-- ═══════ BUILDING DETAIL ═══════ -->
 <section class="screen" id="scrDetail">
-  <div style="padding:14px 4px 6px"><button class="btn ghost" id="dBack">← 마을로</button></div>
+  <div class="topbar"><button class="btn ghost" id="dBack">← 마을로</button><span class="tt" id="dTop">건물</span></div>
   <div class="win" style="margin-top:16px">
     <span class="win-tag" id="dTag">건물</span>
     <div class="d-hero"><div id="dBuild"></div><div class="d-lvchip" id="dLvChip"></div></div>
@@ -247,6 +339,7 @@ details code{
         </select>
         <button class="btn" id="dQAdd" style="flex:1">＋ 등록</button>
       </div>
+      <label class="chkrow"><input type="checkbox" id="dQRepeat"> 🔁 매일 반복</label>
     </div>
     <div class="qcount" id="dQCount"></div>
     <div id="dQList"></div>
@@ -266,8 +359,12 @@ details code{
       <div>🏠 <b id="hHouseNm">—</b></div>
       <div><span id="hHeroNm">촌장 하젤</span> <b id="hLv">Lv.1</b> · 칭호 <span class="h-title" id="hTitle">견습 모험가</span></div>
       <div>진화 단계 <b id="hStage">—</b></div>
-      <div>총 클리어 <b id="hClear">0</b>회</div>
+      <div>총 클리어 <b id="hClear">0</b>회 · 🔥 연속 <b id="hStreak">0</b>일 · 💰 <b id="hGold">0</b>G</div>
     </div>
+  </div>
+  <div class="win">
+    <span class="win-tag">주간 성장 기록</span>
+    <div class="chart-wrap"><svg id="weekChart" width="266" height="130" viewBox="0 0 266 130" role="img" aria-label="최근 7일 XP 차트"></svg></div>
   </div>
   <div class="win">
     <span class="win-tag">능력치</span>
@@ -286,7 +383,7 @@ details code{
 
 <!-- ═══════ EDIT ═══════ -->
 <section class="screen" id="scrEdit">
-  <div style="padding:14px 4px 0"><button class="btn ghost" id="eBack">← 마을로</button></div>
+  <div class="topbar"><button class="btn ghost" id="eBack">← 마을로</button><span class="tt">⚙️ 촌장 사무소</span></div>
   <header class="hdr">
     <h1>⚙️ 촌장 사무소</h1>
     <div class="sub">마을의 모든 문구를 촌장이 직접 다스린다</div>
@@ -344,6 +441,12 @@ details code{
   </div>
 
   <div class="win">
+    <span class="win-tag">🔧 설정</span>
+    <label class="chkrow"><input type="checkbox" id="setSound"> 🔊 8비트 효과음</label>
+    <label class="chkrow"><input type="checkbox" id="setAuto"> 🕐 실제 시간에 맞춰 자동 낮/밤 (07~18시 낮)</label>
+  </div>
+
+  <div class="win">
     <span class="win-tag">☁️ 기기 연동</span>
     <div class="cloud-status" id="cloudStatus">확인 중…</div>
     <div class="qrow">
@@ -372,7 +475,7 @@ service cloud.firestore {
     </details>
   </div>
 
-  <div class="foot">HAZEL VILLAGE v4.0<br><button id="resetBtn">마을 데이터 초기화</button></div>
+  <div class="foot">HAZEL VILLAGE v5.0<br><button id="resetBtn">마을 데이터 초기화</button></div>
 </section>
 
 <!-- ═══════ MODAL ═══════ -->
@@ -388,6 +491,7 @@ service cloud.firestore {
 <!-- ═══════ NAV ═══════ -->
 <nav class="nav">
   <button id="navVillage" class="on">🏘️ 마을</button>
+  <button id="navQuests">📜 퀘스트</button>
   <button id="navHome">🏠 내 집</button>
 </nav>
 
@@ -414,6 +518,8 @@ const defaultState=()=>({
   xp:{work:0,focus:0,health:0,care:0,fun:0,habit:0},
   quests:[],log:[],dreams:[],cleared:0,today:{d:todayStr(),n:0},
   custom:{village:'',hero:'',tagline:'',motto:'',stats:{},houseNames:null,charNames:null},
+  gold:0,streak:{count:0,last:''},daily:{},deco:{},
+  ui:{night:true,sound:true,auto:false},
   _ts:0,
 });
 function normalize(s){
@@ -426,6 +532,11 @@ function normalize(s){
   if(s.today.d!==todayStr())s.today={d:todayStr(),n:0};
   s.custom=Object.assign(d.custom,s.custom||{});
   s.custom.stats=s.custom.stats||{};
+  s.gold=s.gold||0;
+  s.streak=s.streak||{count:0,last:''};
+  s.daily=s.daily||{};
+  s.deco=s.deco||{};
+  s.ui=Object.assign(d.ui,s.ui||{});
   s._ts=s._ts||0;
   return s;
 }
@@ -500,6 +611,99 @@ const taglineTxt=()=>state.custom.tagline||'레벨업할수록 마을이 지어�
 const mottoTxt=()=>state.custom.motto||'조금씩 꾸준히 뭐라도 하면 성장하겠지';
 const charNm=i=>(state.custom.charNames&&state.custom.charNames[i])||CHAR_STAGES[i].nm;
 
+/* ── 8-bit sound ── */
+let AC=null;
+function beep(notes){
+  if(!state.ui.sound)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    let t=AC.currentTime;
+    notes.forEach(n=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.type='square';o.frequency.value=n[0];
+      g.gain.setValueAtTime(.07,t);
+      g.gain.exponentialRampToValueAtTime(.001,t+n[1]);
+      o.connect(g);g.connect(AC.destination);
+      o.start(t);o.stop(t+n[1]);
+      t+=n[1]*0.85;
+    });
+  }catch(e){}
+}
+const SFX={
+  tap:[[520,.05]],
+  done:[[660,.08],[880,.13]],
+  level:[[523,.08],[659,.08],[784,.08],[1046,.2]],
+  dream:[[392,.1],[523,.1],[659,.1],[784,.1],[1046,.28]],
+  coin:[[988,.06],[1319,.12]],
+  nope:[[196,.14]],
+};
+
+/* ── day / night ── */
+function isNight(){
+  if(state.ui.auto){const h=new Date().getHours();return h<7||h>=18;}
+  return !!state.ui.night;
+}
+
+/* ── decoration catalog ── */
+function decoFlower(px){
+  return R(0,-2,2,2,'#d867c0',px)+R(3,-3,2,2,'#ffcd75',px)+R(6,-2,2,2,'#ef7d57',px)
+    +R(0,0,8,1,'#2f6b40',px)+R(1,-1,1,1,'#38b764',px)+R(4,-1,1,1,'#38b764',px)+R(7,-1,1,1,'#38b764',px);
+}
+function decoBench(px){
+  return R(0,-4,10,2,'#8a6a3e',px)+R(0,-7,10,1,'#8a6a3e',px)
+    +R(1,-2,1,2,'#54401f',px)+R(8,-2,1,2,'#54401f',px)+R(0,-6,1,2,'#54401f',px)+R(9,-6,1,2,'#54401f',px);
+}
+function decoMailbox(px){
+  return R(2,-9,5,4,'#c2495e',px)+R(2,-9,5,1,'#8a2f40',px)+R(6,-8,2,1,'#ffcd75',px)+R(4,-5,1,5,'#54401f',px);
+}
+function decoLamp(px){
+  const lit=isNight();
+  let o=R(3,-16,2,16,'#3a4152',px)+R(1,-19,6,3,'#3a4152',px)+R(2,-18,4,2,lit?'#ffe9a8':'#5a6478',px);
+  if(lit)o='<rect x="'+(-3*px)+'" y="'+(-23*px)+'" width="'+(14*px)+'" height="'+(12*px)+'" fill="#ffcd75" opacity=".14"/>'+o;
+  return o;
+}
+function decoDog(px,body,patch){
+  return '<g class="bob">'
+    +R(2,-6,10,4,body,px)      /* body */
+    +R(10,-9,5,4,body,px)      /* head */
+    +R(10,-10,2,2,body,px)     /* ear */
+    +R(14,-8,1,1,'#1a1c2c',px) /* eye */
+    +R(0,-8,2,3,patch,px)      /* tail */
+    +R(3,-2,2,2,body,px)+R(9,-2,2,2,body,px) /* legs */
+    +R(5,-6,4,3,patch,px)      /* patch */
+    +'</g>';
+}
+function decoFountain(px){
+  const N=isNight();
+  return R(0,-4,16,4,'#5a6478',px)+R(1,-3,14,2,N?'#2a5880':'#4a90c8',px)
+    +R(6,-9,4,5,'#8fa2bd',px)
+    +'<g class="smoke">'+R(7,-11,2,2,'#73eff7',px)+'</g>'
+    +'<g class="smoke2">'+R(6,-12,1,1,'#73eff7',px)+R(9,-12,1,1,'#73eff7',px)+'</g>';
+}
+function decoLights(px){
+  const N=isNight();
+  const cols=['#ffcd75','#73eff7','#d867c0','#a7f070','#ef7d57'];
+  let o=R(0,-22,1,22,'#54401f',px)+R(64,-22,1,22,'#54401f',px);
+  for(let i=0;i<11;i++){
+    const x=2+i*6;
+    const sag=Math.round(Math.sin(i/10*Math.PI)*3);
+    o+=R(x,-21+sag,1,1,'#3a415f',px);
+    o+='<g class="'+(i%2?'tw':'tw2')+'">'+R(x,-20+sag,2,2,N?cols[i%5]:'#6b7396',px)+'</g>';
+  }
+  return o;
+}
+const DECOS=[
+ {id:'flower', ico:'🌼',nm:'꽃밭',        price:30, x:245, d:decoFlower,  sd:'마을 길가에 꽃이 핀다'},
+ {id:'bench',  ico:'🪑',nm:'나무 벤치',    price:40, x:445, d:decoBench,   sd:'잠시 쉬어가는 자리'},
+ {id:'mailbox',ico:'📮',nm:'빨간 우체통',  price:50, x:1545,d:decoMailbox, sd:'마을의 소식이 모인다'},
+ {id:'lamp',   ico:'🏮',nm:'가로등',      price:60, x:655, d:decoLamp,    sd:'밤이 되면 불이 켜진다'},
+ {id:'willow', ico:'🐕',nm:'강아지 윌로우', price:100,x:875, d:p=>decoDog(p,'#e8b04a','#c98a2e'), sd:'집 앞을 지키는 첫째'},
+ {id:'koi',    ico:'🐶',nm:'강아지 코이',  price:100,x:195, d:p=>decoDog(p,'#f4f4f4','#ef7d57'), sd:'마을을 뛰어다니는 둘째'},
+ {id:'fountain',ico:'⛲',nm:'분수대',     price:150,x:1135,d:decoFountain,sd:'물이 솟는 마을의 명소'},
+ {id:'lights', ico:'✨',nm:'별빛 전구 줄', price:200,x:1315,d:decoLights,  sd:'밤하늘 아래 반짝인다'},
+];
+
 /* ═══════════ derived ═══════════ */
 const statLevel=id=>Math.floor((state.xp[id]||0)/XP_PER_LEVEL)+1;
 const statProg=id=>(state.xp[id]||0)%XP_PER_LEVEL;
@@ -557,8 +761,8 @@ function buildingSVG(st,stage,px){
       const isGround=(f===floors-1);
       const doorL=Math.floor(W/2)-2,doorR=Math.floor(W/2)+2;
       if(isGround&&wx+2>doorL&&wx<doorR)continue;
-      o+=R(wx,wy,2,3,'#5a4a20',px);
-      o+=R(wx,wy,2,2,'#ffe9a8',px);
+      o+=R(wx,wy,2,3,isNight()?'#5a4a20':'#3a516a',px);
+      o+=R(wx,wy,2,2,isNight()?'#ffe9a8':'#8fb6d4',px);
     }
   }
   const dx=Math.floor(W/2)-2,dy=top+bodyH-5;
@@ -622,7 +826,7 @@ function houseSVG(stage,px){
         const isGround=(f===floors-1);
         const doorL=Math.floor(W/2)-2,doorR=Math.floor(W/2)+2;
         if(isGround&&wx+2>doorL&&wx<doorR)continue;
-        o+=R(wx,wy,2,3,'#5a4a20',px)+R(wx,wy,2,2,'#ffe9a8',px);
+        o+=R(wx,wy,2,3,isNight()?'#5a4a20':'#3a516a',px)+R(wx,wy,2,2,isNight()?'#ffe9a8':'#8fb6d4',px);
       }
     }
     const dx=Math.floor(W/2)-2,dy=top+bodyH-5;
@@ -659,36 +863,53 @@ const SCENE_W=1780,SCENE_H=520,GROUND=452;
 function renderVillage(){
   const wrap=document.getElementById('sceneWrap');
   let o='';
-  o+='<rect width="'+SCENE_W+'" height="360" fill="#0d0f1c"/>';
-  o+='<rect y="340" width="'+SCENE_W+'" height="40" fill="#141731"/>';
-  for(let i=0;i<70;i++){
-    const x=Math.floor((Math.sin(i*127.1)*.5+.5)*SCENE_W);
-    const y=Math.floor((Math.sin(i*311.7)*.5+.5)*300);
-    o+='<rect x="'+x+'" y="'+y+'" width="3" height="3" fill="#f4f4f4" class="'+(i%3===0?'tw':i%3===1?'tw2':'')+'" opacity=".8"/>';
+  const N=isNight();
+  /* sky */
+  o+='<rect width="'+SCENE_W+'" height="360" fill="'+(N?'#0d0f1c':'#3f8fd4')+'"/>';
+  o+='<rect y="340" width="'+SCENE_W+'" height="40" fill="'+(N?'#141731':'#5aa8e0')+'"/>';
+  if(N){
+    for(let i=0;i<70;i++){
+      const x=Math.floor((Math.sin(i*127.1)*.5+.5)*SCENE_W);
+      const y=Math.floor((Math.sin(i*311.7)*.5+.5)*300);
+      o+='<rect x="'+x+'" y="'+y+'" width="3" height="3" fill="#f4f4f4" class="'+(i%3===0?'tw':i%3===1?'tw2':'')+'" opacity=".8"/>';
+    }
+    o+='<g transform="translate(1400,56)" shape-rendering="crispEdges">'
+      +R(1,0,4,1,'#ffe9a8',7)+R(0,1,6,4,'#ffe9a8',7)+R(1,5,4,1,'#ffe9a8',7)
+      +R(1,1,2,2,'#f0d288',7)+R(3,3,2,1,'#f0d288',7)+'</g>';
+  }else{
+    /* sun */
+    o+='<g transform="translate(1400,60)" shape-rendering="crispEdges">'
+      +R(1,0,4,1,'#ffe06a',8)+R(0,1,6,4,'#ffe06a',8)+R(1,5,4,1,'#ffe06a',8)
+      +R(2,2,2,2,'#fff2b0',8)+'</g>';
+    /* pixel clouds */
+    const cloud=(cx,cy,s,cls)=>'<g class="'+cls+'" transform="translate('+cx+','+cy+')" shape-rendering="crispEdges">'
+      +R(2,0,8,2,'#f4f4f4',s)+R(0,2,12,2,'#f4f4f4',s)+R(4,-2,4,2,'#f4f4f4',s)+R(1,4,10,1,'#dde6ee',s)+'</g>';
+    o+=cloud(180,70,6,'cloud')+cloud(720,120,5,'cloud2')+cloud(1150,55,7,'cloud');
   }
-  o+='<g transform="translate(1400,56)" shape-rendering="crispEdges">'
-    +R(1,0,4,1,'#ffe9a8',7)+R(0,1,6,4,'#ffe9a8',7)+R(1,5,4,1,'#ffe9a8',7)
-    +R(1,1,2,2,'#f0d288',7)+R(3,3,2,1,'#f0d288',7)+'</g>';
   for(let x=0;x<SCENE_W;x+=26){
     const h=60+Math.floor((Math.sin(x*.008)*.5+.5)*110);
-    o+='<rect x="'+x+'" y="'+(380-h)+'" width="26" height="'+h+'" fill="#151830"/>';
+    o+='<rect x="'+x+'" y="'+(380-h)+'" width="26" height="'+h+'" fill="'+(N?'#151830':'#2f4a72')+'"/>';
   }
-  o+='<rect y="380" width="'+SCENE_W+'" height="'+(SCENE_H-380)+'" fill="#1b2b21"/>';
-  o+='<rect y="380" width="'+SCENE_W+'" height="4" fill="#28402f"/>';
+  o+='<rect y="380" width="'+SCENE_W+'" height="'+(SCENE_H-380)+'" fill="'+(N?'#1b2b21':'#2a5236')+'"/>';
+  o+='<rect y="380" width="'+SCENE_W+'" height="4" fill="'+(N?'#28402f':'#3a6a44')+'"/>';
   for(let i=0;i<90;i++){
     const x=Math.floor((Math.sin(i*91.3)*.5+.5)*SCENE_W);
     const y=390+Math.floor((Math.sin(i*57.7)*.5+.5)*110);
-    o+='<rect x="'+x+'" y="'+y+'" width="3" height="3" fill="#28402f"/>';
+    o+='<rect x="'+x+'" y="'+y+'" width="3" height="3" fill="'+(N?'#28402f':'#3a6a44')+'"/>';
   }
-  o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="26" fill="#5c4b30"/>';
-  o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="3" fill="#6e5a3a"/>';
-  for(let x=10;x<SCENE_W;x+=42)o+='<rect x="'+x+'" y="'+(GROUND+10)+'" width="14" height="4" fill="#6e5a3a"/>';
+  o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="26" fill="'+(N?'#5c4b30':'#7a6544')+'"/>';
+  o+='<rect y="'+GROUND+'" width="'+SCENE_W+'" height="3" fill="'+(N?'#6e5a3a':'#8f7a52')+'"/>';
+  for(let x=10;x<SCENE_W;x+=42)o+='<rect x="'+x+'" y="'+(GROUND+10)+'" width="14" height="4" fill="'+(N?'#6e5a3a':'#8f7a52')+'"/>';
   [40,470,940,1500].forEach((x,i)=>{
     o+='<g transform="translate('+x+','+(GROUND-66)+')">'+treeSVG(6)+'</g>';
     if(i%2)o+='<g transform="translate('+(x+38)+','+(GROUND-48)+')">'+treeSVG(4.4)+'</g>';
   });
-  [[240,368],[700,352],[1180,372]].forEach((p,i)=>{
+  if(N)[[240,368],[700,352],[1180,372]].forEach((p,i)=>{
     o+='<rect x="'+p[0]+'" y="'+p[1]+'" width="4" height="4" fill="#ffcd75" class="'+(i%2?'ff':'ff2')+'"/>';
+  });
+  /* purchased decorations */
+  DECOS.forEach(dc=>{
+    if(state.deco[dc.id])o+='<g transform="translate('+dc.x+','+GROUND+')" shape-rendering="crispEdges">'+dc.d(4)+'</g>';
   });
 
   const order=['work','focus','health','HOUSE','care','fun','habit','OFFICE'];
@@ -701,7 +922,7 @@ function renderVillage(){
       o+='<g class="bpoi" data-nav="home" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+10)+')">'
         +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="#ffcd75" opacity="0"/>'
         +b.svg+'</g>';
-      o+='<g class="hz-idle" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')">'+spriteSVG(charStage(totalLevel()),4)+'</g>';
+      o+='<g class="hz-idle bpoi" data-nav="hazel" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')">'+spriteSVG(charStage(totalLevel()),4)+'</g>';
       o+=chip(cx,'🏠 '+heroNm()+'의 집','Lv.'+totalLevel());
     }else if(id==='OFFICE'){
       const b=buildingSVG(OFFICE,1,4.6);
@@ -731,17 +952,40 @@ function renderVillage(){
   wrap.querySelectorAll('.bpoi').forEach(g=>{
     g.addEventListener('click',()=>{
       const nav=g.getAttribute('data-nav');
-      if(nav==='home'){renderHome();showScreen('scrHome','navHome');}
-      else if(nav==='office'){renderEdit();showScreen('scrEdit',null);}
-      else openBuilding(nav);
+      if(nav==='home'){beep(SFX.tap);renderHome();showScreen('scrHome','navHome');}
+      else if(nav==='office'){beep(SFX.tap);renderEdit();showScreen('scrEdit',null);}
+      else if(nav==='hazel'){hazelSay();}
+      else{beep(SFX.tap);openBuilding(nav);}
     });
   });
   $('vTitle').textContent='🏘️ '+villageNm();
   $('vSub').textContent=taglineTxt();
   $('hudHero').textContent='촌장 '+heroNm();
   $('hudLv').textContent='Lv.'+totalLevel();
-  $('hudToday').textContent=state.today.n;
-  $('hudQuests').textContent=state.quests.length;
+  $('hudStreak').textContent=state.streak.count;
+  $('hudGoldN').textContent=state.gold;
+  $('dayToggle').textContent=isNight()?'🌙 밤':'☀️ 낮';
+}
+
+/* ── hazel dialog ── */
+let sayTimer=null;
+function hazelSay(){
+  beep(SFX.tap);
+  const lines=[
+    '오늘도 조금씩, 뭐라도 하자!',
+    mottoTxt(),
+    '퀘스트 하나가 벽돌 하나야.',
+    '우리 마을, 점점 멋있어지지 않아?',
+    '어려운 퀘스트일수록 골드가 짭짤해!',
+    isNight()?'별이 예쁜 밤이야. 오늘 하루도 수고했어.':'좋은 아침! 오늘의 퀘스트를 시작하자.',
+  ];
+  if(state.streak.count>=3)lines.push('🔥 '+state.streak.count+'일 연속 출석 중! 꾸준함이 최고야.');
+  if(state.gold>=100)lines.push('💰 골드가 모였네. 상점에 새 장식이 있을지도?');
+  $('hzWho').textContent='촌장 '+heroNm();
+  $('hzTxt').textContent=lines[Math.floor(Math.random()*lines.length)];
+  $('hzSay').classList.add('on');
+  clearTimeout(sayTimer);
+  sayTimer=setTimeout(()=>$('hzSay').classList.remove('on'),2800);
 }
 
 /* ═══════════ navigation ═══════════ */
@@ -750,14 +994,25 @@ let currentStat=null;
 function showScreen(id,navId){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
   $(id).classList.add('on');
-  ['navVillage','navHome'].forEach(n=>$(n).classList.remove('on'));
+  ['navVillage','navQuests','navHome'].forEach(n=>$(n).classList.remove('on'));
   if(navId)$(navId).classList.add('on');
   window.scrollTo(0,0);
 }
-$('navVillage').addEventListener('click',()=>{renderVillage();showScreen('scrVillage','navVillage');});
-$('navHome').addEventListener('click',()=>{renderHome();showScreen('scrHome','navHome');});
-$('dBack').addEventListener('click',()=>{renderVillage();showScreen('scrVillage','navVillage');});
-$('eBack').addEventListener('click',()=>{renderVillage();showScreen('scrVillage','navVillage');});
+function goVillage(){renderVillage();showScreen('scrVillage','navVillage');}
+$('navVillage').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('navQuests').addEventListener('click',()=>{beep(SFX.tap);renderQuests();showScreen('scrQuests','navQuests');});
+$('navHome').addEventListener('click',()=>{beep(SFX.tap);renderHome();showScreen('scrHome','navHome');});
+$('dBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('eBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('sBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('hudGold').addEventListener('click',()=>{beep(SFX.tap);renderShop();showScreen('scrShop',null);});
+$('dayToggle').addEventListener('click',()=>{
+  state.ui.auto=false;
+  state.ui.night=!state.ui.night;
+  saveState();beep(SFX.tap);
+  renderVillage();
+  toast(state.ui.night?'🌙 마을에 밤이 찾아왔다':'☀️ 마을에 아침이 밝았다');
+});
 
 /* ═══════════ building detail ═══════════ */
 function openBuilding(id){currentStat=id;renderDetail();showScreen('scrDetail',null);}
@@ -765,6 +1020,7 @@ function renderDetail(){
   const st=getStat(currentStat);
   const lv=statLevel(st.id),bs=buildStage(lv),p=statProg(st.id);
   $('dTag').textContent=st.ico+' '+st.nm+' · '+st.sub;
+  $('dTop').textContent=st.ico+' '+st.nm;
   $('dLvChip').textContent='Lv.'+lv;
   $('dBuild').innerHTML=buildingSVG(st,bs,7).svg;
   $('dStageNm').innerHTML='<b>'+esc(st.stages[bs])+'</b> <span style="color:#6b7396">('+(bs+1)+'/5단계)</span>';
@@ -774,27 +1030,96 @@ function renderDetail(){
   $('dNext').textContent=bs>=4?'★ 최종 진화 완료! 마을의 자랑이다':'다음 진화 → Lv.'+BUILD_LV[bs+1]+' 「'+st.stages[bs+1]+'」';
   renderDetailQuests();
 }
+function questCard(q){
+  const doneT=q.repeat&&q.last===todayStr();
+  return '<div class="quest'+(doneT?' doneT':'')+'" data-id="'+q.id+'">'
+    +'<button class="chk" data-act="done" aria-label="퀘스트 완료"'+(doneT?' disabled':'')+'>'+(doneT?'✓':'…')+'</button>'
+    +'<div class="qt">'+esc(q.text)+(q.repeat?'<span class="rep-badge">🔁매일</span>':'')
+    +'<div class="qm">+'+q.xp+' XP · +'+goldFor(q.xp)+'G'+(doneT?' · 오늘 완료!':'')+'</div></div>'
+    +'<button class="del" data-act="del" aria-label="퀘스트 삭제">✕</button></div>';
+}
+const goldFor=xp=>xp>=50?20:xp>=25?10:4;
 function renderDetailQuests(){
   const list=state.quests.filter(q=>q.stat===currentStat);
   $('dQCount').textContent='진행 중 '+list.length+'개';
   const box=$('dQList');
   if(!list.length){box.innerHTML='<div class="empty">이 공간의 퀘스트가 없다.<br>위에서 등록하고 건물을 키우자 ▲</div>';return;}
-  box.innerHTML=list.map(q=>
-    '<div class="quest" data-id="'+q.id+'">'
-    +'<button class="chk" data-act="done" aria-label="퀘스트 완료">…</button>'
-    +'<div class="qt">'+esc(q.text)+'<div class="qm">+'+q.xp+' XP</div></div>'
-    +'<button class="del" data-act="del" aria-label="퀘스트 삭제">✕</button></div>'
-  ).join('');
+  box.innerHTML=list.map(questCard).join('');
 }
+
+/* ── quest board ── */
+function renderQuests(){
+  $('qbStat').innerHTML=allStats().map(s=>'<option value="'+s.id+'">'+s.ico+' '+esc(s.nm)+'</option>').join('');
+  const box=$('qbList');
+  if(!state.quests.length){
+    box.innerHTML='<div class="empty">진행 중인 퀘스트가 없다.<br>위에서 등록하거나 건물에 입장해 보자!</div>';
+  }else{
+    box.innerHTML=allStats().map(s=>{
+      const list=state.quests.filter(q=>q.stat===s.id);
+      if(!list.length)return '';
+      return '<div class="qgroup"><span>'+s.ico+'</span><b>'+esc(s.nm)+'</b><span class="glv">Lv.'+statLevel(s.id)+'</span></div>'
+        +list.map(questCard).join('');
+    }).join('');
+  }
+  renderLog();
+}
+function renderLog(){
+  const el=$('logList');
+  if(!state.log.length){el.innerHTML='<div class="empty">아직 기록이 없다.<br>첫 퀘스트를 클리어해 보자!</div>';return;}
+  el.innerHTML=state.log.slice(0,8).map(l=>{
+    const s=getStat(l.stat);
+    return '<div class="dream"><span class="dd">'+(l.d||'')+'</span><span>'+s.ico+' '+esc(l.text)+' <span style="color:#ffcd75">+'+l.xp+'</span></span></div>';
+  }).join('');
+}
+$('qbAdd').addEventListener('click',()=>{
+  const t=$('qbText').value.trim();
+  if(!t)return $('qbText').focus();
+  state.quests.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat:$('qbStat').value,xp:+$('qbDiff').value,repeat:$('qbRepeat').checked,last:''});
+  $('qbText').value='';$('qbRepeat').checked=false;
+  saveState();beep(SFX.tap);renderQuests();
+});
+$('qbText').addEventListener('keydown',e=>{if(e.key==='Enter')$('qbAdd').click();});
+$('qbList').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-act]');if(!btn)return;
+  const card=btn.closest('.quest');
+  const q=state.quests.find(x=>x.id===card.dataset.id);if(!q)return;
+  if(btn.dataset.act==='del'){
+    state.quests=state.quests.filter(x=>x.id!==q.id);
+    saveState();renderQuests();return;
+  }
+  completeQuest(q,btn);
+});
+
+/* ── shop ── */
+function renderShop(){
+  $('shopGold').textContent=state.gold;
+  $('shopList').innerHTML=DECOS.map(d=>{
+    const owned=!!state.deco[d.id];
+    return '<div class="shop-item"><div class="si">'+d.ico+'</div>'
+      +'<div class="sm2"><div class="sn">'+d.nm+'</div><div class="sd">'+d.sd+'</div></div>'
+      +(owned?'<span class="owned">배치 완료 ✓</span>'
+        :'<button class="btn" data-buy="'+d.id+'">💰'+d.price+'G</button>')
+      +'</div>';
+  }).join('');
+}
+$('shopList').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-buy]');if(!btn)return;
+  const d=DECOS.find(x=>x.id===btn.dataset.buy);if(!d||state.deco[d.id])return;
+  if(state.gold<d.price){beep(SFX.nope);toast('골드가 부족해! ('+state.gold+'/'+d.price+'G)');return;}
+  state.gold-=d.price;
+  state.deco[d.id]=true;
+  saveState();beep(SFX.coin);
+  renderShop();
+  toast('✦ '+d.nm+'이(가) 마을에 배치됐다! ✦');
+});
 function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 $('dQAdd').addEventListener('click',()=>{
   const t=$('dQText').value.trim();
   if(!t)return $('dQText').focus();
-  state.quests.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat:currentStat,xp:+$('dQDiff').value});
-  $('dQText').value='';
-  saveState();renderDetailQuests();
-  $('hudQuests').textContent=state.quests.length;
+  state.quests.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat:currentStat,xp:+$('dQDiff').value,repeat:$('dQRepeat').checked,last:''});
+  $('dQText').value='';$('dQRepeat').checked=false;
+  saveState();beep(SFX.tap);renderDetailQuests();
 });
 $('dQText').addEventListener('keydown',e=>{if(e.key==='Enter')$('dQAdd').click();});
 
@@ -810,15 +1135,38 @@ $('dQList').addEventListener('click',e=>{
 });
 
 /* ═══════════ quest completion & dreams ═══════════ */
+function bumpStreak(){
+  const t=todayStr();
+  if(state.streak.last===t)return;
+  const yd=new Date();yd.setDate(yd.getDate()-1);
+  const y=yd.getFullYear()+'-'+(yd.getMonth()+1)+'-'+yd.getDate();
+  state.streak.count=(state.streak.last===y)?state.streak.count+1:1;
+  state.streak.last=t;
+}
+function trackDaily(xp){
+  const t=todayStr();
+  state.daily[t]=(state.daily[t]||0)+xp;
+  const keys=Object.keys(state.daily);
+  if(keys.length>14){
+    keys.sort((a,b)=>new Date(...a.split('-').map((v,i)=>i===1?v-1:+v))-new Date(...b.split('-').map((v,i)=>i===1?v-1:+v)));
+    keys.slice(0,keys.length-14).forEach(k=>delete state.daily[k]);
+  }
+}
 function completeQuest(q,anchor){
+  if(q.repeat&&q.last===todayStr())return;
   const st=getStat(q.stat);
   const beforeLv=statLevel(q.stat);
   const beforeB=buildStage(beforeLv);
   const beforeH=houseStage(totalLevel());
   state.xp[q.stat]=(state.xp[q.stat]||0)+q.xp;
-  state.quests=state.quests.filter(x=>x.id!==q.id);
+  const g=goldFor(q.xp);
+  state.gold+=g;
+  bumpStreak();
+  trackDaily(q.xp);
+  if(q.repeat)q.last=todayStr();
+  else state.quests=state.quests.filter(x=>x.id!==q.id);
   state.cleared++;state.today.n++;
-  state.log.unshift({text:q.text,stat:q.stat,xp:q.xp});
+  state.log.unshift({text:q.text,stat:q.stat,xp:q.xp,d:todayStr()});
   state.log=state.log.slice(0,20);
   const afterLv=statLevel(q.stat);
   const afterB=buildStage(afterLv);
@@ -827,18 +1175,19 @@ function completeQuest(q,anchor){
   if(afterH>beforeH)state.dreams.unshift({t:'🏠 '+heroNm()+'의 집 → 「'+houseNm(afterH)+'」',d:todayStr()});
   state.dreams=state.dreams.slice(0,30);
   saveState();
-  floatXp(anchor,'+'+q.xp+' XP');
-  renderDetail();
-  if(afterH>beforeH){
+  floatXp(anchor,'+'+q.xp+'XP +'+g+'G');
+  if($('scrDetail').classList.contains('on'))renderDetail();
+  if($('scrQuests').classList.contains('on'))renderQuests();
+  if(afterH>beforeH){beep(SFX.dream);
     showModal('꿈이 이루어졌다!',houseSVG(afterH,4).svg,
       '레벨업의 힘으로 '+heroNm()+'의 집이<br><b>「'+esc(houseNm(afterH))+'」</b>(으)로 견고해졌다!');
-  }else if(afterB>beforeB){
+  }else if(afterB>beforeB){beep(SFX.dream);
     showModal('드림 달성!',buildingSVG(st,afterB,4).svg,
       st.ico+' '+esc(st.nm)+'의 꿈이 자라나<br><b>「'+esc(st.stages[afterB])+'」</b>이(가) 완공되었다!');
-  }else if(afterLv>beforeLv){
+  }else if(afterLv>beforeLv){beep(SFX.level);
     showModal('LEVEL UP!',buildingSVG(st,afterB,4).svg,
       st.ico+' <b>'+esc(st.nm)+'</b> Lv.'+beforeLv+' → <b>Lv.'+afterLv+'</b><br>건물이 더 단단해지고 있다…');
-  }
+  }else{beep(SFX.done);}
 }
 function floatXp(anchor,txt){
   const r=anchor.getBoundingClientRect();
@@ -869,7 +1218,10 @@ function renderHome(){
   $('hStage').textContent=charNm(charStage(lv))+' ('+(charStage(lv)+1)+'/4)';
   $('hMotto').textContent=mottoTxt();
   $('hClear').textContent=state.cleared;
+  $('hStreak').textContent=state.streak.count;
+  $('hGold').textContent=state.gold;
   renderRadar();
+  renderWeekChart();
   $('hStats').innerHTML=allStats().map(s=>{
     const l=statLevel(s.id),p=statProg(s.id),bs=buildStage(l);
     return '<div class="stat"><div class="ico">'+s.ico+'</div><div class="meta">'
@@ -904,6 +1256,28 @@ function renderRadar(){
   svg.innerHTML=out;
 }
 
+function renderWeekChart(){
+  const svg=$('weekChart');
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const key=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    days.push({key,dow:'일월화수목금토'[d.getDay()],xp:state.daily[key]||0,isToday:i===0});
+  }
+  const max=Math.max(50,...days.map(d=>d.xp));
+  let out='';
+  const bw=24,gap=11,x0=10,base=100,hMax=82;
+  days.forEach((d,i)=>{
+    const x=x0+i*(bw+gap);
+    const h=Math.max(d.xp>0?4:0,Math.round(d.xp/max*hMax));
+    out+='<rect x="'+x+'" y="'+(base-hMax-4)+'" width="'+bw+'" height="'+(hMax+4)+'" fill="#141625"/>';
+    if(h>0)out+='<rect x="'+(x+2)+'" y="'+(base-h)+'" width="'+(bw-4)+'" height="'+h+'" fill="'+(d.isToday?'#ffcd75':'#8a6a2e')+'"/>';
+    out+='<text x="'+(x+bw/2)+'" y="'+(base+15)+'" text-anchor="middle" font-size="10" fill="'+(d.isToday?'#ffcd75':'#94b0c2')+'" font-family="DungGeunMo,monospace">'+d.dow+'</text>';
+    if(d.xp>0)out+='<text x="'+(x+bw/2)+'" y="'+(base-h-5)+'" text-anchor="middle" font-size="9" fill="#94b0c2" font-family="DungGeunMo,monospace">'+d.xp+'</text>';
+  });
+  svg.innerHTML=out;
+}
+
 /* ═══════════ edit screen ═══════════ */
 function renderEdit(){
   $('eVillage').value=state.custom.village||'';
@@ -915,6 +1289,8 @@ function renderEdit(){
   $('eMotto').value=state.custom.motto||'';
   $('eMotto').placeholder=mottoTxt();
   for(let i=0;i<4;i++)$('eC'+i).value=charNm(i);
+  $('setSound').checked=!!state.ui.sound;
+  $('setAuto').checked=!!state.ui.auto;
   const sel=$('eBranch');
   const cur=sel.value||STATS[0].id;
   sel.innerHTML=STATS.map(s=>{
@@ -954,6 +1330,15 @@ $('eSaveHouse').addEventListener('click',()=>{
   state.custom.houseNames=[0,1,2,3,4].map(i=>$('eH'+i).value.trim()||HOUSE_STAGES[i].nm);
   saveState();toast('✦ 집 이름 저장 완료 ✦');
 });
+$('setSound').addEventListener('change',e=>{
+  state.ui.sound=e.target.checked;saveState();
+  if(e.target.checked)beep(SFX.done);
+  toast(e.target.checked?'🔊 효과음 켜짐':'🔇 효과음 꺼짐');
+});
+$('setAuto').addEventListener('change',e=>{
+  state.ui.auto=e.target.checked;saveState();beep(SFX.tap);
+  toast(e.target.checked?'🕐 자동 낮/밤 켜짐 (07~18시 낮)':'수동 낮/밤으로 전환');
+});
 $('eSaveChar').addEventListener('click',()=>{
   state.custom.charNames=[0,1,2,3].map(i=>$('eC'+i).value.trim()||CHAR_STAGES[i].nm);
   saveState();toast('✦ 캐릭터 이름 저장 완료 ✦');
@@ -966,7 +1351,7 @@ function showModal(big,artSvg,html){
   $('modTxt').innerHTML=html;
   $('mod').classList.add('on');
 }
-$('modOk').addEventListener('click',()=>$('mod').classList.remove('on'));
+$('modOk').addEventListener('click',()=>{beep(SFX.tap);$('mod').classList.remove('on');});
 $('mod').addEventListener('click',e=>{if(e.target===$('mod'))$('mod').classList.remove('on');});
 $('resetBtn').addEventListener('click',()=>{
   if(!confirm('마을 전체를 초기화할까? 모든 건물·드림·편집 내용이 사라져!'))return;
