@@ -296,6 +296,20 @@ details code{
 .ob-nav{display:flex;gap:10px;margin-top:10px}
 .ob-nav .btn{flex:1}
 .ob-nav .btn.ghost{flex:0 0 90px}
+
+/* ── v9: village list (at-a-glance) view ── */
+.locgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 4px 20px}
+.loc-card{
+  background:var(--panel);border:2px solid var(--line);border-left:4px solid var(--line);
+  padding:12px 10px;cursor:pointer;min-height:104px;display:flex;flex-direction:column;
+}
+.loc-card:active{background:var(--panel2)}
+.loc-card .lc-ico{font-size:1.3rem;margin-bottom:6px}
+.loc-card .lc-nm{font-size:.74rem;line-height:1.4;margin-bottom:3px}
+.loc-card .lc-sub{font-size:.6rem;color:var(--dim);margin-bottom:auto;padding-bottom:8px}
+.loc-card .lc-badges{display:flex;gap:5px;flex-wrap:wrap}
+.lcb{background:var(--panel2);border:1px solid var(--line);font-size:.6rem;padding:3px 7px;color:var(--ink)}
+.lcb.dim{color:#6b7396;border-style:dashed}
 .gold-big{font-size:1rem;color:var(--gold);text-align:center;padding:6px 0 12px}
 .chart-wrap{display:flex;justify-content:center;padding-top:4px}
 
@@ -407,11 +421,20 @@ details code{
     <button class="chipbtn" id="hudGold">💰 <b id="hudGoldN">0</b>G · 상점</button>
     <button class="chipbtn" id="dayToggle">🌙 밤</button>
   </div>
-  <div style="position:relative;margin:0 4px 10px">
-    <div class="scene-wrap" id="sceneWrap" style="margin:0"></div>
-    <div class="hzsay" id="hzSay"><div class="who" id="hzWho">촌장 하젤</div><div id="hzTxt"></div></div>
+  <div class="seg" style="margin:0 4px 16px">
+    <button id="vsScene" class="on">🗺️ 마을뷰</button>
+    <button id="vsList">📋 목록뷰</button>
   </div>
-  <div class="scroll-hint">◀ 옆으로 스크롤해서 마을 구경 · 건물을 탭하면 입장 ▶</div>
+  <div id="villageSceneView">
+    <div style="position:relative;margin:0 4px 10px">
+      <div class="scene-wrap" id="sceneWrap" style="margin:0"></div>
+      <div class="hzsay" id="hzSay"><div class="who" id="hzWho">촌장 하젤</div><div id="hzTxt"></div></div>
+    </div>
+    <div class="scroll-hint">◀ 옆으로 스크롤해서 마을 구경 · 건물을 탭하면 입장 ▶</div>
+  </div>
+  <div id="villageListView" style="display:none">
+    <div class="locgrid" id="locGrid"></div>
+  </div>
 </section>
 
 <!-- ═══════ PLAN (projects & tasks) ═══════ -->
@@ -638,7 +661,7 @@ details code{
     <span class="win-tag">🔧 설정</span>
     <label class="chkrow"><input type="checkbox" id="setSound"> 🔊 8비트 효과음</label>
     <label class="chkrow"><input type="checkbox" id="setAuto"> 🕐 실제 시간에 맞춰 자동 낮/밤 (07~18시 낮)</label>
-    <button class="chipbtn" id="btnCharChange" style="width:100%;margin-top:10px;padding:11px">🎭 캐릭터 변경</button>
+    <button class="chipbtn" id="btnCharChange" style="width:100%;margin-top:10px;padding:11px">🎭 캐릭터 변경 (💰<span id="ccCost">300</span>G)</button>
   </div>
 
   <div class="win">
@@ -714,7 +737,7 @@ const defaultState=()=>({
   quests:[],log:[],dreams:[],cleared:0,today:{d:todayStr(),n:0},
   custom:{village:'',hero:'',tagline:'',motto:'',stats:{},houseNames:null,charNames:null},
   gold:0,streak:{count:0,last:''},daily:{},deco:{},
-  ui:{night:true,sound:true,auto:false},
+  ui:{night:true,sound:true,auto:false,villageView:'scene'},
   projects:[],tasks:[],vault:[],
   gen:0,genLog:[],
   profile:{onboarded:false,gender:'',bodyType:'dress',hairId:'brown',hairHex:'#4a2f1d',accentId:'rose',accentHex:'#c2495e'},
@@ -796,6 +819,7 @@ const PROJECT_SIZES=[
  {id:2,label:'대형',xp:200,gold:80},
 ];
 const REBIRTH_LV=25; // total level needed to unlock 환생
+const CHAR_CHANGE_COST=300; // gold cost to re-pick character appearance later
 function genFilter(){return state.gen>0?'filter:hue-rotate('+((state.gen*47)%360)+'deg) saturate('+(1+state.gen*0.06>1.4?1.4:1+state.gen*0.06)+')':'';}
 function wrapGen(svg){return state.gen>0?'<span style="'+genFilter()+';display:inline-block">'+svg+'</span>':svg;}
 const HOUSE_STAGES=[
@@ -827,7 +851,7 @@ const houseNm=i=>(state.custom.houseNames&&state.custom.houseNames[i])||HOUSE_ST
 const villageNm=()=>state.custom.village||'나의 마을';
 const heroNm=()=>state.custom.hero||'나';
 const taglineTxt=()=>state.custom.tagline||'레벨업할수록 마을이 지어진다';
-const mottoTxt=()=>state.custom.motto||'조금씩 꾸준히 뭐라도 하면 성장하겠지';
+const mottoTxt=()=>state.custom.motto||'오늘도 한 걸음, 꾸준히 나아가자';
 const charNm=i=>(state.custom.charNames&&state.custom.charNames[i])||CHAR_STAGES[i].nm;
 
 /* ── 8-bit sound ── */
@@ -917,8 +941,8 @@ const DECOS=[
  {id:'bench',  ico:'🪑',nm:'나무 벤치',    price:40, x:445, d:decoBench,   sd:'잠시 쉬어가는 자리'},
  {id:'mailbox',ico:'📮',nm:'빨간 우체통',  price:50, x:1545,d:decoMailbox, sd:'마을의 소식이 모인다'},
  {id:'lamp',   ico:'🏮',nm:'가로등',      price:60, x:655, d:decoLamp,    sd:'밤이 되면 불이 켜진다'},
- {id:'willow', ico:'🐕',nm:'강아지 윌로우', price:100,x:875, d:p=>decoDog(p,'#e8b04a','#c98a2e'), sd:'집 앞을 지키는 첫째'},
- {id:'koi',    ico:'🐶',nm:'강아지 코이',  price:100,x:195, d:p=>decoDog(p,'#f4f4f4','#ef7d57'), sd:'마을을 뛰어다니는 둘째'},
+ {id:'willow', ico:'🐕',nm:'강아지 친구', price:100,x:875, d:p=>decoDog(p,'#e8b04a','#c98a2e'), sd:'집 앞을 지키는 든든한 친구'},
+ {id:'koi',    ico:'🐶',nm:'하얀 강아지',  price:100,x:195, d:p=>decoDog(p,'#f4f4f4','#ef7d57'), sd:'마을을 뛰어다니는 장난꾸러기'},
  {id:'fountain',ico:'⛲',nm:'분수대',     price:150,x:1135,d:decoFountain,sd:'물이 솟는 마을의 명소'},
  {id:'lights', ico:'✨',nm:'별빛 전구 줄', price:200,x:1315,d:decoLights,  sd:'밤하늘 아래 반짝인다'},
 ];
@@ -941,13 +965,13 @@ function currentTitle(){
 function R(x,y,w,h,c,p){return '<rect x="'+(x*p)+'" y="'+(y*p)+'" width="'+(w*p)+'" height="'+(h*p)+'" fill="'+c+'"/>';}
 const PAL={H:'#4a2f1d',S:'#f0c8a0',E:'#1a1c2c',M:'#c2495e',P:'#333c57',W:'#f4f4f4',G:'#ffcd75',A:'#94b0c2',D:'#dce8f0',B:'#8a5a34',C:'#c2495e'};
 const SPRITES=[
-{pal:{B:'#a3684a',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HHHHHHHHHHHH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HH..SSSS..HH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBBBBBBBBB...","..BBBBBBBBBBBB..","..BBBBBBBBBBBB..",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#a3684a',C:'#c2495e'},map:["......CC........","....HHHHHHHH....","...HHHHHHHHHH...","..HHHHHHHHHHHH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HH..SSSS..HH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBBBBBBBBB...","..BBBBBBBBBBBB..","..BBBBBBBBBBBB..",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#38b764',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HCCCCCCCCCCH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HHCCSSSSCCHH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBBBBBBBBB...","..BBBBBBBBBBBB..","..BBBBBBBBBBBB..",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#94b0c2',C:'#c2495e'},map:["...............D","....HHHHHHHH...D","...HHHHHHHHHH..D","..HCCCCCCCCCCH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BBGGBB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BBGBBBBGBB...","..BBBBBBBBBBBB..","..BGGGGGGGGGGB..",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#8a4ab0',C:'#5d275d'},map:["...G..G..G.....D","...GGGGGGGG....D","..HHHHHHHHHHHH.D","..HHHHHHHHHHHH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BGGGGB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","...BGBBBBBBGB...","..BBGBBBBBBGBB..",".BGGGGGGGGGGGGB.",".....SS...SS....","....WWW..WWW...."]},
 ];
 const SPRITES_TUNIC=[
-{pal:{B:'#a3684a',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HHHHHHHHHHHH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HH..SSSS..HH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BBBBBBBB....","....PPP..PPP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
+{pal:{B:'#a3684a',C:'#c2495e'},map:["......CC........","....HHHHHHHH....","...HHHHHHHHHH...","..HHHHHHHHHHHH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HH..SSSS..HH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BBBBBBBB....","....PPP..PPP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#38b764',C:'#c2495e'},map:["................","....HHHHHHHH....","...HHHHHHHHHH...","..HCCCCCCCCCCH..","..HHSSSSSSSSHH..","..HHSESSSSESHH..","..HHSSSSSSSSHH..","..HHSSSMMSSSHH..","..HHCCSSSSCCHH..","..HH.BBBBBB.HH..","..HHSBBBBBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BBBBBBBB....","....PPP..PPP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#94b0c2',C:'#c2495e'},map:["...............D","....HHHHHHHH...D","...HHHHHHHHHH..D","..HCCCCCCCCCCH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BBGGBB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BGBBBBGB....","....PGP..PGP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
 {pal:{B:'#8a4ab0',C:'#5d275d'},map:["...G..G..G.....D","...GGGGGGGG....D","..HHHHHHHHHHHH.D","..HHHHHHHHHHHH.D","..HHSSSSSSSSHH.D","..HHSESSSSESHH.D","..HHSSSSSSSSHH.D","..HHSSSMMSSSHH.D","..HHCCSSSSCCHH.G","..HH.BGGGGB.HH.G","..HHSBBGGBBSHH..","..HH.BBBBBB.HH..","....BBBBBBBB....","....BGBBBBGB....","....PGP..PGP....","....PPP..PPP....",".....SS...SS....","....WWW..WWW...."]},
@@ -1111,8 +1135,8 @@ function renderVillage(){
       +R(1,0,4,1,'#ffe06a',8)+R(0,1,6,4,'#ffe06a',8)+R(1,5,4,1,'#ffe06a',8)
       +R(2,2,2,2,'#fff2b0',8)+'</g>';
     /* pixel clouds */
-    const cloud=(cx,cy,s,cls)=>'<g class="'+cls+'" transform="translate('+cx+','+cy+')" shape-rendering="crispEdges">'
-      +R(2,0,8,2,'#f4f4f4',s)+R(0,2,12,2,'#f4f4f4',s)+R(4,-2,4,2,'#f4f4f4',s)+R(1,4,10,1,'#dde6ee',s)+'</g>';
+    const cloud=(cx,cy,s,cls)=>'<g transform="translate('+cx+','+cy+')" shape-rendering="crispEdges"><g class="'+cls+'">'
+      +R(2,0,8,2,'#f4f4f4',s)+R(0,2,12,2,'#f4f4f4',s)+R(4,-2,4,2,'#f4f4f4',s)+R(1,4,10,1,'#dde6ee',s)+'</g></g>';
     o+=cloud(180,70,6,'cloud')+cloud(720,120,5,'cloud2')+cloud(1150,55,7,'cloud');
   }
   for(let x=0;x<SCENE_W;x+=26){
@@ -1151,7 +1175,7 @@ function renderVillage(){
       o+='<g class="bpoi" data-nav="home" transform="translate('+(cx-b.W/2)+','+(GROUND-b.H+10)+')" style="'+genFilter()+'">'
         +'<rect class="bglow" width="'+b.W+'" height="'+b.H+'" fill="#ffcd75" opacity="0"/>'
         +b.svg+'</g>';
-      o+='<g class="hz-idle bpoi" data-nav="hazel" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')" style="'+genFilter()+'">'+heroSprite(charStage(totalLevel()),4)+'</g>';
+      o+='<g class="bpoi" data-nav="hazel" transform="translate('+(cx+b.W/2+6)+','+(GROUND-72)+')" style="'+genFilter()+'"><g class="hz-idle">'+heroSprite(charStage(totalLevel()),4)+'</g></g>';
       o+=chip(cx,'🏠 '+heroNm()+'의 집','Lv.'+totalLevel());
     }else if(id==='HALL'){
       const b=buildingSVG(HALL,4,4.6);
@@ -1201,6 +1225,49 @@ function renderVillage(){
   $('hudStreak').textContent=state.streak.count;
   $('hudGoldN').textContent=state.gold;
   $('dayToggle').textContent=isNight()?'🌙 밤':'☀️ 낮';
+  applyVillageView();
+  if(state.ui.villageView==='list')renderVillageList();
+}
+
+/* ── list view: every space at a glance, with live project/task counts ── */
+function renderVillageList(){
+  const box=$('locGrid');
+  let html='';
+  allStats().forEach(s=>{
+    const lv=statLevel(s.id),bs=buildStage(lv);
+    const projN=state.projects.filter(p=>p.stat===s.id).length;
+    const taskN=state.tasks.filter(t=>t.stat===s.id&&!t.done).length;
+    html+='<div class="loc-card" data-nav="'+s.id+'" style="border-left-color:'+s.c+'">'
+      +'<div class="lc-ico">'+s.ico+'</div>'
+      +'<div class="lc-nm">'+esc(s.stages[bs])+'</div>'
+      +'<div class="lc-sub">'+esc(s.nm)+' · Lv.'+lv+'</div>'
+      +'<div class="lc-badges">'
+        +(projN?'<span class="lcb">📦'+projN+'</span>':'')
+        +(taskN?'<span class="lcb">✅'+taskN+'</span>':'')
+        +(!projN&&!taskN?'<span class="lcb dim">진행 중 없음</span>':'')
+      +'</div></div>';
+  });
+  const hs=houseStage(totalLevel());
+  html+='<div class="loc-card" data-nav="home" style="border-left-color:#ffcd75">'
+    +'<div class="lc-ico">🏠</div><div class="lc-nm">'+esc(houseNm(hs))+'</div>'
+    +'<div class="lc-sub">'+esc(heroNm())+'의 집 · Lv.'+totalLevel()+'</div>'
+    +'<div class="lc-badges">'+(state.gen>0?'<span class="lcb">Gen.'+state.gen+'</span>':'<span class="lcb dim">현재 세대</span>')+'</div></div>';
+  html+='<div class="loc-card" data-nav="hall" style="border-left-color:#ffcd75">'
+    +'<div class="lc-ico">🏆</div><div class="lc-nm">기록의 전당</div>'
+    +'<div class="lc-sub">완료된 프로젝트</div>'
+    +'<div class="lc-badges"><span class="lcb">'+state.vault.length+'개 보관 중</span></div></div>';
+  html+='<div class="loc-card" data-nav="office" style="border-left-color:#94b0c2">'
+    +'<div class="lc-ico">⚙️</div><div class="lc-nm">촌장 사무소</div>'
+    +'<div class="lc-sub">설정 · 이름 · 캐릭터</div>'
+    +'<div class="lc-badges"></div></div>';
+  box.innerHTML=html;
+}
+function applyVillageView(){
+  const scene=state.ui.villageView!=='list';
+  $('vsScene').classList.toggle('on',scene);
+  $('vsList').classList.toggle('on',!scene);
+  $('villageSceneView').style.display=scene?'':'none';
+  $('villageListView').style.display=scene?'none':'';
 }
 
 /* ── hazel dialog: rich, varied, non-repeating ── */
@@ -1213,27 +1280,27 @@ function hazelLines(){
     '오늘 뭐라도 하나는 했어? 그럼 충분해.',
     '어제보다 아주 조금만 나아가면 그게 성장이야.',
     isNight()?'별이 예쁜 밤이야. 오늘 하루도 수고했어.':'좋은 아침! 오늘의 퀘스트를 시작해볼까?',
-    '쉬는 것도 프로젝트야. 너무 몰아붙이지 마.',
-    'K BBQ 오늘도 무사히 돌아갔어? 사장님 아니 촌장님, 고생 많아.',
-    '재고 확인, 스케줄 관리… 매장 관리도 결국 레벨업이야.',
-    '직원들한테 오늘 한마디 웃으면서 건넸어? 그것도 리더십이야.',
-    'K BBQ 리뷰 이벤트 반응 좋았잖아. 또 뭔가 해볼까?',
-    '노션대학 첫 기수 결과 발표가 다가오네. 설레지 않아?',
-    '@effi_land 커뮤니티, 하나씩 쌓다 보니 여기까지 왔네.',
-    '@dots__hazel 콘텐츠 하나 올리는 것도 오늘의 퀘스트가 될 수 있어.',
-    '실수를 솔직하게 공개하는 것도 너의 강점이야. 계속 그렇게 써.',
-    '3월에 코딩 완전 처음이었잖아. 지금 이 마을을 봐, 네가 만든 거야.',
-    'Hazel Timer가 첫 배포작이었지. 여기까지 정말 많이 왔다.',
-    'iPad 하나로 여기까지 만들었어. 도구 탓할 시간에 하나 더 만들자.',
-    '오늘 윌로우랑 코이는 산책 시켜줬어?',
-    '윌로우, 코이가 옆에서 응원하고 있을 거야. 왈왈!',
-    '가끔은 멍때리는 것도 필요해. 강아지들처럼 낮잠 한숨 어때.',
+    '쉬는 것도 계획의 일부야. 너무 몰아붙이지 마.',
+    '작게 시작한 게 나중엔 제일 크게 남더라.',
+    '실수를 숨기지 않고 기록해두는 것도 성장의 증거야.',
+    '처음이 어려웠지, 지금은 훨씬 자연스러워졌잖아.',
+    '가진 도구가 뭐든, 그걸로 계속 만들어가는 사람이 결국 이겨.',
+    '오늘 하루도 나만의 속도로 잘 걸어왔어.',
+    '가끔은 멍때리는 것도 필요해. 잠깐 쉬어가도 괜찮아.',
     '퀘스트 목록이 길어도 괜찮아. 오늘은 딱 하나만 해보자.',
-    '태스크는 가볍게, 프로젝트는 진득하게. 그게 우리 마을의 룰이지.',
-    '우리 마을, 점점 그럴싸해지지 않아? 다음엔 또 뭘 지을까.',
+    '태스크는 가볍게, 프로젝트는 진득하게. 그게 이 마을의 룰이지.',
+    '이 마을, 점점 그럴싸해지지 않아? 다음엔 또 뭘 지을까.',
     '어려운 프로젝트일수록 완공됐을 때 뿌듯함이 커.',
     '완벽한 하루가 아니어도 괜찮아. 완료한 게 하나라도 있으면 그게 승리야.',
     '가끔 뒤돌아보면 생각보다 많이 해왔다는 거, 잊지 마.',
+    '남과 비교할 필요 없어. 어제의 나보다만 나아가면 돼.',
+    '작은 습관 하나가 큰 변화를 만든다는 거, 이 마을이 증명하고 있잖아.',
+    '오늘의 나를 위해 뭔가 하나 해보는 건 어때?',
+    '지치면 잠깐 멈춰도 돼. 마을은 도망가지 않아.',
+    '꾸준함은 화려하지 않지만, 결국 제일 강해.',
+    '지금 이 순간의 노력이 나중엔 근사한 결과로 돌아올 거야.',
+    '오늘 하루도 스스로에게 조금 너그러워지자.',
+    '작은 완료 하나가 쌓이면 큰 자신감이 돼.',
   ];
   if(state.streak.count>=3)L.push('🔥 '+state.streak.count+'일 연속 출석 중! 이 흐름 놓치지 말자.');
   if(state.streak.count>=7)L.push('한 주 내내 꾸준했네. 이게 진짜 실력이야.');
@@ -1269,6 +1336,22 @@ function showScreen(id,navId){
 }
 function goVillage(){renderVillage();showScreen('scrVillage','navVillage');}
 $('navVillage').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
+$('locGrid').addEventListener('click',e=>{
+  const card=e.target.closest('[data-nav]');if(!card)return;
+  const nav=card.dataset.nav;
+  beep(SFX.tap);
+  if(nav==='home'){renderHome();showScreen('scrHome','navHome');}
+  else if(nav==='office'){renderEdit();showScreen('scrEdit',null);}
+  else if(nav==='hall'){renderHall();showScreen('scrHall',null);}
+  else openBuilding(nav);
+});
+$('vsScene').addEventListener('click',()=>{
+  state.ui.villageView='scene';saveLocal();beep(SFX.tap);applyVillageView();
+});
+$('vsList').addEventListener('click',()=>{
+  state.ui.villageView='list';saveLocal();beep(SFX.tap);
+  applyVillageView();renderVillageList();
+});
 $('navPlan').addEventListener('click',()=>{beep(SFX.tap);renderPlan();showScreen('scrPlan','navPlan');});
 $('navHome').addEventListener('click',()=>{beep(SFX.tap);renderHome();showScreen('scrHome','navHome');});
 $('dBack').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
@@ -1643,6 +1726,7 @@ function renderWeekChart(){
 
 /* ═══════════ edit screen ═══════════ */
 function renderEdit(){
+  $('ccCost').textContent=CHAR_CHANGE_COST;
   $('eVillage').value=state.custom.village||'';
   $('eVillage').placeholder=villageNm();
   $('eHero').value=state.custom.hero||'';
@@ -1693,7 +1777,11 @@ $('eSaveHouse').addEventListener('click',()=>{
   state.custom.houseNames=[0,1,2,3,4].map(i=>$('eH'+i).value.trim()||HOUSE_STAGES[i].nm);
   saveState();toast('✦ 집 이름 저장 완료 ✦');
 });
-$('btnCharChange').addEventListener('click',()=>{beep(SFX.tap);openOnboarding('edit');});
+$('btnCharChange').addEventListener('click',()=>{
+  if(state.gold<CHAR_CHANGE_COST){beep(SFX.nope);toast('골드가 부족해! ('+state.gold+'/'+CHAR_CHANGE_COST+'G)');return;}
+  if(!confirm('캐릭터를 다시 고르면 💰'+CHAR_CHANGE_COST+'G가 사용돼. 계속할까?'))return;
+  beep(SFX.tap);openOnboarding('edit');
+});
 $('setSound').addEventListener('change',e=>{
   state.ui.sound=e.target.checked;saveState();
   if(e.target.checked)beep(SFX.done);
@@ -1800,7 +1888,7 @@ const cloudConfigured=()=>!!FIREBASE_CONFIG.apiKey;
 function updateCloudUI(extra){
   const st=$('cloudStatus'),li=$('btnGLogin'),lo=$('btnGLogout');
   if(!cloudConfigured()){
-    st.innerHTML='아직 Firebase 설정이 비어 있어.<br>아래 가이드대로 1회만 설정하면<br><b>아이폰 ↔ 아이패드 실시간 동기화</b>가 켜져.<br><span style="color:#6b7396">(지금은 이 기기에만 저장 중)</span>';
+    st.innerHTML='아직 Firebase 설정이 비어 있어.<br>아래 가이드대로 1회만 설정하면<br><b>여러 기기에서 실시간 동기화</b>가 켜져.<br><span style="color:#6b7396">(지금은 이 기기에만 저장 중)</span>';
     li.style.display='none';lo.style.display='none';return;
   }
   if(extra){st.innerHTML='⚠️ '+esc(extra);li.style.display='block';lo.style.display='none';return;}
@@ -1947,7 +2035,11 @@ $('ob1Next').addEventListener('click',()=>{
   if(!obDraft.gender)return toast('하나를 선택해줘');
   beep(SFX.tap);renderObChar();obShow(2);
 });
-$('ob2Back').addEventListener('click',()=>{beep(SFX.tap);obShow(1);});
+$('ob2Back').addEventListener('click',()=>{
+  beep(SFX.tap);
+  if(obReturnTo){$('onboard').classList.add('off');obReturnTo=null;renderEdit();showScreen('scrEdit',null);return;}
+  obShow(1);
+});
 $('ob2Next').addEventListener('click',()=>{
   beep(SFX.tap);
   if(obReturnTo){finishCharChange();return;}
@@ -1982,6 +2074,8 @@ function openOnboarding(returnTo){
   else{renderObGender();obShow(0);}
 }
 function finishCharChange(){
+  if(state.gold<CHAR_CHANGE_COST){beep(SFX.nope);toast('골드가 부족해졌어. 다시 확인해줘.');$('onboard').classList.add('off');obReturnTo=null;renderEdit();showScreen('scrEdit',null);return;}
+  state.gold-=CHAR_CHANGE_COST;
   state.profile.bodyType=obDraft.bodyType;
   state.profile.hairId=obDraft.hairId;
   state.profile.hairHex=obDraft.hairHex;
@@ -1990,7 +2084,7 @@ function finishCharChange(){
   saveState();
   beep(SFX.dream);
   $('onboard').classList.add('off');
-  toast('✦ 캐릭터가 바뀌었다! ✦');
+  toast('✦ 캐릭터가 바뀌었다! (-'+CHAR_CHANGE_COST+'G) ✦');
   if(obReturnTo==='edit'){renderEdit();showScreen('scrEdit',null);}
   else goVillage();
   obReturnTo=null;
