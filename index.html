@@ -332,6 +332,9 @@ details code{
 .proj-acts .btn{flex:1;padding:8px;font-size:.66rem}
 .proj-acts .btn.done-btn{background:var(--green);color:#0d2a17}
 .proj-acts .btn.del-btn{background:var(--panel);color:#8a92ab;box-shadow:none;border-color:var(--line)}
+.proj-acts .btn.edit-btn{background:var(--panel2);color:var(--gold);flex:0 0 52px;box-shadow:none;border-color:var(--gold)}
+.proj-edit{padding:11px}
+.proj-edit .qform{margin-bottom:0}
 .trow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:2px dotted #313753}
 .trow:last-of-type{border-bottom:none}
 .tchk{width:24px;height:24px;flex-shrink:0;cursor:pointer;background:#141625;border:2px solid var(--line2);color:var(--gold);font-size:.85rem;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
@@ -477,6 +480,10 @@ details code{
         <input type="text" id="tText" maxlength="60" placeholder="할 일을 입력…" autocomplete="off">
         <div class="qrow"><select id="tProj" aria-label="프로젝트 연결"></select></div>
         <label class="chkrow"><input type="checkbox" id="tRepeat"> 🔁 매일 반복 (습관 태스크)</label>
+        <div class="frow" id="tRepeatUntilWrap" style="display:none;margin-top:-4px">
+          <label>언제까지 반복할까? (선택, 비우면 계속 반복)</label>
+          <input type="date" id="tRepeatUntil">
+        </div>
         <button class="btn" id="tAdd">＋ 태스크 등록</button>
       </div>
     </div>
@@ -661,7 +668,10 @@ details code{
     <span class="win-tag">🔧 설정</span>
     <label class="chkrow"><input type="checkbox" id="setSound"> 🔊 8비트 효과음</label>
     <label class="chkrow"><input type="checkbox" id="setAuto"> 🕐 실제 시간에 맞춰 자동 낮/밤 (07~18시 낮)</label>
-    <button class="chipbtn" id="btnCharChange" style="width:100%;margin-top:10px;padding:11px">🎭 캐릭터 변경 (💰<span id="ccCost">300</span>G)</button>
+    <div class="frow" style="margin-top:10px"><label>주간 기록 시작 요일</label>
+      <select id="setWeekStart"><option value="mon">월요일 시작 (월화수목금토일)</option><option value="sun">일요일 시작 (일월화수목금토)</option></select>
+    </div>
+    <button class="chipbtn" id="btnCharChange" style="width:100%;margin-top:4px;padding:11px">🎭 캐릭터 변경 (💰<span id="ccCost">300</span>G)</button>
   </div>
 
   <div class="win">
@@ -732,12 +742,22 @@ const FIREBASE_CONFIG={
 const KEY='hazelVillage_v2', OLD_KEY='hazelQuest_v1';
 let memFallback=null;
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function pad2(n){return n<10?'0'+n:''+n;}
+function dateKey(d){d=d||new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function startOfWeek(){
+  const now=new Date();
+  const dow=now.getDay(); // 0=Sun..6=Sat
+  const diff=(state.ui.weekStart==='sun')?-dow:(dow===0?-6:1-dow);
+  const d=new Date(now);d.setDate(now.getDate()+diff);
+  return d;
+}
+function taskExpired(t){return !!(t.repeat&&t.repeatUntil&&dateKey()>t.repeatUntil);}
 const defaultState=()=>({
   xp:{work:0,focus:0,health:0,care:0,fun:0,habit:0},
   quests:[],log:[],dreams:[],cleared:0,today:{d:todayStr(),n:0},
   custom:{village:'',hero:'',tagline:'',motto:'',stats:{},houseNames:null,charNames:null},
   gold:0,streak:{count:0,last:''},daily:{},deco:{},
-  ui:{night:true,sound:true,auto:false,villageView:'scene'},
+  ui:{night:true,sound:true,auto:false,villageView:'scene',weekStart:'mon'},
   projects:[],tasks:[],vault:[],
   gen:0,genLog:[],
   profile:{onboarded:false,gender:'',bodyType:'dress',hairId:'brown',hairHex:'#4a2f1d',accentId:'rose',accentHex:'#c2495e'},
@@ -1236,7 +1256,7 @@ function renderVillageList(){
   allStats().forEach(s=>{
     const lv=statLevel(s.id),bs=buildStage(lv);
     const projN=state.projects.filter(p=>p.stat===s.id).length;
-    const taskN=state.tasks.filter(t=>t.stat===s.id&&!t.done).length;
+    const taskN=state.tasks.filter(t=>t.stat===s.id&&!t.done&&!taskExpired(t)).length;
     html+='<div class="loc-card" data-nav="'+s.id+'" style="border-left-color:'+s.c+'">'
       +'<div class="lc-ico">'+s.ico+'</div>'
       +'<div class="lc-nm">'+esc(s.stages[bs])+'</div>'
@@ -1334,7 +1354,7 @@ function showScreen(id,navId){
   if(navId)$(navId).classList.add('on');
   window.scrollTo(0,0);
 }
-function goVillage(){renderVillage();showScreen('scrVillage','navVillage');}
+function goVillage(){editingProjId=null;renderVillage();showScreen('scrVillage','navVillage');}
 $('navVillage').addEventListener('click',()=>{beep(SFX.tap);goVillage();});
 $('locGrid').addEventListener('click',e=>{
   const card=e.target.closest('[data-nav]');if(!card)return;
@@ -1369,7 +1389,7 @@ $('dayToggle').addEventListener('click',()=>{
 });
 
 /* ═══════════ building detail ═══════════ */
-function openBuilding(id){currentStat=id;renderDetail();showScreen('scrDetail',null);}
+function openBuilding(id){editingProjId=null;currentStat=id;renderDetail();showScreen('scrDetail',null);}
 function renderDetail(){
   const st=getStat(currentStat);
   const lv=statLevel(st.id),bs=buildStage(lv),p=statProg(st.id);
@@ -1389,12 +1409,31 @@ function taskRow(t){
   const proj=t.projectId?state.projects.find(p=>p.id===t.projectId):null;
   return '<div class="trow'+(t.done?' done':'')+'" data-id="'+t.id+'">'
     +'<button class="tchk" data-act="tog" aria-label="태스크 완료">'+(t.done?'✓':'')+'</button>'
-    +'<div class="ttxt">'+esc(t.text)+(t.repeat?'<span class="rep-badge">🔁매일</span>':'')
+    +'<div class="ttxt">'+esc(t.text)+(t.repeat?'<span class="rep-badge">🔁'+(t.repeatUntil?' ~'+t.repeatUntil:'매일')+'</span>':'')
     +(proj?'<div class="qm">📦 '+esc(proj.title)+'</div>':'')+'</div>'
     +(t.done?'<span class="ttime">'+fmtTime(t.doneAt)+'</span>':'')
     +'<button class="tdel" data-act="del" aria-label="태스크 삭제">✕</button></div>';
 }
+let editingProjId=null;
+function projectEditForm(p){
+  const safeTitle=esc(p.title).replace(/"/g,'&quot;');
+  return '<div class="proj" data-id="'+p.id+'">'
+    +'<div class="proj-edit">'
+      +'<div class="qform">'
+        +'<input type="text" class="pe-title" maxlength="40" value="'+safeTitle+'">'
+        +'<div class="qrow">'
+          +'<select class="pe-stat">'+allStats().map(s=>'<option value="'+s.id+'"'+(s.id===p.stat?' selected':'')+'>'+s.ico+' '+esc(s.nm)+'</option>').join('')+'</select>'
+          +'<select class="pe-size">'+PROJECT_SIZES.map((z,i)=>'<option value="'+i+'"'+(i===p.size?' selected':'')+'>'+z.label+'(+'+z.xp+'XP)</option>').join('')+'</select>'
+        +'</div>'
+      +'</div>'
+      +'<div class="proj-acts" style="padding:9px 0 0">'
+        +'<button class="btn" data-act="savep">저장</button>'
+        +'<button class="btn del-btn" data-act="cancelp">취소</button>'
+      +'</div>'
+    +'</div></div>';
+}
 function projectCard(p){
+  if(p.id===editingProjId)return projectEditForm(p);
   const st=getStat(p.stat),sz=PROJECT_SIZES[p.size];
   const {total,done}=projTaskCounts(p.id);
   const pct=total?Math.round(done/total*100):0;
@@ -1406,6 +1445,7 @@ function projectCard(p){
     +(total?'<div class="pbar"><i style="--c:'+st.c+';width:'+pct+'%"></i></div>':'')
     +'<div class="proj-acts">'
       +'<button class="btn done-btn" data-act="complete">🏆 프로젝트 완료</button>'
+      +'<button class="btn edit-btn" data-act="editp">✏️</button>'
       +'<button class="btn del-btn" data-act="delp">삭제</button>'
     +'</div></div>';
 }
@@ -1461,6 +1501,20 @@ function projListClick(e,rerender){
   if(act==='toggle'){proj.classList.toggle('open');const body=proj.querySelector('.proj-body');if(body)body.style.display=proj.classList.contains('open')?'':'none';return;}
   if(act==='delp'){if(confirm('「'+p.title+'」 프로젝트를 삭제할까? (태스크는 남아있어)')){beep(SFX.tap);deleteProject(p.id);rerender();if($('viewTask').style.display!=='none')renderTasks();}return;}
   if(act==='complete'){completeProject(p);rerender();}
+  if(act==='editp'){beep(SFX.tap);editingProjId=p.id;rerender();return;}
+  if(act==='cancelp'){beep(SFX.tap);editingProjId=null;rerender();return;}
+  if(act==='savep'){
+    const title=proj.querySelector('.pe-title').value.trim();
+    if(!title){proj.querySelector('.pe-title').focus();return;}
+    p.title=title;
+    p.stat=proj.querySelector('.pe-stat').value;
+    p.size=+proj.querySelector('.pe-size').value;
+    saveState();beep(SFX.tap);
+    editingProjId=null;
+    rerender();
+    if($('viewTask').style.display!=='none')renderTasks();
+    return;
+  }
 }
 $('planProjList').addEventListener('click',e=>projListClick(e,renderProjects));
 $('pAdd').addEventListener('click',()=>{
@@ -1478,9 +1532,10 @@ function renderTasks(){
     +state.projects.map(p=>{const st=getStat(p.stat);return '<option value="'+p.id+'">'+st.ico+' '+esc(p.title)+'</option>';}).join('');
   rolloverRepeats();
   const box=$('planTaskList');
-  const pending=state.tasks.filter(t=>!t.done);
-  const done=state.tasks.filter(t=>t.done);
-  if(!state.tasks.length){box.innerHTML='<div class="empty">등록된 태스크가 없다.<br>위에서 오늘의 할 일을 등록하자!</div>';renderLog();return;}
+  const active=state.tasks.filter(t=>!taskExpired(t));
+  const pending=active.filter(t=>!t.done);
+  const done=active.filter(t=>t.done);
+  if(!active.length){box.innerHTML='<div class="empty">등록된 태스크가 없다.<br>위에서 오늘의 할 일을 등록하자!</div>';renderLog();return;}
   box.innerHTML=pending.map(taskRow).join('')+(done.length?'<div class="tgroup"><b>완료됨</b></div>'+done.map(taskRow).join(''):'');
   renderLog();
 }
@@ -1492,13 +1547,18 @@ function renderLog(){
     return '<div class="dream"><span class="dd">'+(l.d||'')+'</span><span>'+s.ico+' '+esc(l.text)+(l.xp?' <span style="color:#ffcd75">+'+l.xp+'XP</span>':'')+'</span></div>';
   }).join('');
 }
+$('tRepeat').addEventListener('change',e=>{
+  $('tRepeatUntilWrap').style.display=e.target.checked?'':'none';
+});
 $('tAdd').addEventListener('click',()=>{
   const t=$('tText').value.trim();
   if(!t)return $('tText').focus();
   const pid=$('tProj').value||null;
   const stat=pid?state.projects.find(p=>p.id===pid).stat:allStats()[0].id;
-  state.tasks.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat,projectId:pid,repeat:$('tRepeat').checked,last:'',done:false,doneAt:null,createdAt:Date.now()});
-  $('tText').value='';$('tRepeat').checked=false;
+  const repeat=$('tRepeat').checked;
+  const repeatUntil=repeat?($('tRepeatUntil').value||''):'';
+  state.tasks.unshift({id:Date.now()+''+Math.floor(Math.random()*999),text:t,stat,projectId:pid,repeat,repeatUntil,last:'',done:false,doneAt:null,createdAt:Date.now()});
+  $('tText').value='';$('tRepeat').checked=false;$('tRepeatUntil').value='';$('tRepeatUntilWrap').style.display='none';
   saveState();beep(SFX.tap);renderTasks();
 });
 $('tText').addEventListener('keydown',e=>{if(e.key==='Enter')$('tAdd').click();});
@@ -1566,6 +1626,7 @@ function rolloverRepeats(){
   const t=todayStr();
   let changed=false;
   state.tasks.forEach(tk=>{
+    if(taskExpired(tk))return;
     if(tk.repeat&&tk.done&&tk.last!==t){tk.done=false;tk.doneAt=null;changed=true;}
   });
   if(changed)saveLocal();
@@ -1704,11 +1765,16 @@ function renderRadar(){
 
 function renderWeekChart(){
   const svg=$('weekChart');
+  const labelsMon=['월','화','수','목','금','토','일'];
+  const labelsSun=['일','월','화','수','목','금','토'];
+  const labels=state.ui.weekStart==='sun'?labelsSun:labelsMon;
+  const wkStart=startOfWeek();
+  const todayK=todayStr();
   const days=[];
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
+  for(let i=0;i<7;i++){
+    const d=new Date(wkStart);d.setDate(wkStart.getDate()+i);
     const key=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-    days.push({key,dow:'일월화수목금토'[d.getDay()],xp:state.daily[key]||0,isToday:i===0});
+    days.push({key,dow:labels[i],xp:state.daily[key]||0,isToday:key===todayK});
   }
   const max=Math.max(50,...days.map(d=>d.xp));
   let out='';
@@ -1738,6 +1804,7 @@ function renderEdit(){
   for(let i=0;i<4;i++)$('eC'+i).value=charNm(i);
   $('setSound').checked=!!state.ui.sound;
   $('setAuto').checked=!!state.ui.auto;
+  $('setWeekStart').value=state.ui.weekStart||'mon';
   const sel=$('eBranch');
   const cur=sel.value||STATS[0].id;
   sel.innerHTML=STATS.map(s=>{
@@ -1790,6 +1857,10 @@ $('setSound').addEventListener('change',e=>{
 $('setAuto').addEventListener('change',e=>{
   state.ui.auto=e.target.checked;saveState();beep(SFX.tap);
   toast(e.target.checked?'🕐 자동 낮/밤 켜짐 (07~18시 낮)':'수동 낮/밤으로 전환');
+});
+$('setWeekStart').addEventListener('change',e=>{
+  state.ui.weekStart=e.target.value;saveState();beep(SFX.tap);
+  toast(e.target.value==='sun'?'📅 일요일 시작으로 변경':'📅 월요일 시작으로 변경');
 });
 $('eSaveChar').addEventListener('click',()=>{
   state.custom.charNames=[0,1,2,3].map(i=>$('eC'+i).value.trim()||CHAR_STAGES[i].nm);
